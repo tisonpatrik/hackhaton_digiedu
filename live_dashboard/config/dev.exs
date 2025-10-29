@@ -63,9 +63,6 @@ config :live_dashboard, LiveDashboardWeb.Endpoint,
     ]
   ]
 
-# Enable dev routes for dashboard and mailbox
-config :live_dashboard, dev_routes: true
-
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"
 
