@@ -4,6 +4,7 @@ defmodule LiveDashboardWeb.LocaleController do
   def set(conn, %{"locale" => locale}) when locale in ["en", "cs"] do
     # Get the referer or default to root
     referer = get_req_header(conn, "referer")
+
     redirect_path =
       if referer != [] do
         uri = URI.parse(hd(referer))

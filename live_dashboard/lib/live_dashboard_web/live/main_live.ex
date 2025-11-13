@@ -67,12 +67,16 @@ defmodule LiveDashboardWeb.MainLive do
       <section class="px-6 py-10 sm:px-10 lg:px-16 xl:px-20">
         <header class="flex flex-col gap-6 rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-base-100 px-8 py-10 shadow-lg transition-shadow duration-300 hover:shadow-xl sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-primary/70">{gettext("Live Overview")}</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-primary/70">
+              {gettext("Live Overview")}
+            </p>
             <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
               {gettext("Learning Impact Dashboard")}
             </h1>
             <p class="mt-4 max-w-xl text-base leading-7 text-base-content/70">
-              {gettext("Monitor adoption, engagement, and performance trends across your learning ecosystem. These insights auto-refresh once we connect the live data pipeline.")}
+              {gettext(
+                "Monitor adoption, engagement, and performance trends across your learning ecosystem. These insights auto-refresh once we connect the live data pipeline."
+              )}
             </p>
           </div>
           <div class="flex flex-wrap gap-3">
@@ -97,7 +101,9 @@ defmodule LiveDashboardWeb.MainLive do
           <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">{gettext("Active Learners")}</span>
+                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+                  {gettext("Active Learners")}
+                </span>
                 <span class="rounded-full bg-primary/10 p-2 text-primary">
                   <.icon name="hero-user-group" class="h-5 w-5" />
                 </span>
@@ -107,12 +113,16 @@ defmodule LiveDashboardWeb.MainLive do
                 <.icon name="hero-arrow-trending-up" class="h-4 w-4" />
                 {gettext("12.4% vs last 7 days")}
               </p>
-              <p class="mt-3 text-xs text-base-content/60">{gettext("Upcoming: replace with real-time enrollment metrics.")}</p>
+              <p class="mt-3 text-xs text-base-content/60">
+                {gettext("Upcoming: replace with real-time enrollment metrics.")}
+              </p>
             </article>
 
             <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">{gettext("Completion Rate")}</span>
+                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+                  {gettext("Completion Rate")}
+                </span>
                 <span class="rounded-full bg-secondary/10 p-2 text-secondary">
                   <.icon name="hero-check-badge" class="h-5 w-5" />
                 </span>
@@ -122,12 +132,16 @@ defmodule LiveDashboardWeb.MainLive do
                 <.icon name="hero-adjustments-horizontal" class="h-4 w-4" />
                 {gettext("Stabilizing week over week")}
               </p>
-              <p class="mt-3 text-xs text-base-content/60">{gettext("Hook into course analytics to surface live completion data.")}</p>
+              <p class="mt-3 text-xs text-base-content/60">
+                {gettext("Hook into course analytics to surface live completion data.")}
+              </p>
             </article>
 
             <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">{gettext("Avg. Session Length")}</span>
+                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+                  {gettext("Avg. Session Length")}
+                </span>
                 <span class="rounded-full bg-accent/10 p-2 text-accent">
                   <.icon name="hero-clock" class="h-5 w-5" />
                 </span>
@@ -137,12 +151,16 @@ defmodule LiveDashboardWeb.MainLive do
                 <.icon name="hero-sparkles" class="h-4 w-4" />
                 {gettext("+6 minutes since launch")}
               </p>
-              <p class="mt-3 text-xs text-base-content/60">{gettext("Pull telemetry data to track session depth across devices.")}</p>
+              <p class="mt-3 text-xs text-base-content/60">
+                {gettext("Pull telemetry data to track session depth across devices.")}
+              </p>
             </article>
 
             <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div class="flex items-center justify-between">
-                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">{gettext("Engagement Score")}</span>
+                <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+                  {gettext("Engagement Score")}
+                </span>
                 <span class="rounded-full bg-info/10 p-2 text-info">
                   <.icon name="hero-chart-bar" class="h-5 w-5" />
                 </span>
@@ -152,7 +170,9 @@ defmodule LiveDashboardWeb.MainLive do
                 <.icon name="hero-arrow-trending-up" class="h-4 w-4" />
                 {gettext("+0.3 points this month")}
               </p>
-              <p class="mt-3 text-xs text-base-content/60">{gettext("Composite metric from interactions, submissions, and time spent.")}</p>
+              <p class="mt-3 text-xs text-base-content/60">
+                {gettext("Composite metric from interactions, submissions, and time spent.")}
+              </p>
             </article>
           </div>
 
@@ -169,31 +189,33 @@ defmodule LiveDashboardWeb.MainLive do
                 type="line"
                 data={@engagement_chart_data}
                 height="h-64"
-                options={%{
-                  plugins: %{
-                    legend: %{
-                      display: true,
-                      position: "top"
-                    },
-                    tooltip: %{
-                      mode: "index",
-                      intersect: false
-                    }
-                  },
-                  scales: %{
-                    y: %{
-                      beginAtZero: true,
-                      grid: %{
-                        color: "rgba(0, 0, 0, 0.05)"
+                options={
+                  %{
+                    plugins: %{
+                      legend: %{
+                        display: true,
+                        position: "top"
+                      },
+                      tooltip: %{
+                        mode: "index",
+                        intersect: false
                       }
                     },
-                    x: %{
-                      grid: %{
-                        display: false
+                    scales: %{
+                      y: %{
+                        beginAtZero: true,
+                        grid: %{
+                          color: "rgba(0, 0, 0, 0.05)"
+                        }
+                      },
+                      x: %{
+                        grid: %{
+                          display: false
+                        }
                       }
                     }
                   }
-                }}
+                }
               />
             </div>
 
@@ -210,8 +232,12 @@ defmodule LiveDashboardWeb.MainLive do
                     <.icon name="hero-user-plus" class="h-4 w-4 text-primary" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-base-content">{gettext("New learner enrolled")}</p>
-                    <p class="text-xs text-base-content/60 mt-1">{gettext("Sarah M. joined \"Advanced Data Science\" course")}</p>
+                    <p class="text-sm font-semibold text-base-content">
+                      {gettext("New learner enrolled")}
+                    </p>
+                    <p class="text-xs text-base-content/60 mt-1">
+                      {gettext("Sarah M. joined \"Advanced Data Science\" course")}
+                    </p>
                     <p class="text-xs text-base-content/50 mt-1">{gettext("2 minutes ago")}</p>
                   </div>
                 </div>
@@ -220,8 +246,12 @@ defmodule LiveDashboardWeb.MainLive do
                     <.icon name="hero-check-circle" class="h-4 w-4 text-success" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-base-content">{gettext("Course completed")}</p>
-                    <p class="text-xs text-base-content/60 mt-1">{gettext("John D. finished \"Introduction to Machine Learning\"")}</p>
+                    <p class="text-sm font-semibold text-base-content">
+                      {gettext("Course completed")}
+                    </p>
+                    <p class="text-xs text-base-content/60 mt-1">
+                      {gettext("John D. finished \"Introduction to Machine Learning\"")}
+                    </p>
                     <p class="text-xs text-base-content/50 mt-1">{gettext("15 minutes ago")}</p>
                   </div>
                 </div>
@@ -230,8 +260,12 @@ defmodule LiveDashboardWeb.MainLive do
                     <.icon name="hero-academic-cap" class="h-4 w-4 text-info" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-base-content">{gettext("Assignment submitted")}</p>
-                    <p class="text-xs text-base-content/60 mt-1">{gettext("Emma L. submitted \"Week 3 Project\"")}</p>
+                    <p class="text-sm font-semibold text-base-content">
+                      {gettext("Assignment submitted")}
+                    </p>
+                    <p class="text-xs text-base-content/60 mt-1">
+                      {gettext("Emma L. submitted \"Week 3 Project\"")}
+                    </p>
                     <p class="text-xs text-base-content/50 mt-1">{gettext("1 hour ago")}</p>
                   </div>
                 </div>

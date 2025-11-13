@@ -29,6 +29,10 @@ defmodule LiveDashboardWeb.Router do
     live "/", MainLive
 
     live "/regions", RegionsLive
+
+    live "/schools", SchoolsLive
+
+    live "/regions/:region_id/schools", SchoolsRegionLive
   end
 
   # Other scopes may use custom stacks.
