@@ -46,7 +46,7 @@ defmodule LiveDashboardWeb.MainLive do
   def render(assigns) do
     ~H"""
     <Layouts.dashboard flash={@flash}>
-      <section class="min-h-screen bg-base-200 px-6 py-10 sm:px-10 lg:px-16 xl:px-20">
+      <section class="px-6 py-10 sm:px-10 lg:px-16 xl:px-20">
         <header class="flex flex-col gap-6 rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-base-100 px-8 py-10 shadow-lg transition-shadow duration-300 hover:shadow-xl sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p class="text-sm font-semibold uppercase tracking-[0.35em] text-primary/70">Live Overview</p>
