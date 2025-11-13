@@ -103,3 +103,28 @@
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
 /* This file is for your main application CSS */
+
+/* Sidebar menu styles */
+.menu-section {
+  @apply rounded-lg;
+}
+
+.menu-section-header {
+  @apply flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-base-content/70 hover:bg-base-200 hover:text-base-content transition-colors duration-200;
+}
+
+.menu-section-content {
+  @apply overflow-hidden transition-all duration-300 ease-in-out;
+}
+
+.menu-section-content:not(.hidden) {
+  @apply opacity-100 max-h-96;
+}
+
+.menu-item {
+  @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-base-content/70 hover:bg-base-200 hover:text-base-content transition-colors duration-200;
+}
+
+.menu-item.active {
+  @apply bg-primary/10 text-primary font-medium;
+}
