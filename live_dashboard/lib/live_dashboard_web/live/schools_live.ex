@@ -25,6 +25,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Gymnázium Jana Nerudy",
       region_id: "praha",
       region_name: "Praha",
+      municipality: "Praha 1",
       type: "Gymnázium",
       students: 450
     },
@@ -33,14 +34,43 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Základní škola U Školky",
       region_id: "praha",
       region_name: "Praha",
+      municipality: "Praha 2",
       type: "Základní škola",
       students: 320
+    },
+    %{
+      id: 16,
+      name: "Střední škola Praha 3",
+      region_id: "praha",
+      region_name: "Praha",
+      municipality: "Praha 3",
+      type: "Střední škola",
+      students: 400
+    },
+    %{
+      id: 17,
+      name: "Gymnázium Praha 4",
+      region_id: "praha",
+      region_name: "Praha",
+      municipality: "Praha 4",
+      type: "Gymnázium",
+      students: 350
+    },
+    %{
+      id: 18,
+      name: "Základní škola Praha 5",
+      region_id: "praha",
+      region_name: "Praha",
+      municipality: "Praha 5",
+      type: "Základní škola",
+      students: 280
     },
     %{
       id: 3,
       name: "Střední průmyslová škola",
       region_id: "stredocesky",
       region_name: "Středočeský",
+      municipality: "Kolín",
       type: "Střední škola",
       students: 280
     },
@@ -49,6 +79,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Gymnázium České Budějovice",
       region_id: "jihocesky",
       region_name: "Jihočeský",
+      municipality: "České Budějovice",
       type: "Gymnázium",
       students: 380
     },
@@ -57,6 +88,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Základní škola Plzeň",
       region_id: "plzensky",
       region_name: "Plzeňský",
+      municipality: "Plzeň",
       type: "Základní škola",
       students: 290
     },
@@ -65,6 +97,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Technická univerzita Liberec",
       region_id: "liberecky",
       region_name: "Liberecký",
+      municipality: "Liberec",
       type: "Vysoká škola",
       students: 5200
     },
@@ -73,6 +106,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Gymnázium Hradec Králové",
       region_id: "kralovehradecky",
       region_name: "Královéhradecký",
+      municipality: "Hradec Králové",
       type: "Gymnázium",
       students: 410
     },
@@ -81,6 +115,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Univerzita Pardubice",
       region_id: "pardubicky",
       region_name: "Pardubický",
+      municipality: "Pardubice",
       type: "Vysoká škola",
       students: 8900
     },
@@ -89,6 +124,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Střední škola Jihlava",
       region_id: "vysocina",
       region_name: "Vysočina",
+      municipality: "Jihlava",
       type: "Střední škola",
       students: 350
     },
@@ -97,6 +133,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Masarykova univerzita",
       region_id: "jihomoravsky",
       region_name: "Jihomoravský",
+      municipality: "Brno",
       type: "Vysoká škola",
       students: 32000
     },
@@ -105,6 +142,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Univerzita Palackého",
       region_id: "olomoucky",
       region_name: "Olomoucký",
+      municipality: "Olomouc",
       type: "Vysoká škola",
       students: 21000
     },
@@ -113,6 +151,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Univerzita Tomáše Bati",
       region_id: "zlinsky",
       region_name: "Zlínský",
+      municipality: "Zlín",
       type: "Vysoká škola",
       students: 9200
     },
@@ -121,6 +160,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Ostravská univerzita",
       region_id: "moravskoslezsky",
       region_name: "Moravskoslezský",
+      municipality: "Ostrava",
       type: "Vysoká škola",
       students: 9800
     },
@@ -129,6 +169,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Vysoká škola báňská",
       region_id: "moravskoslezsky",
       region_name: "Moravskoslezský",
+      municipality: "Ostrava",
       type: "Vysoká škola",
       students: 15600
     },
@@ -137,6 +178,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
       name: "Základní škola Ostrava",
       region_id: "moravskoslezsky",
       region_name: "Moravskoslezský",
+      municipality: "Ostrava",
       type: "Základní škola",
       students: 275
     }
@@ -153,6 +195,9 @@ defmodule LiveDashboardWeb.SchoolsLive do
       |> assign(:regions, @regions)
       |> assign(:schools, @schools)
       |> assign(:search_query, "")
+      |> assign(:selected_region, "")
+      |> assign(:selected_type, "")
+      |> assign(:selected_municipality, "")
       |> assign(:filtered_schools, @schools)
 
     {:ok, socket}
@@ -165,29 +210,46 @@ defmodule LiveDashboardWeb.SchoolsLive do
   end
 
   @impl true
-  def handle_event("search", %{"query" => query}, socket) do
-    filtered_schools = filter_schools(@schools, query)
+  def handle_event(
+        "filter",
+        %{"query" => query, "region" => region, "type" => type, "municipality" => municipality},
+        socket
+      ) do
+    filtered_schools = filter_schools(@schools, query, region, type, municipality)
 
     socket =
       socket
       |> assign(:search_query, query)
+      |> assign(:selected_region, region)
+      |> assign(:selected_type, type)
+      |> assign(:selected_municipality, municipality)
       |> assign(:filtered_schools, filtered_schools)
 
     {:noreply, socket}
   end
 
-  defp filter_schools(schools, query) do
-    query = String.downcase(query)
+  defp filter_schools(schools, query, region, type, municipality) do
+    query = String.downcase(String.trim(query))
+    region = String.trim(region)
+    type = String.trim(type)
+    municipality = String.trim(municipality)
 
-    if String.trim(query) == "" do
-      schools
-    else
-      Enum.filter(schools, fn school ->
-        String.contains?(String.downcase(school.name), query) or
+    Enum.filter(schools, fn school ->
+      matches_query =
+        query == "" or
+          String.contains?(String.downcase(school.name), query) or
           String.contains?(String.downcase(school.region_name), query) or
-          String.contains?(String.downcase(school.type), query)
-      end)
-    end
+          String.contains?(String.downcase(school.type), query) or
+          String.contains?(String.downcase(school.municipality), query)
+
+      matches_region = region == "" or school.region_id == region
+
+      matches_type = type == "" or school.type == type
+
+      matches_municipality = municipality == "" or school.municipality == municipality
+
+      matches_query and matches_region and matches_type and matches_municipality
+    end)
   end
 
   @impl true
@@ -206,27 +268,76 @@ defmodule LiveDashboardWeb.SchoolsLive do
           </p>
         </header>
         
-    <!-- Search Bar -->
+    <!-- Search and Filters -->
         <div class="mb-8">
-          <div class="max-w-lg mx-auto">
-            <label class="input input-bordered input-lg flex items-center gap-2">
-              <.icon name="hero-magnifying-glass" class="w-6 h-6 text-base-content/60" />
-              <input
-                type="text"
-                class="grow text-lg"
-                placeholder={gettext("Search schools by name, region, or type...")}
-                phx-keyup="search"
-                phx-value-query={@search_query}
-                value={@search_query}
-              />
-            </label>
+          <div class="max-w-6xl mx-auto bg-base-100 p-6 rounded-3xl border border-base-300/70 shadow-sm">
+            <.form for={%{}} phx-change="filter" phx-submit="filter" class="space-y-4">
+              <div class="grid gap-4 md:grid-cols-4">
+                <label class="input input-bordered input-lg flex items-center gap-2">
+                  <.icon name="hero-magnifying-glass" class="w-6 h-6 text-base-content/60" />
+                  <input
+                    type="text"
+                    name="query"
+                    class="grow text-lg"
+                    placeholder={gettext("Search by name, region, municipality...")}
+                    value={@search_query}
+                  />
+                </label>
+                <select name="region" class="select select-bordered select-lg">
+                  <option value="">{gettext("All Regions")}</option>
+                  <option
+                    :for={region <- @regions}
+                    value={region.id}
+                    selected={@selected_region == region.id}
+                  >
+                    {region.name}
+                  </option>
+                </select>
+                <select name="municipality" class="select select-bordered select-lg">
+                  <option value="">{gettext("All Municipalities")}</option>
+                  <option
+                    :for={
+                      mun <-
+                        Enum.uniq_by(@schools, & &1.municipality)
+                        |> Enum.map(& &1.municipality)
+                        |> Enum.sort()
+                    }
+                    value={mun}
+                    selected={@selected_municipality == mun}
+                  >
+                    {mun}
+                  </option>
+                </select>
+                <select name="type" class="select select-bordered select-lg">
+                  <option value="">{gettext("All Types")}</option>
+                  <option value="Gymnázium" selected={@selected_type == "Gymnázium"}>
+                    {gettext("Gymnázium")}
+                  </option>
+                  <option value="Základní škola" selected={@selected_type == "Základní škola"}>
+                    {gettext("Základní škola")}
+                  </option>
+                  <option value="Střední škola" selected={@selected_type == "Střední škola"}>
+                    {gettext("Střední škola")}
+                  </option>
+                  <option value="Vysoká škola" selected={@selected_type == "Vysoká škola"}>
+                    {gettext("Vysoká škola")}
+                  </option>
+                </select>
+              </div>
+            </.form>
           </div>
         </div>
         
-    <!-- Search Results -->
-        <div :if={@search_query != ""} class="mb-8">
+    <!-- Filtered Schools -->
+        <div
+          :if={
+            @search_query != "" or @selected_region != "" or @selected_type != "" or
+              @selected_municipality != ""
+          }
+          class="mb-8"
+        >
           <h2 class="text-2xl font-bold text-base-content mb-4">
-            {gettext("Search Results")} ({length(@filtered_schools)})
+            {gettext("Filtered Schools")} ({length(@filtered_schools)})
           </h2>
 
           <div :if={@filtered_schools == []} class="text-center py-8">
@@ -248,7 +359,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
                   <div class="flex-1">
                     <h3 class="card-title text-lg">{school.name}</h3>
                     <p class="text-sm text-base-content/70 mt-1">
-                      {school.region_name} • {school.type}
+                      {school.region_name} • {school.municipality} • {school.type}
                     </p>
                   </div>
                   <div class="badge badge-primary badge-outline">
@@ -266,8 +377,11 @@ defmodule LiveDashboardWeb.SchoolsLive do
           </div>
         </div>
         
-    <!-- Regions Overview (shown when no search) -->
-        <div :if={@search_query == ""}>
+    <!-- Regions Overview (shown when no filters) -->
+        <div :if={
+          @search_query == "" and @selected_region == "" and @selected_type == "" and
+            @selected_municipality == ""
+        }>
           <h2 class="text-2xl font-bold text-base-content mb-6">
             {gettext("Browse by Region")}
           </h2>
@@ -286,11 +400,11 @@ defmodule LiveDashboardWeb.SchoolsLive do
                 </p>
                 <div class="flex gap-2">
                   <.link
-                    navigate={"/regions/#{region.id}/schools"}
+                    navigate={"/regions/#{region.id}/municipalities"}
                     class="btn btn-primary btn-sm flex-1"
                   >
-                    <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
-                    {gettext("View Schools")}
+                    <.icon name="hero-building-office" class="w-4 h-4 mr-2" />
+                    {gettext("View Municipalities")}
                   </.link>
                 </div>
               </div>

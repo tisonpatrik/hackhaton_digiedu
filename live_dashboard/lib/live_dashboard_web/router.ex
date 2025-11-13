@@ -32,6 +32,10 @@ defmodule LiveDashboardWeb.Router do
 
     live "/schools", SchoolsLive
 
+    live "/schools/all", SchoolsAllLive
+
+    live "/regions/:region_id/municipalities", MunicipalitiesLive
+
     live "/regions/:region_id/schools", SchoolsRegionLive
   end
 
