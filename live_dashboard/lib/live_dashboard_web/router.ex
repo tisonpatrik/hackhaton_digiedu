@@ -18,6 +18,8 @@ defmodule LiveDashboardWeb.Router do
     pipe_through :browser
 
     live "/", MainLive
+
+    live "/connect", ConnectLive
   end
 
   # Other scopes may use custom stacks.

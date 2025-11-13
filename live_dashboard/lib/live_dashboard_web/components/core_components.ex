@@ -393,6 +393,71 @@ defmodule LiveDashboardWeb.CoreComponents do
   end
 
   @doc """
+  Renders a graph/chart component using Chart.js.
+
+  The component accepts chart data from the backend and displays it as a graph.
+  Data should be in Chart.js format with labels and datasets.
+
+  ## Examples
+
+      <.graph
+        id="engagement-chart"
+        type="line"
+        data={%{
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+          datasets: [
+            %{
+              label: "Engagement",
+              data: [12, 19, 15, 25, 22],
+              borderColor: "rgb(75, 192, 192)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)"
+            }
+          ]
+        }}
+        height="h-64"
+      />
+
+  ## Attributes
+
+    * `id` - Required. Unique identifier for the chart canvas
+    * `type` - Chart type: "line", "bar", "pie", "doughnut", etc. Defaults to "line"
+    * `data` - Required. Chart data in Chart.js format (map with :labels and :datasets keys)
+    * `height` - CSS class for height (e.g., "h-64", "h-96"). Defaults to "h-64"
+    * `options` - Optional. Additional Chart.js options (map)
+  """
+  attr :id, :string, required: true, doc: "unique identifier for the chart"
+  attr :type, :string, default: "line", doc: "chart type: line, bar, pie, doughnut, etc."
+  attr :data, :map, required: true, doc: "chart data in Chart.js format"
+  attr :height, :string, default: "h-64", doc: "CSS class for chart height"
+  attr :options, :map, default: %{}, doc: "additional Chart.js options"
+  attr :class, :string, default: "", doc: "additional CSS classes"
+
+  def graph(assigns) do
+    # Convert Elixir map to JSON string for the hook
+    data_json = Jason.encode!(assigns.data)
+    options_json = Jason.encode!(assigns.options)
+
+    assigns =
+      assigns
+      |> assign(:data_json, data_json)
+      |> assign(:options_json, options_json)
+
+    ~H"""
+    <div
+      id={"chart-container-#{@id}"}
+      class={["relative", @height, @class]}
+      phx-hook="Chart"
+      phx-update="ignore"
+      data-chart-type={@type}
+      data-chart-data={@data_json}
+      data-chart-options={@options_json}
+    >
+      <canvas id={@id}></canvas>
+    </div>
+    """
+  end
+
+  @doc """
   Renders a [Heroicon](https://heroicons.com).
 
   Heroicons come in three styles – outline, solid, and mini.

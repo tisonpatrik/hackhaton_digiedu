@@ -3,7 +3,43 @@ defmodule LiveDashboardWeb.MainLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    # Initialize with chart data from backend
+    # Replace this with your actual backend data fetching logic
+    chart_data = get_engagement_chart_data()
+
+    socket =
+      socket
+      |> assign(:engagement_chart_data, chart_data)
+
     {:ok, socket}
+  end
+
+  # Replace this function with your actual backend data fetching
+  # This is a placeholder that demonstrates the expected data format
+  defp get_engagement_chart_data do
+    # Example data structure - replace with real backend call
+    # For example: YourBackend.get_engagement_data()
+    %{
+      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      datasets: [
+        %{
+          label: "Active Users",
+          data: [120, 190, 150, 250, 220, 180, 210],
+          borderColor: "rgb(59, 130, 246)",
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          tension: 0.4,
+          fill: true
+        },
+        %{
+          label: "Engagement Score",
+          data: [8.2, 8.5, 8.1, 8.9, 8.7, 8.3, 8.6],
+          borderColor: "rgb(16, 185, 129)",
+          backgroundColor: "rgba(16, 185, 129, 0.1)",
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    }
   end
 
   @impl true
@@ -111,13 +147,37 @@ defmodule LiveDashboardWeb.MainLive do
                   <.icon name="hero-ellipsis-horizontal" class="h-5 w-5" />
                 </button>
               </div>
-              <div class="h-64 flex items-center justify-center rounded-2xl bg-base-200/50 border-2 border-dashed border-base-300">
-                <div class="text-center">
-                  <.icon name="hero-chart-bar-square" class="h-12 w-12 mx-auto text-base-content/40 mb-3" />
-                  <p class="text-sm font-medium text-base-content/60">Chart visualization placeholder</p>
-                  <p class="text-xs text-base-content/50 mt-1">Connect API to display engagement trends over time</p>
-                </div>
-              </div>
+              <.graph
+                id="engagement-trends-chart"
+                type="line"
+                data={@engagement_chart_data}
+                height="h-64"
+                options={%{
+                  plugins: %{
+                    legend: %{
+                      display: true,
+                      position: "top"
+                    },
+                    tooltip: %{
+                      mode: "index",
+                      intersect: false
+                    }
+                  },
+                  scales: %{
+                    y: %{
+                      beginAtZero: true,
+                      grid: %{
+                        color: "rgba(0, 0, 0, 0.05)"
+                      }
+                    },
+                    x: %{
+                      grid: %{
+                        display: false
+                      }
+                    }
+                  }
+                }}
+              />
             </div>
 
             <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
