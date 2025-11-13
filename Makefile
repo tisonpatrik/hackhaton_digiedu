@@ -18,7 +18,7 @@ init: db-up
 	@cd $(LIVE_DASHBOARD_DIR) && $(MAKE) init
 
 .PHONY: run
-start: db-up
+run: db-up
 	@cd $(DATA_PROCESSING_DIR) && $(MAKE) run &
 	@cd $(LIVE_DASHBOARD_DIR) && $(MAKE) run
 
