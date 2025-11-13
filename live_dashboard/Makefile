@@ -9,3 +9,7 @@ run:
 .PHONY: build
 build:
 	mix assets.build
+
+.PHONY: migrate
+migrate:
+	mix ecto.migrate
