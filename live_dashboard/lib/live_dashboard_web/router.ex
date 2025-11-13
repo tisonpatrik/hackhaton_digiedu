@@ -19,7 +19,7 @@ defmodule LiveDashboardWeb.Router do
 
     live "/", MainLive
     get "/", PageController, :home
-    live "/uploads", UploadLive
+    live "/connect", ConnectLive
   end
 
   # Other scopes may use custom stacks.
