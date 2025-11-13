@@ -9,3 +9,25 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias LiveDashboard.Repo
+alias LiveDashboard.Schemas.Region
+
+regions_data = [
+  %{name: "Hlavní město Praha"},
+  %{name: "Středočeský kraj"},
+  %{name: "Jihočeský kraj"},
+  %{name: "Plzeňský kraj"},
+  %{name: "Karlovarský kraj"},
+  %{name: "Ústecký kraj"},
+  %{name: "Liberecký kraj"},
+  %{name: "Královéhradecký kraj"},
+  %{name: "Pardubický kraj"},
+  %{name: "Kraj Vysočina"},
+  %{name: "Jihomoravský kraj"},
+  %{name: "Olomoucký kraj"},
+  %{name: "Zlínský kraj"},
+  %{name: "Moravskoslezský kraj"}
+]
+
+Repo.insert_all(Region, regions_data)
