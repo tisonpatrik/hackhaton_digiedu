@@ -5,7 +5,10 @@ use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
-use models::{UploadFileError, UploadFileRequest, UploadFileResponse};
+use models::{
+    UploadFileError, UploadFileRequest, UploadFileResponse,
+    TranscribeRequest, TranscribeResponse, TranscribeError,
+};
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -24,15 +27,20 @@ async fn manual_hello() -> impl Responder {
 #[derive(OpenApi)]
 #[openapi(
     paths(
-        crate::handlers::upload_file
+        crate::handlers::upload_file,
+        crate::handlers::transcribe_audio
     ),
     components(schemas(
         UploadFileRequest,
         UploadFileResponse,
-        UploadFileError
+        UploadFileError,
+        TranscribeRequest,
+        TranscribeResponse,
+        TranscribeError
     )),
     tags(
-        (name = "Files", description = "File operations")
+        (name = "Files", description = "File operations"),
+        (name = "Audio", description = "Audio transcription operations")
     )
 )]
 struct ApiDoc;
@@ -60,6 +68,7 @@ async fn main() -> std::io::Result<()> {
             .service(hello)
             .service(echo)
             .service(handlers::upload_file)
+            .service(handlers::transcribe_audio)
             .route("/hey", web::get().to(manual_hello))
     })
     .bind((host.as_str(), port))?

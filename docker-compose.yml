@@ -60,6 +60,18 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  faster-whisper:
+    image: fedirz/faster-whisper-server:latest-cpu
+    container_name: faster_whisper
+    environment:
+      - WHISPER_MODEL=base
+    volumes:
+      - whisper_data:/root/.cache/huggingface
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   pgadmin-data:
+  whisper_data:
