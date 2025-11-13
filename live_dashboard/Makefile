@@ -1,21 +1,20 @@
 .PHONY: init
-init:
-	mix setup
-
-.PHONY: db-up
-db-up:
-	cd .. && docker-compose up -d postgres
-	@make migrate
-
-.PHONY: run
-run:
-	mix phx.server --open
 
 .PHONY: migrate
 migrate:
 	mix ecto.migrate
 
+init:
+	cd .. && docker-compose up -d postgres
+	mix setup
+	@make migrate
 
 .PHONY: build
 build:
 	mix assets.build
+
+.PHONY: run
+run:
+	mix phx.server --open
+
+
