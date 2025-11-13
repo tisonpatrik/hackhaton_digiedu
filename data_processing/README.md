@@ -1,26 +1,54 @@
 # Data Processing Service
 
-## Setup
+## Running with Docker
 
-1. Create `.env` file from `.env.example`:
+1. Start all services:
 ```bash
-cp .env.example .env
+cd .. && docker-compose up -d
 ```
 
-2. Adjust `.env` as needed (HOST, PORT)
-
-## Running
-
-Use the Makefile for common tasks:
-
+2. Check services are running:
 ```bash
-make run    # Start the server
-make build  # Build the project
-make test   # Run tests
-make stop   # Stop running server
+docker ps
+```
+
+3. Test the setup:
+```bash
+./test-docker.sh
+```
+
+Or test manually:
+```bash
+# Health check
+curl http://localhost:8080/
+
+# Test with audio file (will transcribe)
+curl -X POST http://localhost:8080/upload-file \
+  -H "Content-Type: application/json" \
+  -d '{"path": "/app/sample-audio/Monologue.ogg"}'
+
+# Test with non-audio file
+curl -X POST http://localhost:8080/upload-file \
+  -H "Content-Type: application/json" \
+  -d '{"path": "/app/Cargo.toml"}'
+```
+
+4. View logs:
+```bash
+docker-compose logs -f data_processing
+```
+
+5. Stop everything:
+```bash
+cd .. && docker-compose down
 ```
 
 ## API Documentation
 
-API documentation is available on Swagger UI:
-- http://localhost:8080/docs/
+Swagger UI: http://localhost:8080/docs/
+
+## How it works
+
+- Upload any file to `/upload-file`
+- If it's audio (mp3, wav, ogg, etc.) → automatically transcribes and returns transcript path
+- If it's not audio → just confirms file exists

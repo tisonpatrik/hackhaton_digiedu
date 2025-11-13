@@ -55,9 +55,13 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 8080
+      WHISPER_URL: http://faster-whisper:8000
+    volumes:
+      - data_processing_audio:/app/audio_files
+      - data_processing_transcripts:/app/transcripts
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
+      - faster-whisper
     restart: unless-stopped
 
   faster-whisper:
@@ -75,3 +79,5 @@ volumes:
   postgres_data:
   pgadmin-data:
   whisper_data:
+  data_processing_audio:
+  data_processing_transcripts:

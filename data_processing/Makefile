@@ -8,7 +8,6 @@ run:
 build:
 	cargo build
 
-
 .PHONY: test
 test:
 	cargo test

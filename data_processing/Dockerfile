@@ -22,7 +22,7 @@ FROM chef AS planner
 WORKDIR /app
 
 # když máš workspace, zkopíruj i další Cargo.toml
-COPY Cargo.toml Cargo.lock ./
+COPY Cargo.toml ./
 COPY src src
 
 # v případě workspace:
@@ -53,6 +53,6 @@ RUN cargo build --release --bin data_processing
 FROM gcr.io/distroless/cc-debian12 AS runtime
 WORKDIR /app
 COPY --from=builder /app/target/release/data_processing /app/data_processing
-USER 10001
+COPY --from=builder /app/sample-audio /app/sample-audio
 EXPOSE 8080
 ENTRYPOINT ["/app/data_processing"]

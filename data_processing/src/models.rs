@@ -13,6 +13,13 @@ pub struct UploadFileResponse {
     /// Status of the file check
     #[schema(example = "ok")]
     pub status: String,
+    /// Type of file detected
+    #[schema(example = "audio")]
+    pub file_type: String,
+    /// Path to transcript (only for audio files)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(example = "/app/transcripts/recording.txt")]
+    pub transcript_path: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
