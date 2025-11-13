@@ -1,0 +1,211 @@
+<Layouts.flash_group flash={@flash} />
+
+<section class="min-h-screen bg-base-200 px-6 py-10 sm:px-10 lg:px-16 xl:px-20">
+  <header class="flex flex-col gap-6 rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-base-100 px-8 py-10 shadow-lg transition-shadow duration-300 hover:shadow-xl sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.35em] text-primary/70">Live Overview</p>
+      <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
+        Learning Impact Dashboard
+      </h1>
+      <p class="mt-4 max-w-xl text-base leading-7 text-base-content/70">
+        Monitor adoption, engagement, and performance trends across your learning ecosystem.
+        These insights auto-refresh once we connect the live data pipeline.
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-2xl bg-base-100 px-5 py-3 text-sm font-semibold text-base-content shadow-sm transition hover:bg-base-300 hover:text-base-content/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        <.icon name="hero-arrow-path" class="h-4 w-4 animate-spin text-primary" />
+        Auto-sync pending
+      </button>
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-content shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        <.icon name="hero-bolt" class="h-4 w-4" />
+        Connect Data Source
+      </button>
+    </div>
+  </header>
+
+  <section class="mt-12 space-y-12">
+    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">Active Learners</span>
+          <span class="rounded-full bg-primary/10 p-2 text-primary">
+            <.icon name="hero-user-group" class="h-5 w-5" />
+          </span>
+        </div>
+        <p class="mt-6 text-3xl font-bold tracking-tight text-base-content">1,284</p>
+        <p class="mt-2 flex items-center gap-2 text-sm font-medium text-success">
+          <.icon name="hero-arrow-trending-up" class="h-4 w-4" />
+          12.4% vs last 7 days
+        </p>
+        <p class="mt-3 text-xs text-base-content/60">Upcoming: replace with real-time enrollment metrics.</p>
+      </article>
+
+      <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">Completion Rate</span>
+          <span class="rounded-full bg-secondary/10 p-2 text-secondary">
+            <.icon name="hero-check-badge" class="h-5 w-5" />
+          </span>
+        </div>
+        <p class="mt-6 text-3xl font-bold tracking-tight text-base-content">86%</p>
+        <p class="mt-2 flex items-center gap-2 text-sm font-medium text-warning">
+          <.icon name="hero-adjustments-horizontal" class="h-4 w-4" />
+          Stabilizing week over week
+        </p>
+        <p class="mt-3 text-xs text-base-content/60">Hook into course analytics to surface live completion data.</p>
+      </article>
+
+      <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">Avg. Session Length</span>
+          <span class="rounded-full bg-accent/10 p-2 text-accent">
+            <.icon name="hero-clock" class="h-5 w-5" />
+          </span>
+        </div>
+        <p class="mt-6 text-3xl font-bold tracking-tight text-base-content">42m</p>
+        <p class="mt-2 flex items-center gap-2 text-sm font-medium text-success">
+          <.icon name="hero-sparkles" class="h-4 w-4" />
+          +6 minutes since launch
+        </p>
+        <p class="mt-3 text-xs text-base-content/60">Pull telemetry data to track session depth across devices.</p>
+      </article>
+
+      <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">NPS Snapshot</span>
+          <span class="rounded-full bg-info/10 p-2 text-info">
+            <.icon name="hero-face-smile" class="h-5 w-5" />
+          </span>
+        </div>
+        <p class="mt-6 text-3xl font-bold tracking-tight text-base-content">+43</p>
+        <p class="mt-2 flex items-center gap-2 text-sm font-medium text-info">
+          <.icon name="hero-chat-bubble-left-right" class="h-4 w-4" />
+          89 new responses this month
+        </p>
+        <p class="mt-3 text-xs text-base-content/60">Sync survey responses for continuous learner sentiment.</p>
+      </article>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-7">
+      <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:shadow-lg lg:col-span-4">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-base-content">Engagement Trajectory</h2>
+            <p class="mt-1 text-sm text-base-content/60">
+              This sparkline will render real-time session data once the analytics feed is connected.
+            </p>
+          </div>
+          <select
+            name="timeframe"
+            class="w-full rounded-2xl border-0 bg-base-200 px-4 py-2 text-sm font-medium text-base-content shadow-inner transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:w-auto"
+          >
+            <option>Last 7 days</option>
+            <option>Last 30 days</option>
+            <option>Quarter to date</option>
+          </select>
+        </div>
+        <div class="mt-6 flex h-64 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/5 via-base-200 to-base-100 text-sm font-medium text-base-content/60">
+          <span class="animate-pulse">Interactive chart placeholder</span>
+        </div>
+      </div>
+
+      <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:shadow-lg lg:col-span-3">
+        <h2 class="text-lg font-semibold text-base-content">Top Learning Paths</h2>
+        <p class="mt-1 text-sm text-base-content/60">Showcase trending curriculums once the catalog API is available.</p>
+        <ul class="mt-6 space-y-4">
+          <li class="flex items-center justify-between gap-4 rounded-2xl bg-base-200/60 px-4 py-3 transition hover:bg-base-200">
+            <div>
+              <p class="font-semibold text-base-content">AI Literacy Sprint</p>
+              <p class="text-xs text-base-content/60">Projected completion in 5.2 days</p>
+            </div>
+            <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">482 learners</span>
+          </li>
+          <li class="flex items-center justify-between gap-4 rounded-2xl bg-base-200/60 px-4 py-3 transition hover:bg-base-200">
+            <div>
+              <p class="font-semibold text-base-content">Design Thinking Lab</p>
+              <p class="text-xs text-base-content/60">Average score 92%</p>
+            </div>
+            <span class="rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary">341 learners</span>
+          </li>
+          <li class="flex items-center justify-between gap-4 rounded-2xl bg-base-200/60 px-4 py-3 transition hover:bg-base-200">
+            <div>
+              <p class="font-semibold text-base-content">Leadership Mastery</p>
+              <p class="text-xs text-base-content/60">Live cohorts launching bi-weekly</p>
+            </div>
+            <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">285 learners</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:shadow-lg">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-base-content">Recent Activity</h2>
+          <p class="mt-1 text-sm text-base-content/60">
+            Replace this list with real user actions once the event stream is wired in.
+          </p>
+        </div>
+        <a
+          href="#"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-primary transition hover:text-primary/80"
+        >
+          View full timeline
+          <.icon name="hero-arrow-right" class="h-4 w-4" />
+        </a>
+      </div>
+      <div class="mt-6 overflow-hidden rounded-2xl border border-dashed border-base-300/60">
+        <ul class="divide-y divide-base-300/60 bg-base-100">
+          <li class="flex items-center gap-6 px-6 py-4 transition hover:bg-base-200/60">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <.icon name="hero-user-plus" class="h-5 w-5" />
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-base-content">New cohort onboarded</p>
+              <p class="text-xs text-base-content/60">78 learners invited to “AI Literacy Sprint”.</p>
+            </div>
+            <span class="text-xs font-medium text-base-content/50">2h ago</span>
+          </li>
+          <li class="flex items-center gap-6 px-6 py-4 transition hover:bg-base-200/60">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+              <.icon name="hero-academic-cap" class="h-5 w-5" />
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-base-content">Milestone unlocked</p>
+              <p class="text-xs text-base-content/60">Course completion rate surpassed 85% in week 6.</p>
+            </div>
+            <span class="text-xs font-medium text-base-content/50">Yesterday</span>
+          </li>
+          <li class="flex items-center gap-6 px-6 py-4 transition hover:bg-base-200/60">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
+              <.icon name="hero-presentation-chart-bar" class="h-5 w-5" />
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-base-content">Executive report drafted</p>
+              <p class="text-xs text-base-content/60">Auto-generated insights ready for leadership review.</p>
+            </div>
+            <span class="text-xs font-medium text-base-content/50">2 days ago</span>
+          </li>
+          <li class="flex items-center gap-6 px-6 py-4 transition hover:bg-base-200/60">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-info/10 text-info">
+              <.icon name="hero-envelope-open" class="h-5 w-5" />
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-base-content">Feedback window opened</p>
+              <p class="text-xs text-base-content/60">Invited 240 promoters &amp; detractors to new NPS survey.</p>
+            </div>
+            <span class="text-xs font-medium text-base-content/50">3 days ago</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</section>
+

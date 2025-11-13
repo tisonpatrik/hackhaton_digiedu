@@ -17,6 +17,7 @@ defmodule LiveDashboardWeb.Router do
   scope "/", LiveDashboardWeb do
     pipe_through :browser
 
+    get "/dashboard", DashboardController, :index
     get "/", PageController, :home
   end
 
@@ -32,7 +33,7 @@ defmodule LiveDashboardWeb.Router do
     scope "/" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: LiveDashboardWeb.Telemetry
+      live_dashboard "/dev/dashboard", metrics: LiveDashboardWeb.Telemetry
     end
   end
 
