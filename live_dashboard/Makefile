@@ -1,0 +1,11 @@
+.PHONY: init
+init:
+	mix setup
+
+.PHONY: run
+run:
+	mix phx.server
+
+.PHONY: build
+build:
+	mix assets.build
