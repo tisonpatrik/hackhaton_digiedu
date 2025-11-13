@@ -1,4 +1,4 @@
-defmodule LiveDashboardWeb.DashboardLive do
+defmodule LiveDashboardWeb.MainLive do
   use LiveDashboardWeb, :live_view
 
   @impl true

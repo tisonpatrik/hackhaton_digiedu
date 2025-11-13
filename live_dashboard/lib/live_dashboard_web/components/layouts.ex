@@ -90,12 +90,6 @@ defmodule LiveDashboardWeb.Layouts do
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
-            <a href="/" class="btn btn-ghost">Home</a>
-          </li>
-          <li>
-            <a href="/dashboard" class="btn btn-ghost">Dashboard</a>
-          </li>
-          <li>
             <.theme_toggle />
           </li>
         </ul>
