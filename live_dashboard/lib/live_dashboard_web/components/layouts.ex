@@ -147,21 +147,15 @@ defmodule LiveDashboardWeb.Layouts do
         <.menu_section title={gettext("Schools")} icon="hero-building-library">
           <:item>
             <.link navigate={~p"/schools"} class="menu-item">
-              <.icon name="hero-home" class="w-5 h-5" />
-              <span>{gettext("Overview")}</span>
+              <.icon name="hero-map" class="w-5 h-5" />
+              <span>{gettext("Browse by Region")}</span>
             </.link>
           </:item>
           <:item>
-            <a href="#" class="menu-item">
-              <.icon name="hero-plus" class="w-5 h-5" />
-              <span>{gettext("Add School")}</span>
-            </a>
-          </:item>
-          <:item>
-            <a href="#" class="menu-item">
-              <.icon name="hero-document-arrow-up" class="w-5 h-5" />
-              <span>{gettext("Upload Data")}</span>
-            </a>
+            <.link navigate={~p"/schools/all"} class="menu-item">
+              <.icon name="hero-building-library" class="w-5 h-5" />
+              <span>{gettext("See Schools")}</span>
+            </.link>
           </:item>
         </.menu_section>
 
