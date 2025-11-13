@@ -21,6 +21,7 @@ defmodule LiveDashboard.MixProject do
   def application do
     [
       mod: {LiveDashboard.Application, []},
+      applications: [:postgrex],
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -43,7 +44,7 @@ defmodule LiveDashboard.MixProject do
       {:phoenix, "~> 1.8.1"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.19.0"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 1.1.0"},
