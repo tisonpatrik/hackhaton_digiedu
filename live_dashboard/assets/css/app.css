@@ -128,3 +128,16 @@
 .menu-item.active {
   @apply bg-primary/10 text-primary font-medium;
 }
+
+/* MapLibre map styles */
+#map {
+  @apply rounded-xl overflow-hidden;
+}
+
+.maplibregl-popup-content {
+  @apply bg-base-100 text-base-content rounded-lg shadow-lg;
+}
+
+.maplibregl-ctrl {
+  @apply bg-base-100 text-base-content;
+}
