@@ -16,18 +16,18 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:251
-#: lib/live_dashboard_web/components/layouts.ex:263
+#: lib/live_dashboard_web/components/layouts.ex:264
+#: lib/live_dashboard_web/components/layouts.ex:276
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:258
+#: lib/live_dashboard_web/components/layouts.ex:271
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:246
+#: lib/live_dashboard_web/components/layouts.ex:259
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
@@ -37,303 +37,437 @@ msgstr ""
 msgid "close"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:128
+#: lib/live_dashboard_web/live/regions_live.ex:156
 #, elixir-autogen, elixir-format
 msgid "Active learners"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:136
+#: lib/live_dashboard_web/components/layouts.ex:126
 #, elixir-autogen, elixir-format
 msgid "Analytics"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:140
+#: lib/live_dashboard_web/live/regions_live.ex:169
 #, elixir-autogen, elixir-format
 msgid "Average session length"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:100
+#: lib/live_dashboard_web/live/regions_live.ex:125
 #, elixir-autogen, elixir-format
 msgid "Clear selection"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:85
+#: lib/live_dashboard_web/live/regions_live.ex:99
 #, elixir-autogen, elixir-format
 msgid "Click on a region in the map to view detailed report"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:134
+#: lib/live_dashboard_web/live/regions_live.ex:162
 #, elixir-autogen, elixir-format
 msgid "Completion rate"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:161
+#: lib/live_dashboard_web/components/layouts.ex:172
 #, elixir-autogen, elixir-format
 msgid "Configuration"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:146
+#: lib/live_dashboard_web/components/layouts.ex:136
 #, elixir-autogen, elixir-format
 msgid "Courses"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:127
+#: lib/live_dashboard_web/components/layouts.ex:117
 #, elixir-autogen, elixir-format
 msgid "Dashboard"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:152
+#: lib/live_dashboard_web/components/layouts.ex:142
 #, elixir-autogen, elixir-format
 msgid "Engagement"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:146
+#: lib/live_dashboard_web/live/regions_live.ex:176
 #, elixir-autogen, elixir-format
 msgid "Engagement score"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:93
+#: lib/live_dashboard_web/live/regions_live.ex:108
 #, elixir-autogen, elixir-format
 msgid "Map of Czech Republic"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:123
+#: lib/live_dashboard_web/components/layouts.ex:113
 #, elixir-autogen, elixir-format
 msgid "Menu"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:152
+#: lib/live_dashboard_web/live/regions_live.ex:182
 #, elixir-autogen, elixir-format
 msgid "Number of courses"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:158
+#: lib/live_dashboard_web/live/regions_live.ex:189
 #, elixir-autogen, elixir-format
 msgid "Number of institutions"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:131
+#: lib/live_dashboard_web/components/layouts.ex:121
+#: lib/live_dashboard_web/components/layouts.ex:151
 #, elixir-autogen, elixir-format
 msgid "Overview"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:117
+#: lib/live_dashboard_web/live/regions_live.ex:144
 #, elixir-autogen, elixir-format
 msgid "Region"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:82
+#: lib/live_dashboard_web/live/regions_live.ex:96
 #, elixir-autogen, elixir-format
 msgid "Regional Overview"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:140
+#: lib/live_dashboard_web/components/layouts.ex:130
 #, elixir-autogen, elixir-format
 msgid "Regions"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:167
+#: lib/live_dashboard_web/components/layouts.ex:178
 #, elixir-autogen, elixir-format
 msgid "Security"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:171
+#: lib/live_dashboard_web/live/regions_live.ex:206
 #, elixir-autogen, elixir-format
 msgid "Select a region in the map to view report"
 msgstr ""
 
-#: lib/live_dashboard_web/components/layouts.ex:157
+#: lib/live_dashboard_web/components/layouts.ex:168
 #, elixir-autogen, elixir-format
 msgid "Settings"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:125
+#: lib/live_dashboard_web/live/regions_live.ex:153
 #, elixir-autogen, elixir-format
 msgid "Statistics"
 msgstr ""
 
-#: lib/live_dashboard_web/live/regions_live.ex:142
+#: lib/live_dashboard_web/live/regions_live.ex:172
 #, elixir-autogen, elixir-format
 msgid "min"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:90
+#: lib/live_dashboard_web/live/main_live.ex:105
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Active Learners"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:74
+#: lib/live_dashboard_web/live/main_live.ex:88
 #, elixir-autogen, elixir-format
 msgid "Auto-sync pending"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:120
+#: lib/live_dashboard_web/live/main_live.ex:143
 #, elixir-autogen, elixir-format
 msgid "Avg. Session Length"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:105
+#: lib/live_dashboard_web/live/main_live.ex:124
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Completion Rate"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:81
+#: lib/live_dashboard_web/live/main_live.ex:95
 #, elixir-autogen, elixir-format
 msgid "Connect Data Source"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:42
-#: lib/live_dashboard_web/live/main_live.ex:135
+#: lib/live_dashboard_web/live/main_live.ex:52
+#: lib/live_dashboard_web/live/main_live.ex:162
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Engagement Score"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:152
+#: lib/live_dashboard_web/live/main_live.ex:182
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Engagement Trends"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:62
+#: lib/live_dashboard_web/live/main_live.ex:74
 #, elixir-autogen, elixir-format
 msgid "Learning Impact Dashboard"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:60
+#: lib/live_dashboard_web/live/main_live.ex:71
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Live Overview"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:65
+#: lib/live_dashboard_web/live/main_live.ex:77
 #, elixir-autogen, elixir-format
 msgid "Monitor adoption, engagement, and performance trends across your learning ecosystem. These insights auto-refresh once we connect the live data pipeline."
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:192
+#: lib/live_dashboard_web/live/main_live.ex:224
 #, elixir-autogen, elixir-format
 msgid "Recent Activity"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:143
+#: lib/live_dashboard_web/live/main_live.ex:171
 #, elixir-autogen, elixir-format
 msgid "+0.3 points this month"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:128
+#: lib/live_dashboard_web/live/main_live.ex:152
 #, elixir-autogen, elixir-format
 msgid "+6 minutes since launch"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:225
+#: lib/live_dashboard_web/live/main_live.ex:269
 #, elixir-autogen, elixir-format
 msgid "1 hour ago"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:98
+#: lib/live_dashboard_web/live/main_live.ex:114
 #, elixir-autogen, elixir-format
 msgid "12.4% vs last 7 days"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:215
+#: lib/live_dashboard_web/live/main_live.ex:255
 #, elixir-autogen, elixir-format
 msgid "15 minutes ago"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:205
+#: lib/live_dashboard_web/live/main_live.ex:241
 #, elixir-autogen, elixir-format
 msgid "2 minutes ago"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:34
+#: lib/live_dashboard_web/live/main_live.ex:44
 #, elixir-autogen, elixir-format
 msgid "Active Users"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:223
+#: lib/live_dashboard_web/live/main_live.ex:264
 #, elixir-autogen, elixir-format
 msgid "Assignment submitted"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:145
+#: lib/live_dashboard_web/live/main_live.ex:174
 #, elixir-autogen, elixir-format
 msgid "Composite metric from interactions, submissions, and time spent."
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:213
+#: lib/live_dashboard_web/live/main_live.ex:250
 #, elixir-autogen, elixir-format
 msgid "Course completed"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:224
+#: lib/live_dashboard_web/live/main_live.ex:267
 #, elixir-autogen, elixir-format
 msgid "Emma L. submitted \"Week 3 Project\""
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:28
+#: lib/live_dashboard_web/live/main_live.ex:38
 #, elixir-autogen, elixir-format
 msgid "Fri"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:115
+#: lib/live_dashboard_web/live/main_live.ex:136
 #, elixir-autogen, elixir-format
 msgid "Hook into course analytics to surface live completion data."
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:214
+#: lib/live_dashboard_web/live/main_live.ex:253
 #, elixir-autogen, elixir-format
 msgid "John D. finished \"Introduction to Machine Learning\""
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:24
+#: lib/live_dashboard_web/live/main_live.ex:34
 #, elixir-autogen, elixir-format
 msgid "Mon"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:203
+#: lib/live_dashboard_web/live/main_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "New learner enrolled"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:130
+#: lib/live_dashboard_web/live/main_live.ex:155
 #, elixir-autogen, elixir-format
 msgid "Pull telemetry data to track session depth across devices."
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:204
+#: lib/live_dashboard_web/live/main_live.ex:239
 #, elixir-autogen, elixir-format
 msgid "Sarah M. joined \"Advanced Data Science\" course"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:29
+#: lib/live_dashboard_web/live/main_live.ex:39
 #, elixir-autogen, elixir-format
 msgid "Sat"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:113
+#: lib/live_dashboard_web/live/main_live.ex:133
 #, elixir-autogen, elixir-format
 msgid "Stabilizing week over week"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:30
+#: lib/live_dashboard_web/live/main_live.ex:40
 #, elixir-autogen, elixir-format
 msgid "Sun"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:27
+#: lib/live_dashboard_web/live/main_live.ex:37
 #, elixir-autogen, elixir-format
 msgid "Thu"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:25
+#: lib/live_dashboard_web/live/main_live.ex:35
 #, elixir-autogen, elixir-format
 msgid "Tue"
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:100
+#: lib/live_dashboard_web/live/main_live.ex:117
 #, elixir-autogen, elixir-format
 msgid "Upcoming: replace with real-time enrollment metrics."
 msgstr ""
 
-#: lib/live_dashboard_web/live/main_live.ex:26
+#: lib/live_dashboard_web/live/main_live.ex:36
 #, elixir-autogen, elixir-format
 msgid "Wed"
+msgstr ""
+
+#: lib/live_dashboard_web/live/regions_live.ex:114
+#, elixir-autogen, elixir-format
+msgid "Reset map view"
+msgstr ""
+
+#: lib/live_dashboard_web/live/regions_live.ex:117
+#, elixir-autogen, elixir-format
+msgid "Reset view"
+msgstr ""
+
+#: lib/live_dashboard_web/components/layouts.ex:157
+#, elixir-autogen, elixir-format
+msgid "Add School"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:203
+#, elixir-autogen, elixir-format
+msgid "Manage educational institutions across regions. Select a region to view and manage schools."
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:285
+#, elixir-autogen, elixir-format
+msgid "Manage schools and educational institutions"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:200
+#, elixir-autogen, elixir-format
+msgid "School Management"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:305
+#, elixir-autogen, elixir-format
+msgid "School Management System"
+msgstr ""
+
+#: lib/live_dashboard_web/components/layouts.ex:147
+#: lib/live_dashboard_web/live/schools_region_live.ex:182
+#, elixir-autogen, elixir-format
+msgid "Schools"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:308
+#, elixir-autogen, elixir-format
+msgid "This feature will allow you to create school profiles, upload data files, and manage educational institutions across all regions."
+msgstr ""
+
+#: lib/live_dashboard_web/components/layouts.ex:163
+#, elixir-autogen, elixir-format
+msgid "Upload Data"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:293
+#, elixir-autogen, elixir-format
+msgid "View Schools"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:272
+#, elixir-autogen, elixir-format
+msgid "Browse by Region"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:236
+#, elixir-autogen, elixir-format
+msgid "No schools found matching your search."
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:229
+#, elixir-autogen, elixir-format
+msgid "Search Results"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:217
+#, elixir-autogen, elixir-format
+msgid "Search schools by name, region, or type..."
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:261
+#: lib/live_dashboard_web/live/schools_region_live.ex:238
+#, elixir-autogen, elixir-format
+msgid "View Details"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_live.ex:255
+#: lib/live_dashboard_web/live/schools_region_live.ex:227
+#, elixir-autogen, elixir-format
+msgid "students"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:259
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Add First School"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:268
+#, elixir-autogen, elixir-format
+msgid "Back to All Schools"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:200
+#, elixir-autogen, elixir-format
+msgid "Manage educational institutions in the"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:250
+#, elixir-autogen, elixir-format
+msgid "No Schools Found"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:197
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Schools in"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:253
+#, elixir-autogen, elixir-format
+msgid "There are currently no schools registered in the"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:200
+#, elixir-autogen, elixir-format, fuzzy
+msgid "region"
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:253
+#, elixir-autogen, elixir-format, fuzzy
+msgid "region."
+msgstr ""
+
+#: lib/live_dashboard_web/live/schools_region_live.ex:208
+#, elixir-autogen, elixir-format, fuzzy
+msgid "schools"
 msgstr ""

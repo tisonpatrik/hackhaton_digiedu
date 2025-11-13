@@ -104,7 +104,9 @@ defmodule LiveDashboardWeb.RegionsLive do
           <div class="lg:col-span-2">
             <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
               <div class="mb-6 flex items-center justify-between">
-                <h2 class="text-xl font-bold text-base-content">{gettext("Map of Czech Republic")}</h2>
+                <h2 class="text-xl font-bold text-base-content">
+                  {gettext("Map of Czech Republic")}
+                </h2>
                 <div class="flex items-center gap-2">
                   <button
                     phx-click="reset_map"
@@ -138,7 +140,9 @@ defmodule LiveDashboardWeb.RegionsLive do
             <div :if={@selected_region && @report_data} class="space-y-6">
               <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm">
                 <div class="mb-4 flex items-center justify-between">
-                  <h3 class="text-xl font-bold text-base-content">{gettext("Region")}: {@selected_region.name}</h3>
+                  <h3 class="text-xl font-bold text-base-content">
+                    {gettext("Region")}: {@selected_region.name}
+                  </h3>
                   <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
                     {@selected_region.code}
                   </span>
@@ -161,7 +165,9 @@ defmodule LiveDashboardWeb.RegionsLive do
                     </span>
                   </div>
                   <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">{gettext("Average session length")}</span>
+                    <span class="text-sm text-base-content/70">
+                      {gettext("Average session length")}
+                    </span>
                     <span class="text-lg font-bold text-base-content">
                       {@report_data.avg_session_length} {gettext("min")}
                     </span>
@@ -179,7 +185,9 @@ defmodule LiveDashboardWeb.RegionsLive do
                     </span>
                   </div>
                   <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">{gettext("Number of institutions")}</span>
+                    <span class="text-sm text-base-content/70">
+                      {gettext("Number of institutions")}
+                    </span>
                     <span class="text-lg font-bold text-base-content">
                       {@report_data.institutions_count}
                     </span>
@@ -188,7 +196,10 @@ defmodule LiveDashboardWeb.RegionsLive do
               </div>
             </div>
 
-            <div :if={!@selected_region} class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm">
+            <div
+              :if={!@selected_region}
+              class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm"
+            >
               <div class="text-center py-12">
                 <.icon name="hero-map" class="mx-auto h-12 w-12 text-base-content/30" />
                 <p class="mt-4 text-base text-base-content/70">

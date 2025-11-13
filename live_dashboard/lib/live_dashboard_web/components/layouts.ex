@@ -36,8 +36,7 @@ defmodule LiveDashboardWeb.Layouts do
   def app(assigns) do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
-      <div class="flex-1">
-      </div>
+      <div class="flex-1"></div>
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
@@ -81,8 +80,7 @@ defmodule LiveDashboardWeb.Layouts do
 
       <div class="flex flex-1 flex-col overflow-hidden">
         <header class="navbar px-4 sm:px-6 lg:px-8 border-b border-base-300">
-          <div class="flex-1">
-          </div>
+          <div class="flex-1"></div>
           <div class="flex-none">
             <ul class="flex flex-column px-1 space-x-4 items-center">
               <li>
@@ -146,6 +144,27 @@ defmodule LiveDashboardWeb.Layouts do
           </:item>
         </.menu_section>
 
+        <.menu_section title={gettext("Schools")} icon="hero-building-library">
+          <:item>
+            <.link navigate={~p"/schools"} class="menu-item">
+              <.icon name="hero-home" class="w-5 h-5" />
+              <span>{gettext("Overview")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <a href="#" class="menu-item">
+              <.icon name="hero-plus" class="w-5 h-5" />
+              <span>{gettext("Add School")}</span>
+            </a>
+          </:item>
+          <:item>
+            <a href="#" class="menu-item">
+              <.icon name="hero-document-arrow-up" class="w-5 h-5" />
+              <span>{gettext("Upload Data")}</span>
+            </a>
+          </:item>
+        </.menu_section>
+
         <.menu_section title={gettext("Settings")} icon="hero-cog-6-tooth">
           <:item>
             <a href="#" class="menu-item">
@@ -192,8 +211,10 @@ defmodule LiveDashboardWeb.Layouts do
         phx-click={
           JS.toggle(
             to: "##{@section_id}",
-            in: {"transition-all duration-300 ease-in-out", "opacity-0 max-h-0", "opacity-100 max-h-96"},
-            out: {"transition-all duration-300 ease-in-out", "opacity-100 max-h-96", "opacity-0 max-h-0"}
+            in:
+              {"transition-all duration-300 ease-in-out", "opacity-0 max-h-0", "opacity-100 max-h-96"},
+            out:
+              {"transition-all duration-300 ease-in-out", "opacity-100 max-h-96", "opacity-0 max-h-0"}
           )
           |> JS.toggle_class("rotate-180", to: "##{@chevron_id}")
         }
@@ -270,7 +291,10 @@ defmodule LiveDashboardWeb.Layouts do
 
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-      <div class={["absolute w-1/2 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 transition-[left]", @left_position]} />
+      <div class={[
+        "absolute w-1/2 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 transition-[left]",
+        @left_position
+      ]} />
 
       <button
         phx-click="set-locale"
