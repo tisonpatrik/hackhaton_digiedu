@@ -5,11 +5,11 @@ defmodule LiveDashboard.Repo.Migrations.CreateGuides do
     create table(:guides) do
       add :name, :string, null: false
       add :experience, :text
-      add :region_id, references(:regions, on_delete: :restrict), null: false
+      add :municipality_id, references(:municipalities, on_delete: :restrict), null: false
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:guides, [:region_id])
+    create index(:guides, [:municipality_id])
   end
 end
