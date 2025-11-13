@@ -37,10 +37,6 @@ defmodule LiveDashboardWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
-        </a>
       </div>
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
@@ -86,13 +82,12 @@ defmodule LiveDashboardWeb.Layouts do
       <div class="flex flex-1 flex-col overflow-hidden">
         <header class="navbar px-4 sm:px-6 lg:px-8 border-b border-base-300">
           <div class="flex-1">
-            <a href="/" class="flex w-fit items-center gap-2">
-              <img src={~p"/images/logo.svg"} width="36" />
-              <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
-            </a>
           </div>
           <div class="flex-none">
             <ul class="flex flex-column px-1 space-x-4 items-center">
+              <li>
+                <.locale_toggle />
+              </li>
               <li>
                 <.theme_toggle />
               </li>
@@ -117,51 +112,51 @@ defmodule LiveDashboardWeb.Layouts do
     ~H"""
     <aside class="w-64 bg-base-100 border-r border-base-300 flex flex-col">
       <div class="p-4 border-b border-base-300">
-        <h2 class="text-lg font-bold text-base-content">Menu</h2>
+        <h2 class="text-lg font-bold text-base-content">{gettext("Menu")}</h2>
       </div>
 
       <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-        <.menu_section title="Dashboard" icon="hero-home" default_open={true}>
+        <.menu_section title={gettext("Dashboard")} icon="hero-home" default_open={true}>
           <:item>
             <.link navigate={~p"/"} class="menu-item">
               <.icon name="hero-chart-bar" class="w-5 h-5" />
-              <span>Overview</span>
+              <span>{gettext("Overview")}</span>
             </.link>
           </:item>
         </.menu_section>
 
-        <.menu_section title="Analytics" icon="hero-chart-bar-square">
+        <.menu_section title={gettext("Analytics")} icon="hero-chart-bar-square">
           <:item>
-            <a href="#" class="menu-item">
-              <.icon name="hero-user-group" class="w-5 h-5" />
-              <span>Users</span>
-            </a>
+            <.link navigate={~p"/regions"} class="menu-item">
+              <.icon name="hero-map" class="w-5 h-5" />
+              <span>{gettext("Regions")}</span>
+            </.link>
           </:item>
           <:item>
             <a href="#" class="menu-item">
               <.icon name="hero-academic-cap" class="w-5 h-5" />
-              <span>Courses</span>
+              <span>{gettext("Courses")}</span>
             </a>
           </:item>
           <:item>
             <a href="#" class="menu-item">
               <.icon name="hero-clock" class="w-5 h-5" />
-              <span>Engagement</span>
+              <span>{gettext("Engagement")}</span>
             </a>
           </:item>
         </.menu_section>
 
-        <.menu_section title="Settings" icon="hero-cog-6-tooth">
+        <.menu_section title={gettext("Settings")} icon="hero-cog-6-tooth">
           <:item>
             <a href="#" class="menu-item">
               <.icon name="hero-wrench-screwdriver" class="w-5 h-5" />
-              <span>Configuration</span>
+              <span>{gettext("Configuration")}</span>
             </a>
           </:item>
           <:item>
             <a href="#" class="menu-item">
               <.icon name="hero-shield-check" class="w-5 h-5" />
-              <span>Security</span>
+              <span>{gettext("Security")}</span>
             </a>
           </:item>
         </.menu_section>
@@ -260,6 +255,38 @@ defmodule LiveDashboardWeb.Layouts do
         {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
+    </div>
+    """
+  end
+
+  @doc """
+  Provides language toggle between Czech and English.
+  """
+  def locale_toggle(assigns) do
+    current_locale = Gettext.get_locale(LiveDashboardWeb.Gettext)
+    left_position = if current_locale == "cs", do: "left-1/2", else: "left-0"
+
+    assigns = assign(assigns, :left_position, left_position)
+
+    ~H"""
+    <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
+      <div class={["absolute w-1/2 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 transition-[left]", @left_position]} />
+
+      <button
+        phx-click="set-locale"
+        phx-value-locale="en"
+        class="relative z-10 flex p-2 cursor-pointer w-1/2 items-center justify-center"
+      >
+        <span class="text-xs font-semibold text-white">EN</span>
+      </button>
+
+      <button
+        phx-click="set-locale"
+        phx-value-locale="cs"
+        class="relative z-10 flex p-2 cursor-pointer w-1/2 items-center justify-center"
+      >
+        <span class="text-xs font-semibold text-white">CS</span>
+      </button>
     </div>
     """
   end

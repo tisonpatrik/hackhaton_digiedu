@@ -8,6 +8,13 @@ defmodule LiveDashboardWeb.Router do
     plug :put_root_layout, html: {LiveDashboardWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :set_locale
+  end
+
+  defp set_locale(conn, _opts) do
+    locale = Plug.Conn.get_session(conn, "locale") || "en"
+    Gettext.put_locale(LiveDashboardWeb.Gettext, locale)
+    conn
   end
 
   pipeline :api do
@@ -17,9 +24,11 @@ defmodule LiveDashboardWeb.Router do
   scope "/", LiveDashboardWeb do
     pipe_through :browser
 
+    get "/set-locale/:locale", LocaleController, :set
+
     live "/", MainLive
 
-    live "/connect", ConnectLive
+    live "/regions", RegionsLive
   end
 
   # Other scopes may use custom stacks.
