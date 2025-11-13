@@ -4,7 +4,7 @@ init:
 
 .PHONY: run
 run:
-	mix phx.server
+	mix phx.server --open
 
 .PHONY: build
 build:
