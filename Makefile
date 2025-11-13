@@ -3,7 +3,7 @@ LIVE_DASHBOARD_DIR = live_dashboard
 
 .PHONY: db-up
 db-up:
-	docker-compose up -d postgres
+	docker-compose up -d
 
 .PHONY: db-down
 db-down:
@@ -29,6 +29,4 @@ build:
 
 .PHONY: down
 down:
-	@cd $(DATA_PROCESSING_DIR) && $(MAKE) down
-	@cd $(LIVE_DASHBOARD_DIR) && $(MAKE) down
 	@$(MAKE) db-down
