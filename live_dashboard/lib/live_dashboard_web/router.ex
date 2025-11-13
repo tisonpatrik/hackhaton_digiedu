@@ -18,7 +18,7 @@ defmodule LiveDashboardWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    live "/dashboard", DashboardLive, :index
+    live "/dashboard", DashboardLive
   end
 
   # Other scopes may use custom stacks.
@@ -33,7 +33,7 @@ defmodule LiveDashboardWeb.Router do
     scope "/" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: LiveDashboardWeb.Telemetry
+      live_dashboard "/dev/dashboard", metrics: LiveDashboardWeb.Telemetry
     end
   end
 
