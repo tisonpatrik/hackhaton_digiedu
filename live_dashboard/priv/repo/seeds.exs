@@ -20,4 +20,7 @@ IO.puts("✓ Schools seeded")
 Code.require_file("priv/repo/seeds/guides_projects.exs")
 IO.puts("✓ Guides and projects seeded")
 
+Code.require_file("priv/repo/seeds/exam_results.exs")
+IO.puts("✓ Exam results seeded")
+
 IO.puts("🎉 Database seeding completed successfully!")

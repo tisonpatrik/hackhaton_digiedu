@@ -2,6 +2,9 @@ defmodule LiveDashboardWeb.MainLive do
   use LiveDashboardWeb, :live_view
 
   alias LiveDashboard.Schemas.Region
+  alias LiveDashboard.Schemas.ExamResult
+  alias LiveDashboard.Schemas.School
+  alias LiveDashboard.Schemas.Municipality
   alias LiveDashboard.Repo
   alias LiveDashboard.Metrics
   alias LiveDashboardWeb.RegionHelpers
@@ -34,8 +37,8 @@ defmodule LiveDashboardWeb.MainLive do
     # Get recent activity
     recent_activity = Metrics.get_recent_activity()
 
-    # Generate chart data for selected regions
-    chart_data = get_engagement_chart_data(selected_region_ids, regions)
+    # Generate chart data for selected regions (exam results)
+    chart_data = get_exam_results_chart_data(selected_region_ids, regions)
 
     socket =
       socket
@@ -43,7 +46,7 @@ defmodule LiveDashboardWeb.MainLive do
       |> assign(:selected_region_ids, selected_region_ids)
       |> assign(:metrics, metrics)
       |> assign(:recent_activity, recent_activity)
-      |> assign(:engagement_chart_data, chart_data)
+      |> assign(:exam_results_chart_data, chart_data)
       |> assign(:region_dropdown_open, false)
 
     {:ok, socket}
@@ -77,13 +80,13 @@ defmodule LiveDashboardWeb.MainLive do
       # Ensure at least one region is selected
       selected_ids = if Enum.empty?(selected_ids), do: [List.first(socket.assigns.regions).id], else: selected_ids
 
-      # Generate chart data for selected regions
-      chart_data = get_engagement_chart_data(selected_ids, socket.assigns.regions)
+      # Generate chart data for selected regions (exam results)
+      chart_data = get_exam_results_chart_data(selected_ids, socket.assigns.regions)
 
       socket =
         socket
         |> assign(:selected_region_ids, selected_ids)
-        |> assign(:engagement_chart_data, chart_data)
+        |> assign(:exam_results_chart_data, chart_data)
 
       {:noreply, socket}
     else
@@ -94,12 +97,12 @@ defmodule LiveDashboardWeb.MainLive do
   def handle_event("select_all_regions", _params, socket) do
     # Select all regions
     selected_ids = Enum.map(socket.assigns.regions, & &1.id)
-    chart_data = get_engagement_chart_data(selected_ids, socket.assigns.regions)
+    chart_data = get_exam_results_chart_data(selected_ids, socket.assigns.regions)
 
     socket =
       socket
       |> assign(:selected_region_ids, selected_ids)
-      |> assign(:engagement_chart_data, chart_data)
+      |> assign(:exam_results_chart_data, chart_data)
 
     {:noreply, socket}
   end
@@ -112,12 +115,12 @@ defmodule LiveDashboardWeb.MainLive do
   def handle_event("deselect_all_regions", _params, socket) do
     # Deselect all, but keep at least one
     first_region_id = List.first(socket.assigns.regions).id
-    chart_data = get_engagement_chart_data([first_region_id], socket.assigns.regions)
+    chart_data = get_exam_results_chart_data([first_region_id], socket.assigns.regions)
 
     socket =
       socket
       |> assign(:selected_region_ids, [first_region_id])
-      |> assign(:engagement_chart_data, chart_data)
+      |> assign(:exam_results_chart_data, chart_data)
 
     {:noreply, socket}
   end
@@ -138,15 +141,15 @@ defmodule LiveDashboardWeb.MainLive do
     end
   end
 
-  # Generate engagement chart data comparing selected regions
-  defp get_engagement_chart_data(region_ids, all_regions) do
+  # Generate exam results chart data comparing selected regions
+  defp get_exam_results_chart_data(region_ids, all_regions) do
     # Filter regions to only selected ones
     selected_regions =
       all_regions
       |> Enum.filter(fn r -> r.id in region_ids end)
 
-    # Generate labels (last 7 days)
-    labels = generate_date_labels()
+    # Get exam dates for labels (last 7 exam periods)
+    labels = get_exam_date_labels()
 
     # Generate datasets for each selected region
     datasets =
@@ -157,9 +160,12 @@ defmodule LiveDashboardWeb.MainLive do
         colors = get_region_colors()
         color = Enum.at(colors, rem(index, length(colors)))
 
+        # Get exam results data for this region
+        data = get_region_exam_scores(region.id, labels)
+
         %{
           label: region.name,
-          data: generate_engagement_data(region.id),
+          data: data,
           borderColor: color.border,
           backgroundColor: color.background,
           tension: 0.4,
@@ -173,35 +179,113 @@ defmodule LiveDashboardWeb.MainLive do
     }
   end
 
-  defp generate_date_labels do
-    today = Date.utc_today()
+  # Get exam date labels (last 7 exam periods from database)
+  defp get_exam_date_labels do
+    # Get distinct exam dates from the database, ordered by date descending
+    exam_dates =
+      ExamResult
+      |> select([er], er.exam_date)
+      |> distinct(true)
+      |> order_by([er], desc: er.exam_date)
+      |> limit(7)
+      |> Repo.all()
+      |> Enum.reverse()
 
-    # Generate labels for last 7 days (6 days ago to today)
-    Enum.map(0..6, fn days_ago ->
-      date = Date.add(today, -days_ago)
-      format_date(date)
-    end)
-    |> Enum.reverse()
+    # If we have exam dates, use them; otherwise generate placeholder dates
+    if Enum.empty?(exam_dates) do
+      # Generate labels for last 7 exam periods (assuming monthly exams)
+      today = Date.utc_today()
+      Enum.map(6..0//-1, fn months_ago ->
+        date = Date.add(today, -months_ago * 30)
+        format_exam_date(date)
+      end)
+    else
+      Enum.map(exam_dates, &format_exam_date/1)
+    end
   end
 
-  defp format_date(date) do
-    # Format as "Mon 14" or similar
-    day_name = Calendar.strftime(date, "%a")
-    day_num = date.day
-    "#{day_name} #{day_num}"
+  defp format_exam_date(date) do
+    # Format as "Jan 2024" or similar
+    month_name = Calendar.strftime(date, "%b")
+    year = date.year
+    "#{month_name} #{year}"
   end
 
-  defp generate_engagement_data(region_id) do
-    # Generate mock engagement data based on region ID for consistency
-    # In a real app, this would query actual engagement metrics
-    # Use region_id as seed for consistent data
-    :rand.seed(:exs1024, {region_id, region_id * 2, region_id * 3})
-    base_value = rem(region_id, 100) + 50
-    Enum.map(0..6, fn i ->
-      # Add some variation but keep it consistent for the same region
-      variation = :rand.uniform(30) - 15
-      base_value + variation + (i * 2)
+  # Get average exam scores for a region across exam dates
+  defp get_region_exam_scores(region_id, exam_date_labels) do
+    # Get all exam dates we're interested in
+    exam_dates = parse_exam_dates(exam_date_labels)
+
+    # Query exam results for schools in this region
+    # Join: exam_results -> schools -> municipalities -> regions
+    # Calculate average score across all subjects for each exam date
+    query =
+      from er in ExamResult,
+        join: s in School,
+        on: er.school_id == s.id,
+        join: m in Municipality,
+        on: s.municipality_id == m.id,
+        where: m.region_id == ^region_id,
+        where: er.exam_date in ^exam_dates,
+        group_by: [er.exam_date],
+        select: %{
+          exam_date: er.exam_date,
+          avg_score: avg(er.average_score)
+        },
+        order_by: [er.exam_date]
+
+    results = Repo.all(query)
+
+    # Create a map of exam_date -> average_score
+    score_map =
+      results
+      |> Enum.map(fn %{exam_date: date, avg_score: score} ->
+        {date, Decimal.to_float(score)}
+      end)
+      |> Map.new()
+
+    # Return scores in the same order as labels, using 0 if no data
+    Enum.map(exam_dates, fn date ->
+      Map.get(score_map, date, 0.0)
     end)
+  end
+
+  # Parse exam date labels back to Date structs
+  defp parse_exam_dates(labels) do
+    Enum.map(labels, fn label ->
+      # Parse "Jan 2024" format
+      case Regex.run(~r/(\w+)\s+(\d{4})/, label) do
+        [_, month_str, year_str] ->
+          year = String.to_integer(year_str)
+          month = month_string_to_number(month_str)
+          Date.new!(year, month, 1)
+
+        _ ->
+          # Fallback: try to parse as date string
+          case Date.from_iso8601(label) do
+            {:ok, date} -> date
+            _ -> Date.utc_today()
+          end
+      end
+    end)
+  end
+
+  defp month_string_to_number(month_str) do
+    case String.downcase(month_str) do
+      "jan" -> 1
+      "feb" -> 2
+      "mar" -> 3
+      "apr" -> 4
+      "may" -> 5
+      "jun" -> 6
+      "jul" -> 7
+      "aug" -> 8
+      "sep" -> 9
+      "oct" -> 10
+      "nov" -> 11
+      "dec" -> 12
+      _ -> 1
+    end
   end
 
   defp get_region_colors do
@@ -343,7 +427,7 @@ defmodule LiveDashboardWeb.MainLive do
                   {gettext("Region Comparison")}
                 </h2>
                 <p class="text-sm text-base-content/60 mt-1">
-                  {gettext("Last 7 days engagement comparison")}
+                  {gettext("Student exam results by region")}
                 </p>
               </div>
 
@@ -422,9 +506,9 @@ defmodule LiveDashboardWeb.MainLive do
               </div>
 
               <.graph
-                id="engagement-trends-chart"
+                id="exam-results-chart"
                 type="line"
-                data={@engagement_chart_data}
+                data={@exam_results_chart_data}
                 height="h-64"
                 options={
                   %{
@@ -441,6 +525,11 @@ defmodule LiveDashboardWeb.MainLive do
                     scales: %{
                       y: %{
                         beginAtZero: true,
+                        max: 100,
+                        title: %{
+                          display: true,
+                          text: "Average Score (%)"
+                        },
                         grid: %{
                           color: "rgba(0, 0, 0, 0.05)"
                         }
