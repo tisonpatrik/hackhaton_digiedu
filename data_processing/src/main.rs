@@ -3,8 +3,11 @@ mod models;
 mod processors;
 mod injectors;
 mod file_types;
+mod gen_ai;
+mod prompts;
 
 use actix_web::{App, HttpServer, web};
+use sqlx::postgres::PgPoolOptions;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -53,10 +56,22 @@ async fn main() -> std::io::Result<()> {
     
     log::info!("Starting server on {}:{}", host, port);
     
+    let database_url = std::env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "postgres://postgres:postgres@localhost:5432/live_dashboard_dev".to_string());
+    
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&database_url)
+        .await
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, format!("Failed to connect to database: {}", e)))?;
+    
+    log::info!("Connected to database");
+    
     let openapi = ApiDoc::openapi();
     
     HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(pool.clone()))
             .wrap(actix_web::middleware::Logger::default())
             .wrap(
                 actix_cors::Cors::default()

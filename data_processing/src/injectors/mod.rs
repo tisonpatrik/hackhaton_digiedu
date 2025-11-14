@@ -1,4 +1,9 @@
-pub fn inject_document(_text: &str) -> Result<(), String> {
-    Err("Document injection not implemented".to_string())
-}
+mod db;
+mod document;
+mod chunk;
 
+pub use document::inject_document;
+pub use chunk::create_chunks_from_document;
+
+#[allow(unused_imports)]
+pub use chunk::TextChunk;

@@ -10,6 +10,7 @@ actix-cors = "0.7"
 futures-util = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+serde_yaml = "0.9"
 dotenv = "0.15"
 env_logger = "0.11"
 log = "0.4"
@@ -18,6 +19,11 @@ utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web"] }
 reqwest = { version = "0.12", features = ["json", "multipart", "native-tls-vendored"] }
 tokio = { version = "1", features = ["full"] }
 calamine = { version = "0.24", features = ["chrono"] }
+tiktoken-rs = "0.9.1"
+sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "tls-rustls-ring-webpki"] }
+uuid = { version = "1.10", features = ["v4"] }
+async-openai = "0.31.0-alpha.7"
+schemars = "0.8"
 
 [dev-dependencies]
 actix-rt = "2"
