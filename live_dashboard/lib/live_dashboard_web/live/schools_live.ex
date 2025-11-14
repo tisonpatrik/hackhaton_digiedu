@@ -135,24 +135,9 @@ defmodule LiveDashboardWeb.SchoolsLive do
     <Layouts.dashboard flash={@flash}>
       <div class="px-6 py-10 sm:px-10 lg:px-16 xl:px-20">
         <header class="mb-8">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
-                {gettext("All Schools")}
-              </h1>
-              <p class="mt-4 text-base leading-7 text-base-content/70">
-                {gettext(
-                  "Comprehensive list of all educational institutions with advanced search and filtering capabilities."
-                )}
-              </p>
-            </div>
-            <div class="hidden sm:block">
-              <.link navigate={~p"/schools/regions"} class="btn btn-outline">
-                <.icon name="hero-map" class="w-4 h-4 mr-2" />
-                {gettext("Browse by Region")}
-              </.link>
-            </div>
-          </div>
+          <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
+            {gettext("All Schools")}
+          </h1>
         </header>
 
     <!-- Search and Filters -->
@@ -310,42 +295,16 @@ defmodule LiveDashboardWeb.SchoolsLive do
             </div>
           </div>
 
-          <div :if={@filtered_schools != []} class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div
-              :for={school <- @filtered_schools}
-              class="card bg-base-100 shadow-sm border border-base-300/70 hover:shadow-lg transition-shadow"
-            >
-              <div class="card-body p-6">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex-1">
-                    <h3 class="card-title text-lg text-base-content mb-1">{school.name}</h3>
-                    <p class="text-sm text-base-content/70 mb-2">
-                      {school.type}
-                    </p>
-                    <p class="text-sm text-base-content/60">
-                      {(school.municipality && school.municipality.region &&
-                          school.municipality.region.name) || "Unknown Region"} • {(school.municipality &&
-                                                                                      school.municipality.name) ||
-                        "Unknown Municipality"}
-                    </p>
-                  </div>
-                  <div class="badge badge-primary badge-outline">
-                    {school.students || 0} {gettext("students")}
-                  </div>
+          <div :if={@filtered_schools != []} class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div :for={school <- @filtered_schools} class="group">
+              <.link
+                navigate={~p"/schools/#{school.id}"}
+                class="block"
+              >
+                <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
+                  <h3 class="text-2xl font-bold text-base-content">{school.name}</h3>
                 </div>
-
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-base-content/60">
-                    <.icon name="hero-map-pin" class="w-4 h-4 inline mr-1" />
-                    {school.municipality && school.municipality.region &&
-                      school.municipality.region.name}
-                  </div>
-                  <.link navigate={~p"/schools/#{school.id}"} class="btn btn-primary btn-sm">
-                    <.icon name="hero-eye" class="w-4 h-4 mr-2" />
-                    {gettext("View Details")}
-                  </.link>
-                </div>
-              </div>
+              </.link>
             </div>
           </div>
         </div>
@@ -359,49 +318,18 @@ defmodule LiveDashboardWeb.SchoolsLive do
             <h2 class="text-2xl font-bold text-base-content mb-4">
               {gettext("All Schools")} ({length(@schools)})
             </h2>
-            <p class="text-base text-base-content/70">
-              {gettext(
-                "Complete list of all educational institutions. Use the filters above to narrow down results."
-              )}
-            </p>
           </div>
 
-          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div
-              :for={school <- @schools}
-              class="card bg-base-100 shadow-sm border border-base-300/70 hover:shadow-lg transition-shadow"
-            >
-              <div class="card-body p-6">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex-1">
-                    <h3 class="card-title text-lg text-base-content mb-1">{school.name}</h3>
-                    <p class="text-sm text-base-content/70 mb-2">
-                      {school.type}
-                    </p>
-                    <p class="text-sm text-base-content/60">
-                      {(school.municipality && school.municipality.region &&
-                          school.municipality.region.name) || "Unknown Region"} • {(school.municipality &&
-                                                                                      school.municipality.name) ||
-                        "Unknown Municipality"}
-                    </p>
-                  </div>
-                  <div class="badge badge-primary badge-outline">
-                    {school.students || 0} {gettext("students")}
-                  </div>
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div :for={school <- @schools} class="group">
+              <.link
+                navigate={~p"/schools/#{school.id}"}
+                class="block"
+              >
+                <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
+                  <h3 class="text-2xl font-bold text-base-content">{school.name}</h3>
                 </div>
-
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-base-content/60">
-                    <.icon name="hero-map-pin" class="w-4 h-4 inline mr-1" />
-                    {school.municipality && school.municipality.region &&
-                      school.municipality.region.name}
-                  </div>
-                  <.link navigate={~p"/schools/#{school.id}"} class="btn btn-primary btn-sm">
-                    <.icon name="hero-eye" class="w-4 h-4 mr-2" />
-                    {gettext("View Details")}
-                  </.link>
-                </div>
-              </div>
+              </.link>
             </div>
           </div>
         </div>
