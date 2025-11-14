@@ -1,22 +1,11 @@
 defmodule LiveDashboardWeb.MunicipalitiesLive do
   use LiveDashboardWeb, :live_view
 
-  @regions [
-    %{id: "praha", name: "Praha", code: "A"},
-    %{id: "stredocesky", name: "Středočeský", code: "S"},
-    %{id: "jihocesky", name: "Jihočeský", code: "C"},
-    %{id: "plzensky", name: "Plzeňský", code: "P"},
-    %{id: "karlovarsky", name: "Karlovarský", code: "K"},
-    %{id: "ustecky", name: "Ústecký", code: "U"},
-    %{id: "liberecky", name: "Liberecký", code: "L"},
-    %{id: "kralovehradecky", name: "Královéhradecký", code: "H"},
-    %{id: "pardubicky", name: "Pardubický", code: "E"},
-    %{id: "vysocina", name: "Vysočina", code: "J"},
-    %{id: "jihomoravsky", name: "Jihomoravský", code: "B"},
-    %{id: "olomoucky", name: "Olomoucký", code: "M"},
-    %{id: "zlinsky", name: "Zlínský", code: "Z"},
-    %{id: "moravskoslezsky", name: "Moravskoslezský", code: "T"}
-  ]
+  import Ecto.Query
+
+  alias LiveDashboard.Repo
+  alias LiveDashboard.Schemas.Region
+  alias LiveDashboard.Schemas.Municipality
 
   @impl true
   def mount(%{"region_id" => region_id}, session, socket) do
@@ -24,10 +13,19 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
     locale = Map.get(session, "locale", "en")
     Gettext.put_locale(LiveDashboardWeb.Gettext, locale)
 
-    region = Enum.find(@regions, &(&1.id == region_id))
+    region = Repo.get_by(Region, slug: region_id)
 
-    # Mock municipalities for the region
-    municipalities = get_mock_municipalities(region_id)
+    municipalities =
+      if region do
+        Repo.all(
+          from m in Municipality,
+            where: m.region_id == ^region.id,
+            preload: [:schools]
+        )
+        |> Enum.map(&Map.put(&1, :schools_count, length(&1.schools)))
+      else
+        []
+      end
 
     socket =
       socket
@@ -41,36 +39,6 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
   def handle_event("set-locale", %{"locale" => locale}, socket) when locale in ["en", "cs"] do
     # Navigate to controller endpoint which updates session
     {:noreply, push_navigate(socket, to: ~p"/set-locale/#{locale}")}
-  end
-
-  defp get_mock_municipalities(region_id) do
-    # Mock municipalities based on region
-    case region_id do
-      "praha" ->
-        [
-          %{id: "praha1", name: "Praha 1", schools_count: 5},
-          %{id: "praha2", name: "Praha 2", schools_count: 8},
-          %{id: "praha3", name: "Praha 3", schools_count: 6}
-        ]
-
-      "stredocesky" ->
-        [
-          %{id: "kolin", name: "Kolín", schools_count: 3},
-          %{id: "kutna_hora", name: "Kutná Hora", schools_count: 4}
-        ]
-
-      "jihocesky" ->
-        [
-          %{id: "ceske_budejovice", name: "České Budějovice", schools_count: 7},
-          %{id: "jindrichuv_hradec", name: "Jindřichův Hradec", schools_count: 2}
-        ]
-
-      _ ->
-        [
-          %{id: "mock1", name: "Mock Municipality 1", schools_count: 5},
-          %{id: "mock2", name: "Mock Municipality 2", schools_count: 3}
-        ]
-    end
   end
 
   @impl true
@@ -95,7 +63,7 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
                 <div class="flex items-center">
                   <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
                   <.link
-                    navigate={"/regions/#{@region.id}/schools"}
+                    navigate={if @region, do: "/regions/#{@region.slug}/schools", else: "#"}
                     class="text-sm font-medium text-base-content/60 hover:text-base-content"
                   >
                     {@region.name}
@@ -116,13 +84,15 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
           <div class="flex items-center justify-between">
             <div>
               <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
-                {gettext("Municipalities in")} {@region.name}
+                {gettext("Municipalities in")} {if @region,
+                  do: @region.name,
+                  else: gettext("Unknown Region")}
               </h1>
               <p class="mt-4 text-base leading-7 text-base-content/70">
                 {gettext("Select a municipality to view schools")}
               </p>
             </div>
-            <div class="flex items-center gap-3">
+            <div :if={@region} class="flex items-center gap-3">
               <span class="badge badge-primary badge-lg">
                 {@region.code}
               </span>
@@ -156,7 +126,7 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
                   {@region.name}
                 </div>
                 <.link
-                  navigate={"/regions/#{@region.id}/schools"}
+                  navigate={if @region, do: "/regions/#{@region.slug}/schools", else: "#"}
                   class="btn btn-primary btn-sm"
                 >
                   <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
@@ -175,9 +145,9 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
               {gettext("No Municipalities Found")}
             </h3>
             <p class="text-base-content/60 mb-6">
-              {gettext("There are currently no municipalities registered in the")} {@region.name} {gettext(
-                "region."
-              )}
+              {gettext("There are currently no municipalities registered in the")} {if @region,
+                do: @region.name,
+                else: gettext("selected")} {gettext("region.")}
             </p>
             <button class="btn btn-primary">
               <.icon name="hero-plus" class="w-5 h-5 mr-2" />
