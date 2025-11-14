@@ -40,9 +40,12 @@ services:
       PHX_HOST: localhost
       PORT: 4000
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:-vffTTH35S9/LFbOFPSSs3GNuvVxEmFNT6DKgjW0D21PW0GK3Ums7N9xT0opaajN3}
+      DATA_PROCESSING_URL: http://data_processing:8080
     depends_on:
       postgres:
         condition: service_healthy
+      data_processing:
+        condition: service_started
     restart: unless-stopped
 
   data_processing:
@@ -59,6 +62,7 @@ services:
     volumes:
       - data_processing_audio:/app/audio_files
       - data_processing_transcripts:/app/transcripts
+      - data_processing_uploads:/app/uploads
     depends_on:
       - postgres
       - faster-whisper
@@ -81,3 +85,4 @@ volumes:
   whisper_data:
   data_processing_audio:
   data_processing_transcripts:
+  data_processing_uploads:

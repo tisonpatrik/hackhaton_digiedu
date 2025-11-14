@@ -2,13 +2,14 @@ mod handlers;
 mod models;
 mod processors;
 
-use actix_web::{App, HttpServer};
+use actix_web::{App, HttpServer, web};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
 use models::{
     UploadFileError, UploadFileRequest, UploadFileResponse,
     TranscribeRequest, TranscribeResponse, TranscribeError,
+    FileUploadResponse, FileUploadError,
 };
 
 #[derive(OpenApi)]
@@ -16,7 +17,8 @@ use models::{
     paths(
         crate::handlers::health::health,
         crate::handlers::upload_file::upload_file,
-        crate::handlers::transcribe::transcribe_audio
+        crate::handlers::transcribe::transcribe_audio,
+        crate::handlers::upload_multipart::upload_multipart_file
     ),
     components(schemas(
         UploadFileRequest,
@@ -24,7 +26,9 @@ use models::{
         UploadFileError,
         TranscribeRequest,
         TranscribeResponse,
-        TranscribeError
+        TranscribeError,
+        FileUploadResponse,
+        FileUploadError
     )),
     tags(
         (name = "Health", description = "Health check"),
@@ -52,6 +56,14 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(actix_web::middleware::Logger::default())
+            .wrap(
+                actix_cors::Cors::default()
+                    .allow_any_origin()
+                    .allow_any_method()
+                    .allow_any_header()
+                    .max_age(3600)
+            )
+            .app_data(web::PayloadConfig::new(500 * 1024 * 1024)) // 500MB max payload
             .service(
                 SwaggerUi::new("/docs/{_:.*}")
                     .url("/api-doc/openapi.json", openapi.clone())
@@ -59,7 +71,10 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::health::health)
             .service(handlers::upload_file::upload_file)
             .service(handlers::transcribe::transcribe_audio)
+            .service(handlers::upload_multipart::upload_multipart_file)
     })
+    .keep_alive(std::time::Duration::from_secs(600)) // 10 min keep-alive
+    .client_request_timeout(std::time::Duration::from_secs(600)) // 10 min timeout
     .bind((host.as_str(), port))?
     .run()
     .await

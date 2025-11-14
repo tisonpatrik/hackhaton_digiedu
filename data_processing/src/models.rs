@@ -9,6 +9,36 @@ pub struct UploadFileRequest {
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
+pub struct FileUploadResponse {
+    /// Status of the upload
+    #[schema(example = "ok")]
+    pub status: String,
+    /// Type of file detected
+    #[schema(example = "audio")]
+    pub file_type: String,
+    /// Original filename
+    #[schema(example = "recording.mp3")]
+    pub filename: String,
+    /// Path where file was saved
+    #[schema(example = "/app/audio_files/recording.mp3")]
+    pub file_path: String,
+    /// Transcript text (for audio files)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub transcript_text: Option<String>,
+    /// Path to transcript file (for audio files)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(example = "/app/transcripts/recording.txt")]
+    pub transcript_path: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct FileUploadError {
+    /// Error message
+    #[schema(example = "Failed to save file")]
+    pub error: String,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct UploadFileResponse {
     /// Status of the file check
     #[schema(example = "ok")]

@@ -10,6 +10,7 @@ RUN apt-get update && \
       make \
       git \
       curl \
+      ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 RUN cargo install cargo-chef --locked
@@ -50,7 +51,16 @@ RUN cargo build --release --bin data_processing
 ############################
 # 5) RUNTIME STAGE (MALÝ, BEZ TOOLCHAINU)
 ############################
-FROM gcr.io/distroless/cc-debian12 AS runtime
+FROM debian:bookworm-slim AS runtime
+
+# Install runtime dependencies including ffmpeg
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ca-certificates \
+      libssl3 \
+      ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=builder /app/target/release/data_processing /app/data_processing
 COPY --from=builder /app/sample-audio /app/sample-audio
