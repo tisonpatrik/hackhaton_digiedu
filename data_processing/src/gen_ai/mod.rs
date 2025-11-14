@@ -1,4 +1,4 @@
 mod client;
 
-pub use client::chat_completion;
+pub use client::extract_qa_structured;
 

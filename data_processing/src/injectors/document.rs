@@ -2,8 +2,8 @@ use sqlx::PgPool;
 
 use crate::injectors::db;
 use crate::injectors::create_chunks_from_document;
-use crate::gen_ai::chat_completion;
-use crate::prompts::{reformat_to_conversation_system, reformat_to_conversation_user};
+use crate::gen_ai::extract_qa_structured;
+use crate::prompts::{extract_qa_system, extract_qa_user};
 use crate::processors::tabular::TABULAR_RECORD_SEPARATOR;
 
 pub async fn inject_document(
@@ -37,41 +37,35 @@ pub async fn inject_document(
     let chunks = create_chunks_from_document(text, separator, TOKEN_SIZE, OVERLAP_TOKEN_SIZE)?;
     log::info!("Created {} chunks from document '{}'", chunks.len(), document_name);
     
-    // Process each chunk through chat completion for cleaning/reformatting
-    let mut cleaned_chunks = Vec::new();
+    let system_msg = extract_qa_system();
+    
     for (index, chunk) in chunks.iter().enumerate() {
         log::info!("Processing chunk {}/{} ({} tokens)", index + 1, chunks.len(), chunk.total_tokens);
         
-        let system_msg = reformat_to_conversation_system();
-        let user_msg = reformat_to_conversation_user(&chunk.text);
+        let user_msg = extract_qa_user(&chunk.text);
         
-        match chat_completion(system_msg, &user_msg).await {
-            Ok(cleaned_text) => {
-                cleaned_chunks.push(cleaned_text.clone());
-                
-                // Print preview of cleaned chunk
-                let preview = if cleaned_text.len() > 300 {
-                    &cleaned_text[..300]
-                } else {
-                    &cleaned_text
-                };
-                println!("\n=== Chunk {} Cleaned (first {} chars) ===", index + 1, preview.len());
-                println!("{}", preview);
-                if cleaned_text.len() > 300 {
-                    println!("... (truncated, total length: {} chars)\n", cleaned_text.len());
-                } else {
-                    println!("\n");
+        match extract_qa_structured(system_msg, &user_msg).await {
+            Ok(normalized) => {
+                println!("\n=== Chunk {} - Normalized Response ===", index + 1);
+                println!("Timestamp: {:?}", normalized.timestamp);
+                println!("QA pairs: {}", normalized.qa.len());
+                for (qa_index, qa) in normalized.qa.iter().enumerate() {
+                    println!("\n  QA {}:", qa_index + 1);
+                    if let Some(ref qid) = qa.question_id {
+                        println!("    Question ID: {}", qid);
+                    }
+                    println!("    Question: {}", qa.question_text);
+                    println!("    Answer: {}", qa.answer);
                 }
+                println!("\n");
             }
             Err(e) => {
-                log::warn!("Failed to clean chunk {}: {}", index + 1, e);
-                // Keep original chunk text if cleaning fails
-                cleaned_chunks.push(chunk.text.clone());
+                log::warn!("Failed to extract QA from chunk {}: {}", index + 1, e);
             }
         }
     }
     
-    log::info!("Successfully processed {} chunks through AI cleaning", cleaned_chunks.len());
+    log::info!("Successfully processed {} chunks", chunks.len());
     
     Ok(())
 }
