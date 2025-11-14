@@ -29,19 +29,12 @@ pub async fn transcribe_audio(req: web::Json<TranscribeRequest>) -> impl Respond
         });
     }
     
-    // Create audio_files and transcripts directories if they don't exist
-    let audio_dir = Path::new("./audio_files");
-    let transcripts_dir = Path::new("./transcripts");
+    // Create data directory if it doesn't exist
+    let data_dir = Path::new("/app/raw_data");
     
-    if let Err(e) = fs::create_dir_all(audio_dir) {
+    if let Err(e) = fs::create_dir_all(data_dir) {
         return HttpResponse::InternalServerError().json(TranscribeError {
-            error: format!("Failed to create audio directory: {}", e),
-        });
-    }
-    
-    if let Err(e) = fs::create_dir_all(transcripts_dir) {
-        return HttpResponse::InternalServerError().json(TranscribeError {
-            error: format!("Failed to create transcripts directory: {}", e),
+            error: format!("Failed to create data directory: {}", e),
         });
     }
     
@@ -51,7 +44,7 @@ pub async fn transcribe_audio(req: web::Json<TranscribeRequest>) -> impl Respond
         .unwrap_or("audio");
     
     // Copy audio file to shared volume
-    let dest_audio_path = audio_dir.join(filename);
+    let dest_audio_path = data_dir.join(filename);
     if let Err(e) = fs::copy(audio_path, &dest_audio_path) {
         return HttpResponse::InternalServerError().json(TranscribeError {
             error: format!("Failed to copy audio file: {}", e),
@@ -129,7 +122,7 @@ pub async fn transcribe_audio(req: web::Json<TranscribeRequest>) -> impl Respond
             .and_then(|s| s.to_str())
             .unwrap_or("transcript")
     );
-    let transcript_path = transcripts_dir.join(&transcript_filename);
+    let transcript_path = data_dir.join(&transcript_filename);
     
     let mut file = match fs::File::create(&transcript_path) {
         Ok(f) => f,

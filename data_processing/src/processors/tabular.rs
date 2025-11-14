@@ -1,9 +1,45 @@
 use std::path::Path;
 use std::fs;
 
+use calamine::{Reader, Data};
+
 use crate::file_types::is_tabular_extension;
 
 const MAX_FILE_SIZE: u64 = 50 * 1024 * 1024;
+
+fn parse_excel_file(file_path: &Path) -> Result<String, String> {
+    let mut workbook = calamine::open_workbook_auto(file_path)
+        .map_err(|e| format!("Failed to open Excel/ODS file: {}", e))?;
+    
+    let mut result = String::new();
+    
+    if let Some(Ok(range)) = workbook.worksheet_range_at(0) {
+        for row in range.rows() {
+            let row_text: Vec<String> = row
+                .iter()
+                .map(|cell| {
+                    match cell {
+                        Data::Empty => String::new(),
+                        Data::String(s) => s.clone(),
+                        Data::Float(f) => f.to_string(),
+                        Data::Int(i) => i.to_string(),
+                        Data::Bool(b) => b.to_string(),
+                        Data::Error(e) => format!("ERROR: {:?}", e),
+                        Data::DateTime(dt) => dt.to_string(),
+                        Data::DateTimeIso(dt) => dt.to_string(),
+                        Data::DurationIso(dt) => dt.clone(),
+                    }
+                })
+                .collect();
+            result.push_str(&row_text.join("\t"));
+            result.push('\n');
+        }
+    } else {
+        return Err("No worksheet found in Excel/ODS file".to_string());
+    }
+    
+    Ok(result)
+}
 
 pub async fn parse_tabular_file(file_path: &Path) -> Result<String, String> {
     if !file_path.exists() {
@@ -53,7 +89,7 @@ pub async fn parse_tabular_file(file_path: &Path) -> Result<String, String> {
                 .map_err(|e| format!("Failed to read YAML file: {}", e))?
         }
         "xlsx" | "xls" | "ods" => {
-            return Err("Excel/ODS file parsing not implemented".to_string());
+            parse_excel_file(file_path)?
         }
         _ => {
             return Err(format!("Unsupported tabular file format: {}", extension));
