@@ -63,6 +63,6 @@ RUN apt-get update && \
 
 WORKDIR /app
 COPY --from=builder /app/target/release/data_processing /app/data_processing
-COPY --from=builder /app/sample-audio /app/sample-audio
+COPY --from=builder /app/sample_data /app/sample_data
 EXPOSE 8080
 ENTRYPOINT ["/app/data_processing"]
