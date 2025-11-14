@@ -52,24 +52,24 @@ defmodule LiveDashboardWeb.SchoolsRegionsLive do
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
               <.link
-                navigate={~p"/schools"}
+                navigate={~p"/catalog/regions"}
                 class="inline-flex items-center text-sm font-medium text-base-content/60 hover:text-base-content"
               >
                 <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
-                {gettext("Schools")}
+                {gettext("Catalog")}
               </.link>
             </li>
             <li>
               <div class="flex items-center">
                 <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
                 <span class="text-sm font-medium text-base-content">
-                  {gettext("Browse by Region")}
+                  {gettext("Regions")}
                 </span>
               </div>
             </li>
           </ol>
         </nav>
-        
+
     <!-- Header -->
         <header class="mb-8">
           <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
@@ -79,47 +79,18 @@ defmodule LiveDashboardWeb.SchoolsRegionsLive do
             {gettext("Browse educational institutions organized by geographic regions")}
           </p>
         </header>
-        
+
     <!-- Regions Grid -->
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <div :for={region <- @regions} class="group">
-            <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
-              <div class="flex items-center justify-between mb-4">
+            <.link navigate={~p"/regions/#{region.slug}/municipalities"} class="block">
+              <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
                 <h3 class="text-xl font-bold text-base-content">{region.name}</h3>
-                <div class="flex items-center gap-2">
-                  <span class="badge badge-primary badge-outline">
-                    {region.schools_count} {gettext("schools")}
-                  </span>
-                  <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-                    {region.code}
-                  </span>
-                </div>
               </div>
-              <p class="text-sm text-base-content/60 mb-4">
-                {gettext("Explore")} {length(region.municipalities)} {gettext("municipalities and")} {region.schools_count} {gettext(
-                  "schools in this region"
-                )}
-              </p>
-              <div class="flex gap-2">
-                <.link
-                  navigate={~p"/regions/#{region.slug}/schools"}
-                  class="btn btn-primary btn-sm flex-1"
-                >
-                  <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
-                  {gettext("View Schools")}
-                </.link>
-                <.link
-                  navigate={~p"/regions/#{region.slug}/municipalities"}
-                  class="btn btn-outline btn-sm flex-1"
-                >
-                  <.icon name="hero-building-office" class="w-4 h-4 mr-2" />
-                  {gettext("Municipalities")}
-                </.link>
-              </div>
-            </div>
+            </.link>
           </div>
         </div>
-        
+
     <!-- Stats Summary -->
         <div class="mt-12 rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
           <h2 class="text-xl font-bold text-base-content mb-6">
