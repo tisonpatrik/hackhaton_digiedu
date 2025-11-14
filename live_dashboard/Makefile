@@ -4,6 +4,10 @@
 migrate:
 	mix ecto.migrate
 
+.PHONY: drop
+drop:
+	mix ecto.drop
+
 init:
 	cd .. && docker-compose up -d postgres
 	mix setup

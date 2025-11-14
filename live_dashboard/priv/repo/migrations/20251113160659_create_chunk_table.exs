@@ -7,7 +7,7 @@ defmodule LiveDashboard.Repo.Migrations.CreateChunkTable do
     create table("chunk", primary_key: false) do
       add :document_name, :string, size: 1024, null: false, primary_key: true
       add :content, :text, null: false
-      add :embedding, :"vector(1536)"
+      add :embedding, :"vector(1024)"
       add :labels, {:array, :smallint}
       add :created_at, :utc_datetime, default: fragment("CURRENT_TIMESTAMP")
     end

@@ -1,7 +1,19 @@
 // Use direct HTTP request to Mistral API for custom model support
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::sync::OnceLock;
 use crate::models::NormalizedResponse;
+
+static HTTP_CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
+
+fn get_client() -> &'static reqwest::Client {
+    HTTP_CLIENT.get_or_init(|| {
+        reqwest::Client::builder()
+            .timeout(std::time::Duration::from_secs(60))
+            .build()
+            .expect("Failed to create HTTP client")
+    })
+}
 
 #[derive(Serialize)]
 struct ChatRequest {
@@ -39,14 +51,12 @@ pub async fn extract_qa_structured(
     system_message: &str,
     user_message: &str,
 ) -> Result<NormalizedResponse, String> {
-    let api_key = std::env::var("API_KEY")
-        .or_else(|_| std::env::var("API_KEYS"))
-        .or_else(|_| std::env::var("MISTRAL_API_KEY"))
+    let api_key = std::env::var("MISTRAL_API_KEY")
         .map_err(|_| {
-            "API_KEY, API_KEYS, or MISTRAL_API_KEY environment variable not set. Please set it in your .env file or environment variables.".to_string()
+            "MISTRAL_API_KEY environment variable not set. Please set it in your .env file or environment variables.".to_string()
         })?;
     
-    let client = reqwest::Client::new();
+    let client = get_client();
     let model_name = "mistral-small-2506";
     
     let json_schema = json!({
@@ -82,9 +92,15 @@ pub async fn extract_qa_structured(
                     "required": ["question_text", "answer"],
                     "additionalProperties": false
                 }
+            },
+            "topic_labels": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
             }
         },
-        "required": ["raw_input", "qa"],
+        "required": ["raw_input", "qa", "topic_labels"],
         "additionalProperties": false
     });
     
@@ -111,7 +127,7 @@ pub async fn extract_qa_structured(
         ],
         temperature: 0.1,
         top_p: 1.0,
-        max_tokens: Some(4000),
+        max_tokens: Some(16000),
         response_format: Some(response_format),
     };
     
@@ -147,4 +163,64 @@ pub async fn extract_qa_structured(
         .map_err(|e| format!("Failed to parse structured response: {}", e))?;
     
     Ok(normalized)
+}
+
+#[derive(Serialize)]
+struct EmbedRequest {
+    model: String,
+    input: Vec<String>,
+}
+
+#[derive(Deserialize)]
+struct EmbedResponse {
+    data: Vec<EmbedData>,
+}
+
+#[derive(Deserialize)]
+struct EmbedData {
+    embedding: Vec<f32>,
+}
+
+pub async fn create_embedding(text: &str) -> Result<Vec<f32>, String> {
+    let api_key = std::env::var("MISTRAL_API_KEY")
+        .map_err(|_| {
+            "MISTRAL_API_KEY environment variable not set. Please set it in your .env file or environment variables.".to_string()
+        })?;
+    
+    let client = get_client();
+    let model_name = "mistral-embed";
+    
+    let request = EmbedRequest {
+        model: model_name.to_string(),
+        input: vec![text.to_string()],
+    };
+    
+    let response = client
+        .post("https://api.mistral.ai/v1/embeddings")
+        .header("Authorization", format!("Bearer {}", api_key))
+        .header("Content-Type", "application/json")
+        .json(&request)
+        .send()
+        .await
+        .map_err(|e| format!("Failed to send request to Mistral Embed API: {}", e))?;
+    
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(format!("Mistral Embed API error ({}): {}", status, error_body));
+    }
+    
+    let embed_response: EmbedResponse = response
+        .json()
+        .await
+        .map_err(|e| format!("Failed to parse embedding response: {}", e))?;
+    
+    let embedding = embed_response
+        .data
+        .first()
+        .ok_or("No embedding data in response")?
+        .embedding
+        .clone();
+    
+    Ok(embedding)
 }
