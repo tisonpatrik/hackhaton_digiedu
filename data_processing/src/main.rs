@@ -1,7 +1,8 @@
 mod handlers;
 mod models;
+mod processors;
 
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpServer};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -10,25 +11,12 @@ use models::{
     TranscribeRequest, TranscribeResponse, TranscribeError,
 };
 
-#[utoipa::path(
-    get,
-    path = "/health",
-    responses(
-        (status = 200, description = "Service is healthy")
-    ),
-    tag = "Health"
-)]
-#[get("/health")]
-async fn health() -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({"status": "ok"}))
-}
-
 #[derive(OpenApi)]
 #[openapi(
     paths(
-        health,
-        crate::handlers::upload_file,
-        crate::handlers::transcribe_audio
+        crate::handlers::health::health,
+        crate::handlers::upload_file::upload_file,
+        crate::handlers::transcribe::transcribe_audio
     ),
     components(schemas(
         UploadFileRequest,
@@ -68,9 +56,9 @@ async fn main() -> std::io::Result<()> {
                 SwaggerUi::new("/docs/{_:.*}")
                     .url("/api-doc/openapi.json", openapi.clone())
             )
-            .service(health)
-            .service(handlers::upload_file)
-            .service(handlers::transcribe_audio)
+            .service(handlers::health::health)
+            .service(handlers::upload_file::upload_file)
+            .service(handlers::transcribe::transcribe_audio)
     })
     .bind((host.as_str(), port))?
     .run()
