@@ -3,6 +3,8 @@ use std::fs;
 use std::io::Write;
 use std::process::Command;
 
+use crate::file_types::is_audio_extension;
+
 /// Preprocess audio file for optimal Whisper transcription
 /// - Converts to 16kHz mono Opus/OGG (highly compressed)
 /// - Reduces file size by ~80-90% while maintaining speech quality
@@ -58,6 +60,31 @@ fn preprocess_audio(input_path: &Path) -> Result<PathBuf, String> {
 }
 
 pub async fn transcribe_audio_file(audio_path: &Path) -> Result<String, String> {
+    // Validation checks from Patrik's version
+    if !audio_path.exists() {
+        return Err(format!("Audio file not found: {}", audio_path.display()));
+    }
+    
+    if !audio_path.is_file() {
+        return Err(format!("Path is not a file: {}", audio_path.display()));
+    }
+    
+    let extension = audio_path
+        .extension()
+        .and_then(|ext| ext.to_str())
+        .map(|ext| ext.to_lowercase())
+        .unwrap_or_default();
+    
+    if !is_audio_extension(&extension) {
+        return Err(format!("Invalid audio file format: {}", extension));
+    }
+    
+    // Get filename
+    let filename = audio_path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .ok_or("Invalid filename")?;
+    
     // Create directories
     let audio_dir = Path::new("./audio_files");
     let transcripts_dir = Path::new("./transcripts");
@@ -67,12 +94,6 @@ pub async fn transcribe_audio_file(audio_path: &Path) -> Result<String, String> 
     
     fs::create_dir_all(transcripts_dir)
         .map_err(|e| format!("Failed to create transcripts directory: {}", e))?;
-    
-    // Get filename
-    let filename = audio_path
-        .file_name()
-        .and_then(|n| n.to_str())
-        .ok_or("Invalid filename")?;
     
     // Determine destination path
     let dest_audio_path = audio_dir.join(filename);
@@ -159,7 +180,7 @@ pub async fn transcribe_audio_file(audio_path: &Path) -> Result<String, String> 
         .unwrap_or("")
         .to_string();
     
-    // Save transcript
+    // Patrik's version returns just the text, but we need to also save it to file for compatibility
     let transcript_filename = format!(
         "{}.txt",
         audio_path
@@ -175,6 +196,6 @@ pub async fn transcribe_audio_file(audio_path: &Path) -> Result<String, String> 
     file.write_all(transcript_text.as_bytes())
         .map_err(|e| format!("Failed to write transcript: {}", e))?;
     
+    // Return the path for compatibility with upload handlers
     Ok(transcript_path.to_string_lossy().to_string())
 }
-

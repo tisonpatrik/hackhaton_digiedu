@@ -1,6 +1,8 @@
 mod handlers;
 mod models;
 mod processors;
+mod injectors;
+mod file_types;
 
 use actix_web::{App, HttpServer, web};
 use utoipa::OpenApi;
