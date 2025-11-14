@@ -63,6 +63,7 @@ services:
       - data_processing_audio:/app/audio_files
       - data_processing_transcripts:/app/transcripts
       - data_processing_uploads:/app/uploads
+      - ./raw_data:/app/raw_data
     depends_on:
       - postgres
       - faster-whisper
