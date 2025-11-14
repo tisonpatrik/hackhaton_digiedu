@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
+use schemars::JsonSchema;
 
 #[derive(Deserialize, Serialize, ToSchema)]
 pub struct UploadFileRequest {
@@ -81,5 +82,27 @@ pub struct TranscribeError {
     /// Error message
     #[schema(example = "Audio file not found")]
     pub error: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, JsonSchema)]
+pub struct QuestionAnswer {
+    /// Optional question identifier (e.g., internal key or column name)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub question_id: Option<String>,
+    /// Question text (if extractable from text)
+    pub question_text: String,
+    /// Answer from respondent
+    pub answer: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, JsonSchema)]
+pub struct NormalizedResponse {
+    /// Optional timestamp (format unknown)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub timestamp: Option<String>,
+    /// Original text that the model saw
+    pub raw_input: String,
+    /// List of question-answer pairs
+    pub qa: Vec<QuestionAnswer>,
 }
 

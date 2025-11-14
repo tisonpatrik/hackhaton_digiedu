@@ -1,4 +1,4 @@
-mod reformat;
+mod extract_qa;
 
-pub use reformat::{reformat_to_conversation_system, reformat_to_conversation_user};
+pub use extract_qa::{extract_qa_system, extract_qa_user};
 
