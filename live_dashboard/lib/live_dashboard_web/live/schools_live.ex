@@ -154,7 +154,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
             </div>
           </div>
         </header>
-        
+
     <!-- Search and Filters -->
         <div class="mb-8">
           <div class="bg-base-100 p-6 rounded-3xl border border-base-300/70 shadow-sm">
@@ -176,7 +176,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
                 {gettext("Add New School")}
               </.link>
             </div>
-            
+
     <!-- Quick Filters -->
             <div class="flex flex-wrap gap-2 mb-6">
               <button
@@ -275,7 +275,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
             </.form>
           </div>
         </div>
-        
+
     <!-- Filtered Schools -->
         <div
           :if={
@@ -349,7 +349,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
             </div>
           </div>
         </div>
-        
+
     <!-- Schools Overview (shown when no filters) -->
         <div :if={
           @search_query == "" and @selected_region == "" and @selected_type == "" and
