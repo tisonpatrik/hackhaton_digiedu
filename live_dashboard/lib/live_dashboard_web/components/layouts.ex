@@ -123,6 +123,21 @@ defmodule LiveDashboardWeb.Layouts do
           </:item>
         </.menu_section>
 
+        <.menu_section title={gettext("Data Processing")} icon="hero-cpu-chip">
+          <:item>
+            <.link navigate={~p"/upload"} class="menu-item">
+              <.icon name="hero-cloud-arrow-up" class="w-5 h-5" />
+              <span>{gettext("File Upload")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <a href="#" class="menu-item">
+              <.icon name="hero-document-text" class="w-5 h-5" />
+              <span>{gettext("Transcriptions")}</span>
+            </a>
+          </:item>
+        </.menu_section>
+
         <.menu_section title={gettext("Analytics")} icon="hero-chart-bar-square">
           <:item>
             <.link navigate={~p"/regions"} class="menu-item">
