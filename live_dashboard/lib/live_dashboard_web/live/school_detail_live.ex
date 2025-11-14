@@ -118,7 +118,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
         {:noreply,
          socket
          |> put_flash(:info, gettext("School deleted successfully"))
-         |> push_navigate(to: ~p"/regions/#{socket.assigns.region.id}/schools")}
+         |> push_navigate(to: ~p"/catalog/regions/#{socket.assigns.region.id}/schools")}
 
       {:error, _changeset} ->
         socket =
@@ -421,7 +421,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
               <div class="flex items-center">
                 <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
                 <.link
-                  navigate={~p"/regions/#{@region.id}/schools"}
+                  navigate={~p"/catalog/regions/#{@region.id}/schools"}
                   class="text-sm font-medium text-base-content/60 hover:text-base-content"
                 >
                   {@region.name}
@@ -436,7 +436,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
             </li>
           </ol>
         </nav>
-        
+
     <!-- Header -->
         <header class="mb-8">
           <div class="flex items-center justify-between">
@@ -470,7 +470,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
             </div>
           </div>
         </header>
-        
+
     <!-- School Details -->
         <div :if={!@editing} class="grid gap-6 lg:grid-cols-3">
           <!-- Main Info -->
@@ -549,7 +549,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
               </div>
             </div>
           </div>
-          
+
     <!-- Sidebar -->
           <div class="lg:col-span-1 space-y-6">
             <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm">
@@ -586,7 +586,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
                   {gettext("Delete School")}
                 </button>
                 <.link
-                  navigate={~p"/regions/#{@region.id}/schools"}
+                  navigate={~p"/catalog/regions/#{@region.id}/schools"}
                   class="btn btn-outline btn-block"
                 >
                   <.icon name="hero-arrow-left" class="w-4 h-4 mr-2" />
@@ -596,7 +596,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
             </div>
           </div>
         </div>
-        
+
     <!-- Edit Form -->
         <div :if={@editing} class="max-w-3xl">
           <form phx-submit="save" phx-change="validate" class="space-y-6">
