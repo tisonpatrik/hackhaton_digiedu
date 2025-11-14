@@ -2,36 +2,22 @@
 #
 #     mix run priv/repo/seeds.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     LiveDashboard.Repo.insert!(%LiveDashboard.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+# This file orchestrates the seeding process by loading individual seed files
+# in the correct order to maintain referential integrity.
 
-alias LiveDashboard.Repo
-alias LiveDashboard.Schemas.Region
+IO.puts("Starting database seeding...")
 
-import Ecto.Query
+# Load seed files in dependency order
+Code.require_file("priv/repo/seeds/regions.exs")
+IO.puts("✓ Regions seeded")
 
-regions_data = [
-  %{name: "Hlavní město Praha"},
-  %{name: "Středočeský kraj"},
-  %{name: "Jihočeský kraj"},
-  %{name: "Plzeňský kraj"},
-  %{name: "Karlovarský kraj"},
-  %{name: "Ústecký kraj"},
-  %{name: "Liberecký kraj"},
-  %{name: "Královéhradecký kraj"},
-  %{name: "Pardubický kraj"},
-  %{name: "Kraj Vysočina"},
-  %{name: "Jihomoravský kraj"},
-  %{name: "Olomoucký kraj"},
-  %{name: "Zlínský kraj"},
-  %{name: "Moravskoslezský kraj"}
-]
+Code.require_file("priv/repo/seeds/municipalities.exs")
+IO.puts("✓ Municipalities seeded")
 
-if Repo.aggregate(from(r in Region), :count) == 0 do
-  Repo.insert_all(Region, regions_data)
-end
+Code.require_file("priv/repo/seeds/schools.exs")
+IO.puts("✓ Schools seeded")
+
+Code.require_file("priv/repo/seeds/guides_projects.exs")
+IO.puts("✓ Guides and projects seeded")
+
+IO.puts("🎉 Database seeding completed successfully!")

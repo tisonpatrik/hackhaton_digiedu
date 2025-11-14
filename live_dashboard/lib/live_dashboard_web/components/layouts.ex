@@ -137,10 +137,10 @@ defmodule LiveDashboardWeb.Layouts do
             </a>
           </:item>
           <:item>
-            <a href="#" class="menu-item">
-              <.icon name="hero-clock" class="w-5 h-5" />
-              <span>{gettext("Engagement")}</span>
-            </a>
+            <.link navigate={~p"/schools#scroll-to-form"} class="menu-item">
+              <.icon name="hero-plus" class="w-5 h-5" />
+              <span>{gettext("Add School")}</span>
+            </.link>
           </:item>
         </.menu_section>
 
@@ -148,7 +148,7 @@ defmodule LiveDashboardWeb.Layouts do
           <:item>
             <.link navigate={~p"/schools"} class="menu-item">
               <.icon name="hero-map" class="w-5 h-5" />
-              <span>{gettext("Browse by Region")}</span>
+              <span>{gettext("Browse Schools")}</span>
             </.link>
           </:item>
           <:item>
@@ -158,9 +158,9 @@ defmodule LiveDashboardWeb.Layouts do
             </.link>
           </:item>
           <:item>
-            <.link navigate={~p"/schools/new"} class="menu-item">
-              <.icon name="hero-plus-circle" class="w-5 h-5" />
-              <span>{gettext("Add New School")}</span>
+            <.link navigate={~p"/schools#scroll-to-form"} class="menu-item">
+              <.icon name="hero-plus" class="w-5 h-5" />
+              <span>{gettext("Add School")}</span>
             </.link>
           </:item>
         </.menu_section>
