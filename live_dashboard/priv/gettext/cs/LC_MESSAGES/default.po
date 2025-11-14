@@ -35,8 +35,8 @@ msgstr "Nemůžeme najít internet"
 
 #: lib/live_dashboard_web/components/core_components.ex:74
 #, elixir-autogen, elixir-format
-msgid "close"
-msgstr "zavřít"
+msgid "Close"
+msgstr "Zavřít"
 
 #: lib/live_dashboard_web/live/regions_live.ex:142
 #, elixir-autogen, elixir-format
@@ -292,7 +292,7 @@ msgstr "Obnovit zobrazení"
 #: lib/live_dashboard_web/components/layouts.ex:157
 #, elixir-autogen, elixir-format
 msgid "Add School"
-msgstr "Přidat školu"
+msgstr "Přidat Školu"
 
 #: lib/live_dashboard_web/components/layouts.ex:141
 #: lib/live_dashboard_web/live/municipalities_live.ex:59
@@ -317,12 +317,12 @@ msgstr "Zobrazit školy"
 #: lib/live_dashboard_web/live/schools_regions_live.ex:66
 #, elixir-autogen, elixir-format
 msgid "Browse by Region"
-msgstr "Procházet podle regionu"
+msgstr "Procházet podle Regionu"
 
 #: lib/live_dashboard_web/live/schools_live.ex:289
 #, elixir-autogen, elixir-format
 msgid "Search Results"
-msgstr "Výsledky hledání"
+msgstr "Výsledky Hledání"
 
 #: lib/live_dashboard_web/live/schools_live.ex:345
 #: lib/live_dashboard_web/live/schools_live.ex:401
@@ -347,7 +347,7 @@ msgstr "Přidat první školu"
 #: lib/live_dashboard_web/live/schools_region_live.ex:159
 #, elixir-autogen, elixir-format
 msgid "Back to All Schools"
-msgstr "Zpět na všechny školy"
+msgstr "Zpět na Všechny školy"
 
 #: lib/live_dashboard_web/live/schools_region_live.ex:83
 #, elixir-autogen, elixir-format
@@ -361,8 +361,8 @@ msgstr "Nebyly nalezeny žádné školy"
 
 #: lib/live_dashboard_web/live/schools_region_live.ex:80
 #, elixir-autogen, elixir-format
-msgid "Schools in"
-msgstr "Školy v"
+msgid "Schools in Regions"
+msgstr "Školy v Regionech"
 
 #: lib/live_dashboard_web/live/schools_region_live.ex:144
 #, elixir-autogen, elixir-format
@@ -390,7 +390,7 @@ msgstr "Školy"
 #: lib/live_dashboard_web/live/municipalities_live.ex:154
 #, elixir-autogen, elixir-format
 msgid "Add Municipality"
-msgstr ""
+msgstr "Přidat obec"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:135
 #: lib/live_dashboard_web/live/new_school_live.ex:144
@@ -403,7 +403,7 @@ msgstr "Přidat školu"
 #: lib/live_dashboard_web/live/school_detail_live.ex:633
 #, elixir-autogen, elixir-format
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #: lib/live_dashboard_web/live/schools_live.ex:250
 #, elixir-autogen, elixir-format
@@ -430,12 +430,12 @@ msgstr "Všechny typy"
 #: lib/live_dashboard_web/live/school_detail_live.ex:582
 #, elixir-autogen, elixir-format
 msgid "Are you sure you want to delete this school?"
-msgstr ""
+msgstr "Chcete opravdu odstranit školu?"
 
 #: lib/live_dashboard_web/live/municipalities_live.ex:163
 #, elixir-autogen, elixir-format
 msgid "Back to Browse by Region"
-msgstr ""
+msgstr "Zpět na Hledat podle Regionů"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:593
 #: lib/live_dashboard_web/live/school_profile_live.ex:308
@@ -446,12 +446,12 @@ msgstr "Zpět na všechny školy"
 #: lib/live_dashboard_web/live/schools_regions_live.ex:79
 #, elixir-autogen, elixir-format
 msgid "Browse educational institutions organized by geographic regions"
-msgstr ""
+msgstr "Procházejte vzdělávací instituce podle geografických regionů"
 
 #: lib/live_dashboard_web/live/main_live.ex:193
 #, elixir-autogen, elixir-format
 msgid "Calculated from intervention session data."
-msgstr ""
+msgstr "Vypočítáno na základě údajů z intervenčních sezení."
 
 #: lib/live_dashboard_web/live/new_school_live.ex:207
 #: lib/live_dashboard_web/live/school_detail_live.ex:468
@@ -459,12 +459,12 @@ msgstr ""
 #: lib/live_dashboard_web/live/school_profile_live.ex:192
 #, elixir-autogen, elixir-format
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:386
 #, elixir-autogen, elixir-format
 msgid "Cannot delete school: %{errors}"
-msgstr ""
+msgstr "Nelze smazat školu: %{errors}"
 
 #: lib/live_dashboard_web/live/schools_live.ex:191
 #, elixir-autogen, elixir-format
@@ -474,50 +474,50 @@ msgstr "Vymazat vše"
 #: lib/live_dashboard_web/live/schools_live.ex:363
 #, elixir-autogen, elixir-format
 msgid "Complete list of all educational institutions. Use the filters above to narrow down results."
-msgstr ""
+msgstr "Kompletní seznam všech vzdělávacích institucí. Použijte filtry výše pro zúžení výsledků."
 
 #: lib/live_dashboard_web/live/schools_live.ex:144
 #, elixir-autogen, elixir-format
 msgid "Comprehensive list of all educational institutions with advanced search and filtering capabilities."
-msgstr ""
+msgstr "Kompletní seznam všech vzdělávacích institucí s pokročilým vyhledáváním a možnostmi filtrování."
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:506
 #, elixir-autogen, elixir-format
 msgid "Contact Information"
-msgstr ""
+msgstr "Kontaktní informace"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:211
 #, elixir-autogen, elixir-format
 msgid "Create School"
-msgstr ""
+msgstr "Přidat Školu"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:147
 #, elixir-autogen, elixir-format
 msgid "Create a new school profile by filling in the information below"
-msgstr ""
+msgstr "Vytvořte nový profil školy vyplněním informací níže"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:257
 #, elixir-autogen, elixir-format
 msgid "Delete"
-msgstr ""
+msgstr "Smazat"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:586
 #, elixir-autogen, elixir-format
 msgid "Delete School"
-msgstr ""
+msgstr "Smazat školu"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:497
 #: lib/live_dashboard_web/live/school_detail_live.ex:657
 #, elixir-autogen, elixir-format
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:461
 #: lib/live_dashboard_web/live/school_profile_live.ex:92
 #: lib/live_dashboard_web/live/school_profile_live.ex:248
 #, elixir-autogen, elixir-format
 msgid "Edit"
-msgstr ""
+msgstr "Upravit"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:605
 #: lib/live_dashboard_web/live/school_profile_live.ex:100
@@ -534,24 +534,24 @@ msgstr "Základní"
 #: lib/live_dashboard_web/live/school_detail_live.ex:645
 #, elixir-autogen, elixir-format
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:149
 #: lib/live_dashboard_web/live/school_profile_live.ex:186
 #, elixir-autogen, elixir-format
 msgid "Enter founder name"
-msgstr ""
+msgstr "Zadejte jméno zakladatele"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:198
 #, elixir-autogen, elixir-format
 msgid "Enter founder name (optional)"
-msgstr ""
+msgstr "Zadejte jméno zakladatele (volitelné)"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:164
 #: lib/live_dashboard_web/live/school_profile_live.ex:112
 #, elixir-autogen, elixir-format
 msgid "Enter school name"
-msgstr ""
+msgstr "Zadejte název školy"
 
 #: lib/live_dashboard_web/live/schools_regions_live.ex:99
 #, elixir-autogen, elixir-format
@@ -561,7 +561,7 @@ msgstr ""
 #: lib/live_dashboard_web/live/new_school_live.ex:71
 #, elixir-autogen, elixir-format
 msgid "Failed to create school. Please check the form for errors."
-msgstr ""
+msgstr "Nepodařilo se vytvořit školu. Zkontrolujte formulář na chyby."
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:126
 #: lib/live_dashboard_web/live/school_profile_live.ex:393
@@ -572,7 +572,7 @@ msgstr ""
 #: lib/live_dashboard_web/live/school_detail_live.ex:109
 #, elixir-autogen, elixir-format
 msgid "Failed to update school"
-msgstr ""
+msgstr "Nepodařilo se aktualizovat školu"
 
 #: lib/live_dashboard_web/live/schools_live.ex:168
 #, elixir-autogen, elixir-format
@@ -583,13 +583,13 @@ msgstr "Najít školy podle názvu, regionu, typu nebo obce"
 #: lib/live_dashboard_web/live/school_profile_live.ex:283
 #, elixir-autogen, elixir-format
 msgid "Founder"
-msgstr ""
+msgstr "Zakladatel"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:144
 #: lib/live_dashboard_web/live/school_profile_live.ex:181
 #, elixir-autogen, elixir-format
 msgid "Founder (Optional)"
-msgstr ""
+msgstr "Zakladatel (volitelné)"
 
 #: lib/live_dashboard_web/live/schools_live.ex:209
 #, elixir-autogen, elixir-format
@@ -599,7 +599,7 @@ msgstr "Gymnázium"
 #: lib/live_dashboard_web/live/schools_live.ex:262
 #, elixir-autogen, elixir-format
 msgid "Gymnázium"
-msgstr ""
+msgstr "Gymnázium"
 
 #: lib/live_dashboard_web/live/main_live.ex:172
 #, elixir-autogen, elixir-format
@@ -609,31 +609,31 @@ msgstr ""
 #: lib/live_dashboard_web/live/school_profile_live.ex:290
 #, elixir-autogen, elixir-format
 msgid "Location"
-msgstr ""
+msgstr "Umístění"
 
 #: lib/live_dashboard_web/live/municipalities_live.ex:77
 #: lib/live_dashboard_web/live/schools_regions_live.ex:116
 #: lib/live_dashboard_web/live/schools_regions_live.ex:139
 #, elixir-autogen, elixir-format
 msgid "Municipalities"
-msgstr ""
+msgstr "Obce"
 
 #: lib/live_dashboard_web/live/municipalities_live.ex:87
 #, elixir-autogen, elixir-format
 msgid "Municipalities in"
-msgstr ""
+msgstr "Obce v"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:180
 #: lib/live_dashboard_web/live/school_profile_live.ex:297
 #, elixir-autogen, elixir-format
 msgid "Municipality"
-msgstr ""
+msgstr "Obec"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:485
 #: lib/live_dashboard_web/live/school_profile_live.ex:269
 #, elixir-autogen, elixir-format
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #: lib/live_dashboard_web/live/municipalities_live.ex:145
 #, elixir-autogen, elixir-format
@@ -662,7 +662,7 @@ msgstr ""
 #: lib/live_dashboard_web/live/school_profile_live.ex:357
 #, elixir-autogen, elixir-format
 msgid "Please fix the errors below"
-msgstr ""
+msgstr "Opravte prosím chyby níže"
 
 #: lib/live_dashboard_web/live/schools_live.ex:195
 #, elixir-autogen, elixir-format
@@ -672,22 +672,22 @@ msgstr "Rychlé filtry:"
 #: lib/live_dashboard_web/live/school_detail_live.ex:557
 #, elixir-autogen, elixir-format
 msgid "Quick Stats"
-msgstr ""
+msgstr "Rychlé statistiky"
 
 #: lib/live_dashboard_web/live/main_live.ex:151
 #, elixir-autogen, elixir-format
 msgid "Real-time enrollment metrics from database."
-msgstr ""
+msgstr "Metriky registrace v reálném čase z databáze."
 
 #: lib/live_dashboard_web/live/schools_regions_live.ex:135
 #, elixir-autogen, elixir-format
 msgid "Regions with Schools"
-msgstr ""
+msgstr "Regiony se školami"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:670
 #, elixir-autogen, elixir-format
 msgid "Save Changes"
-msgstr ""
+msgstr "Uložit změny"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:156
 #: lib/live_dashboard_web/live/school_detail_live.ex:480
@@ -719,7 +719,7 @@ msgstr ""
 #: lib/live_dashboard_web/live/school_detail_live.ex:120
 #, elixir-autogen, elixir-format
 msgid "School deleted successfully"
-msgstr ""
+msgstr "Škola byla úspěšně smazána"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:371
 #, elixir-autogen, elixir-format
@@ -729,12 +729,12 @@ msgstr ""
 #: lib/live_dashboard_web/live/school_detail_live.ex:101
 #, elixir-autogen, elixir-format
 msgid "School updated successfully"
-msgstr ""
+msgstr "Škola byla úspěšně aktualizována"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:349
 #, elixir-autogen, elixir-format
 msgid "School updated successfully!"
-msgstr ""
+msgstr "Škola byla úspěšně aktualizována!"
 
 #: lib/live_dashboard_web/live/schools_regions_live.ex:76
 #, elixir-autogen, elixir-format, fuzzy
@@ -759,23 +759,23 @@ msgstr "Střední"
 #: lib/live_dashboard_web/live/municipalities_live.ex:92
 #, elixir-autogen, elixir-format
 msgid "Select a municipality to view schools"
-msgstr ""
+msgstr "Vyberte obec pro zobrazení škol"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:181
 #, elixir-autogen, elixir-format
 msgid "Select municipality"
-msgstr ""
+msgstr "Vyberte obec"
 
 #: lib/live_dashboard_web/live/new_school_live.ex:172
 #, elixir-autogen, elixir-format
 msgid "Select school type"
-msgstr ""
+msgstr "Vyberte typ školy"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:124
 #: lib/live_dashboard_web/live/school_profile_live.ex:161
 #, elixir-autogen, elixir-format
 msgid "Select type"
-msgstr ""
+msgstr "Vyberte typ"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:561
 #: lib/live_dashboard_web/live/school_profile_live.ex:277
@@ -786,7 +786,7 @@ msgstr "studentů"
 #: lib/live_dashboard_web/live/schools_live.ex:268
 #, elixir-autogen, elixir-format
 msgid "Střední škola"
-msgstr ""
+msgstr "Střední škola"
 
 #: lib/live_dashboard_web/live/municipalities_live.ex:148
 #, elixir-autogen, elixir-format, fuzzy
@@ -796,19 +796,19 @@ msgstr "V současné době nejsou registrované žádné školy v"
 #: lib/live_dashboard_web/live/schools_regions_live.ex:143
 #, elixir-autogen, elixir-format
 msgid "Total Schools"
-msgstr ""
+msgstr "Celkem škol"
 
 #: lib/live_dashboard_web/live/schools_live.ex:304
 #, elixir-autogen, elixir-format
 msgid "Try adjusting your search criteria or browse all schools."
-msgstr ""
+msgstr "Zkuste upravit kritéria vyhledávání nebo procházet všechny školy."
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:491
 #: lib/live_dashboard_web/live/school_detail_live.ex:569
 #: lib/live_dashboard_web/live/school_profile_live.ex:273
 #, elixir-autogen, elixir-format
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: lib/live_dashboard_web/live/schools_live.ex:223
 #, elixir-autogen, elixir-format
@@ -821,17 +821,17 @@ msgstr "Vysoká škola"
 #: lib/live_dashboard_web/live/schools_region_live.ex:122
 #, elixir-autogen, elixir-format
 msgid "Unknown Region"
-msgstr ""
+msgstr "Neznámý region"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:196
 #, elixir-autogen, elixir-format
 msgid "Update"
-msgstr ""
+msgstr "Aktualizovat"
 
 #: lib/live_dashboard_web/live/school_profile_live.ex:101
 #, elixir-autogen, elixir-format
 msgid "Update school information"
-msgstr ""
+msgstr "Aktualizovat informace o škole"
 
 #: lib/live_dashboard_web/live/schools_live.ex:293
 #: lib/live_dashboard_web/live/schools_live.ex:308
@@ -842,13 +842,13 @@ msgstr "Zobrazit školy"
 #: lib/live_dashboard_web/live/schools_live.ex:271
 #, elixir-autogen, elixir-format
 msgid "Vysoká škola"
-msgstr ""
+msgstr "Vysoká škola"
 
 #: lib/live_dashboard_web/live/school_detail_live.ex:541
 #: lib/live_dashboard_web/live/school_detail_live.ex:651
 #, elixir-autogen, elixir-format
 msgid "Website"
-msgstr ""
+msgstr "Webové stránky"
 
 #: lib/live_dashboard_web/live/schools_live.ex:265
 #, elixir-autogen, elixir-format
@@ -858,21 +858,21 @@ msgstr ""
 #: lib/live_dashboard_web/live/municipalities_live.ex:100
 #, elixir-autogen, elixir-format
 msgid "municipalities"
-msgstr ""
+msgstr "obce"
 
 #: lib/live_dashboard_web/live/schools_regions_live.ex:99
 #, elixir-autogen, elixir-format
 msgid "municipalities and"
-msgstr ""
+msgstr "obce a"
 
 #: lib/live_dashboard_web/live/schools_regions_live.ex:99
 #, elixir-autogen, elixir-format
 msgid "schools in this region"
-msgstr ""
+msgstr "školy v tomto regionu"
 
 #: lib/live_dashboard_web/live/municipalities_live.ex:150
 #: lib/live_dashboard_web/live/schools_region_live.ex:85
 #: lib/live_dashboard_web/live/schools_region_live.ex:146
 #, elixir-autogen, elixir-format
 msgid "selected"
-msgstr ""
+msgstr "vybráno"
