@@ -1,188 +1,10 @@
 defmodule LiveDashboardWeb.SchoolsLive do
   use LiveDashboardWeb, :live_view
 
-  @regions [
-    %{id: "praha", name: "Praha", code: "A"},
-    %{id: "stredocesky", name: "Středočeský", code: "S"},
-    %{id: "jihocesky", name: "Jihočeský", code: "C"},
-    %{id: "plzensky", name: "Plzeňský", code: "P"},
-    %{id: "karlovarsky", name: "Karlovarský", code: "K"},
-    %{id: "ustecky", name: "Ústecký", code: "U"},
-    %{id: "liberecky", name: "Liberecký", code: "L"},
-    %{id: "kralovehradecky", name: "Královéhradecký", code: "H"},
-    %{id: "pardubicky", name: "Pardubický", code: "E"},
-    %{id: "vysocina", name: "Vysočina", code: "J"},
-    %{id: "jihomoravsky", name: "Jihomoravský", code: "B"},
-    %{id: "olomoucky", name: "Olomoucký", code: "M"},
-    %{id: "zlinsky", name: "Zlínský", code: "Z"},
-    %{id: "moravskoslezsky", name: "Moravskoslezský", code: "T"}
-  ]
-
-  # Mock school data for demonstration
-  @schools [
-    %{
-      id: 1,
-      name: "Gymnázium Jana Nerudy",
-      region_id: "praha",
-      region_name: "Praha",
-      municipality: "Praha 1",
-      type: "Gymnázium",
-      students: 450
-    },
-    %{
-      id: 2,
-      name: "Základní škola U Školky",
-      region_id: "praha",
-      region_name: "Praha",
-      municipality: "Praha 2",
-      type: "Základní škola",
-      students: 320
-    },
-    %{
-      id: 16,
-      name: "Střední škola Praha 3",
-      region_id: "praha",
-      region_name: "Praha",
-      municipality: "Praha 3",
-      type: "Střední škola",
-      students: 400
-    },
-    %{
-      id: 17,
-      name: "Gymnázium Praha 4",
-      region_id: "praha",
-      region_name: "Praha",
-      municipality: "Praha 4",
-      type: "Gymnázium",
-      students: 350
-    },
-    %{
-      id: 18,
-      name: "Základní škola Praha 5",
-      region_id: "praha",
-      region_name: "Praha",
-      municipality: "Praha 5",
-      type: "Základní škola",
-      students: 280
-    },
-    %{
-      id: 3,
-      name: "Střední průmyslová škola",
-      region_id: "stredocesky",
-      region_name: "Středočeský",
-      municipality: "Kolín",
-      type: "Střední škola",
-      students: 280
-    },
-    %{
-      id: 4,
-      name: "Gymnázium České Budějovice",
-      region_id: "jihocesky",
-      region_name: "Jihočeský",
-      municipality: "České Budějovice",
-      type: "Gymnázium",
-      students: 380
-    },
-    %{
-      id: 5,
-      name: "Základní škola Plzeň",
-      region_id: "plzensky",
-      region_name: "Plzeňský",
-      municipality: "Plzeň",
-      type: "Základní škola",
-      students: 290
-    },
-    %{
-      id: 6,
-      name: "Technická univerzita Liberec",
-      region_id: "liberecky",
-      region_name: "Liberecký",
-      municipality: "Liberec",
-      type: "Vysoká škola",
-      students: 5200
-    },
-    %{
-      id: 7,
-      name: "Gymnázium Hradec Králové",
-      region_id: "kralovehradecky",
-      region_name: "Královéhradecký",
-      municipality: "Hradec Králové",
-      type: "Gymnázium",
-      students: 410
-    },
-    %{
-      id: 8,
-      name: "Univerzita Pardubice",
-      region_id: "pardubicky",
-      region_name: "Pardubický",
-      municipality: "Pardubice",
-      type: "Vysoká škola",
-      students: 8900
-    },
-    %{
-      id: 9,
-      name: "Střední škola Jihlava",
-      region_id: "vysocina",
-      region_name: "Vysočina",
-      municipality: "Jihlava",
-      type: "Střední škola",
-      students: 350
-    },
-    %{
-      id: 10,
-      name: "Masarykova univerzita",
-      region_id: "jihomoravsky",
-      region_name: "Jihomoravský",
-      municipality: "Brno",
-      type: "Vysoká škola",
-      students: 32000
-    },
-    %{
-      id: 11,
-      name: "Univerzita Palackého",
-      region_id: "olomoucky",
-      region_name: "Olomoucký",
-      municipality: "Olomouc",
-      type: "Vysoká škola",
-      students: 21000
-    },
-    %{
-      id: 12,
-      name: "Univerzita Tomáše Bati",
-      region_id: "zlinsky",
-      region_name: "Zlínský",
-      municipality: "Zlín",
-      type: "Vysoká škola",
-      students: 9200
-    },
-    %{
-      id: 13,
-      name: "Ostravská univerzita",
-      region_id: "moravskoslezsky",
-      region_name: "Moravskoslezský",
-      municipality: "Ostrava",
-      type: "Vysoká škola",
-      students: 9800
-    },
-    %{
-      id: 14,
-      name: "Vysoká škola báňská",
-      region_id: "moravskoslezsky",
-      region_name: "Moravskoslezský",
-      municipality: "Ostrava",
-      type: "Vysoká škola",
-      students: 15600
-    },
-    %{
-      id: 15,
-      name: "Základní škola Ostrava",
-      region_id: "moravskoslezsky",
-      region_name: "Moravskoslezský",
-      municipality: "Ostrava",
-      type: "Základní škola",
-      students: 275
-    }
-  ]
+  alias LiveDashboard.Repo
+  alias LiveDashboard.Schemas.Region
+  alias LiveDashboard.Schemas.Municipality
+  alias LiveDashboard.Schemas.School
 
   @impl true
   def mount(_params, session, socket) do
@@ -190,15 +12,34 @@ defmodule LiveDashboardWeb.SchoolsLive do
     locale = Map.get(session, "locale", "en")
     Gettext.put_locale(LiveDashboardWeb.Gettext, locale)
 
+    regions = Repo.all(Region)
+
+    schools =
+      Repo.all(School)
+      |> Repo.preload(municipality: [:region])
+      |> Enum.filter(&(&1.municipality && &1.municipality.region))
+
+    municipalities =
+      schools
+      |> Enum.map(& &1.municipality)
+      |> Enum.uniq_by(& &1.name)
+      |> Enum.sort_by(& &1.name)
+
+    # Create empty changeset for the create form
+    empty_school = %School{}
+    school_form = School.changeset(empty_school, %{}) |> Phoenix.Component.to_form()
+
     socket =
       socket
-      |> assign(:regions, @regions)
-      |> assign(:schools, @schools)
+      |> assign(:regions, regions)
+      |> assign(:schools, schools)
+      |> assign(:municipalities, municipalities)
+      |> assign(:school_form, school_form)
       |> assign(:search_query, "")
       |> assign(:selected_region, "")
       |> assign(:selected_type, "")
       |> assign(:selected_municipality, "")
-      |> assign(:filtered_schools, @schools)
+      |> assign(:filtered_schools, schools)
 
     {:ok, socket}
   end
@@ -215,7 +56,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
         %{"query" => query, "region" => region, "type" => type, "municipality" => municipality},
         socket
       ) do
-    filtered_schools = filter_schools(@schools, query, region, type, municipality)
+    filtered_schools = filter_schools(socket.assigns.schools, query, region, type, municipality)
 
     socket =
       socket
@@ -228,6 +69,96 @@ defmodule LiveDashboardWeb.SchoolsLive do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("scroll_to_form", _params, socket) do
+    {:noreply, push_event(socket, "scroll-to-form", %{})}
+  end
+
+  @impl true
+  def handle_event("create_school", %{"school" => school_params}, socket) do
+    municipality = Repo.get_by(Municipality, name: school_params["municipality_name"])
+
+    if municipality do
+      students_value =
+        case school_params["students"] do
+          "" ->
+            nil
+
+          nil ->
+            nil
+
+          str ->
+            case Integer.parse(str) do
+              {num, ""} when num > 0 -> num
+              _ -> nil
+            end
+        end
+
+      school_attrs = %{
+        name: school_params["name"],
+        type: school_params["type"],
+        students: students_value,
+        founder: school_params["founder"],
+        municipality_id: municipality.id
+      }
+
+      case Repo.insert(School.changeset(%School{}, school_attrs)) do
+        {:ok, _school} ->
+          # Reload schools
+          schools =
+            Repo.all(School)
+            |> Repo.preload(municipality: [:region])
+            |> Enum.filter(&(&1.municipality && &1.municipality.region))
+
+          municipalities =
+            schools
+            |> Enum.map(& &1.municipality)
+            |> Enum.uniq_by(& &1.name)
+            |> Enum.sort_by(& &1.name)
+
+          filtered_schools =
+            filter_schools(
+              schools,
+              socket.assigns.search_query,
+              socket.assigns.selected_region,
+              socket.assigns.selected_type,
+              socket.assigns.selected_municipality
+            )
+
+          # Reset form
+          empty_school = %School{}
+          school_form = School.changeset(empty_school, %{}) |> Phoenix.Component.to_form()
+
+          socket =
+            socket
+            |> assign(:schools, schools)
+            |> assign(:municipalities, municipalities)
+            |> assign(:school_form, school_form)
+            |> assign(:filtered_schools, filtered_schools)
+            |> put_flash(:info, gettext("School created successfully!"))
+
+          {:noreply, socket}
+
+        {:error, changeset} ->
+          # Update form with errors
+          school_form = Phoenix.Component.to_form(changeset)
+
+          socket =
+            socket
+            |> assign(:school_form, school_form)
+            |> put_flash(:error, gettext("Please fix the errors below"))
+
+          {:noreply, socket}
+      end
+    else
+      socket =
+        socket
+        |> put_flash(:error, gettext("Selected municipality not found"))
+
+      {:noreply, socket}
+    end
+  end
+
   defp filter_schools(schools, query, region, type, municipality) do
     query = String.downcase(String.trim(query))
     region = String.trim(region)
@@ -235,18 +166,28 @@ defmodule LiveDashboardWeb.SchoolsLive do
     municipality = String.trim(municipality)
 
     Enum.filter(schools, fn school ->
+      region_name =
+        (school.municipality && school.municipality.region && school.municipality.region.name) ||
+          ""
+
+      municipality_name = (school.municipality && school.municipality.name) || ""
+
+      region_slug =
+        (school.municipality && school.municipality.region && school.municipality.region.slug) ||
+          ""
+
       matches_query =
         query == "" or
           String.contains?(String.downcase(school.name), query) or
-          String.contains?(String.downcase(school.region_name), query) or
+          String.contains?(String.downcase(region_name), query) or
           String.contains?(String.downcase(school.type), query) or
-          String.contains?(String.downcase(school.municipality), query)
+          String.contains?(String.downcase(municipality_name), query)
 
-      matches_region = region == "" or school.region_id == region
+      matches_region = region == "" or region_slug == region
 
       matches_type = type == "" or school.type == type
 
-      matches_municipality = municipality == "" or school.municipality == municipality
+      matches_municipality = municipality == "" or municipality_name == municipality
 
       matches_query and matches_region and matches_type and matches_municipality
     end)
@@ -271,6 +212,28 @@ defmodule LiveDashboardWeb.SchoolsLive do
     <!-- Search and Filters -->
         <div class="mb-8">
           <div class="max-w-6xl mx-auto bg-base-100 p-6 rounded-3xl border border-base-300/70 shadow-sm">
+            <!-- Header with Add Button -->
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-xl font-bold text-base-content">
+                  {gettext("Search & Filter Schools")}
+                </h2>
+                <p class="text-sm text-base-content/60 mt-1">
+                  {gettext("Find schools by name, region, type, or municipality")}
+                </p>
+              </div>
+              <button
+                id="add-school-btn"
+                phx-click="scroll_to_form"
+                phx-hook="ScrollToForm"
+                class="btn btn-primary btn-sm"
+                type="button"
+              >
+                <.icon name="hero-plus" class="w-4 h-4 mr-2" />
+                {gettext("Add New School")}
+              </button>
+            </div>
+
             <.form for={%{}} phx-change="filter" phx-submit="filter" class="space-y-4">
               <div class="grid gap-4 md:grid-cols-4">
                 <label class="input input-bordered input-lg flex items-center gap-2">
@@ -287,8 +250,8 @@ defmodule LiveDashboardWeb.SchoolsLive do
                   <option value="">{gettext("All Regions")}</option>
                   <option
                     :for={region <- @regions}
-                    value={region.id}
-                    selected={@selected_region == region.id}
+                    value={region.slug}
+                    selected={@selected_region == region.slug}
                   >
                     {region.name}
                   </option>
@@ -296,16 +259,11 @@ defmodule LiveDashboardWeb.SchoolsLive do
                 <select name="municipality" class="select select-bordered select-lg">
                   <option value="">{gettext("All Municipalities")}</option>
                   <option
-                    :for={
-                      mun <-
-                        Enum.uniq_by(@schools, & &1.municipality)
-                        |> Enum.map(& &1.municipality)
-                        |> Enum.sort()
-                    }
-                    value={mun}
-                    selected={@selected_municipality == mun}
+                    :for={municipality <- @municipalities}
+                    value={municipality.name}
+                    selected={@selected_municipality == municipality.name}
                   >
-                    {mun}
+                    {municipality.name}
                   </option>
                 </select>
                 <select name="type" class="select select-bordered select-lg">
@@ -359,7 +317,10 @@ defmodule LiveDashboardWeb.SchoolsLive do
                   <div class="flex-1">
                     <h3 class="card-title text-lg">{school.name}</h3>
                     <p class="text-sm text-base-content/70 mt-1">
-                      {school.region_name} • {school.municipality} • {school.type}
+                      {(school.municipality && school.municipality.region &&
+                          school.municipality.region.name) || "Unknown Region"} • {(school.municipality &&
+                                                                                      school.municipality.name) ||
+                        "Unknown Municipality"} • {school.type}
                     </p>
                   </div>
                   <div class="badge badge-primary badge-outline">
@@ -367,10 +328,10 @@ defmodule LiveDashboardWeb.SchoolsLive do
                   </div>
                 </div>
                 <div class="card-actions justify-end mt-4">
-                  <button class="btn btn-primary btn-sm">
+                  <.link navigate={~p"/schools/#{school.id}"} class="btn btn-primary btn-sm">
                     <.icon name="hero-eye" class="w-4 h-4 mr-2" />
                     {gettext("View Details")}
-                  </button>
+                  </.link>
                 </div>
               </div>
             </div>
@@ -400,7 +361,7 @@ defmodule LiveDashboardWeb.SchoolsLive do
                 </p>
                 <div class="flex gap-2">
                   <.link
-                    navigate={"/regions/#{region.id}/municipalities"}
+                    navigate={"/regions/#{region.slug}/municipalities"}
                     class="btn btn-primary btn-sm flex-1"
                   >
                     <.icon name="hero-building-office" class="w-4 h-4 mr-2" />
@@ -411,19 +372,110 @@ defmodule LiveDashboardWeb.SchoolsLive do
             </div>
           </div>
         </div>
-
-        <div class="mt-12 rounded-3xl border border-dashed border-base-300/70 bg-base-100/50 p-8 text-center">
-          <div class="mx-auto max-w-md">
-            <.icon name="hero-building-office-2" class="mx-auto h-12 w-12 text-base-content/30 mb-4" />
-            <h3 class="text-lg font-semibold text-base-content mb-2">
-              {gettext("School Management System")}
+        
+    <!-- Add School Form -->
+        <div
+          class="mt-12 rounded-3xl border border-base-300/70 bg-base-100 p-8"
+          data-form="add-school"
+        >
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-base-content mb-2">
+              {gettext("Add New School")}
             </h3>
-            <p class="text-base-content/60 mb-4">
-              {gettext(
-                "This feature will allow you to create school profiles, upload data files, and manage educational institutions across all regions."
-              )}
+            <p class="text-base-content/60">
+              {gettext("Create a new school profile with basic information.")}
             </p>
           </div>
+
+          <.form for={@school_form} phx-submit="create_school" class="space-y-6">
+            <div class="grid gap-6 md:grid-cols-2">
+              <div>
+                <label class="label">
+                  <span class="label-text">{gettext("School Name")}</span>
+                </label>
+                <.input
+                  field={@school_form[:name]}
+                  class="input input-bordered w-full"
+                  placeholder={gettext("Enter school name")}
+                />
+              </div>
+
+              <div>
+                <label class="label">
+                  <span class="label-text">{gettext("School Type")}</span>
+                </label>
+                <.input
+                  field={@school_form[:type]}
+                  type="select"
+                  class="select select-bordered w-full"
+                  prompt={gettext("Select type")}
+                  options={["Základní škola", "Střední škola", "Gymnázium", "Vysoká škola"]}
+                />
+              </div>
+
+              <div>
+                <label class="label">
+                  <span class="label-text">{gettext("Region")}</span>
+                </label>
+                <select name="school[region_slug]" class="select select-bordered w-full" required>
+                  <option value="">{gettext("Select region")}</option>
+                  <option :for={region <- @regions} value={region.slug}>
+                    {region.name}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="label">
+                  <span class="label-text">{gettext("Municipality")}</span>
+                </label>
+                <select
+                  name="school[municipality_name]"
+                  class="select select-bordered w-full"
+                  required
+                >
+                  <option value="">{gettext("Select municipality")}</option>
+                  <option
+                    :for={municipality <- @municipalities}
+                    value={municipality.name}
+                  >
+                    {municipality.name}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="label">
+                  <span class="label-text">{gettext("Number of Students")}</span>
+                </label>
+                <.input
+                  field={@school_form[:students]}
+                  type="number"
+                  min="1"
+                  class="input input-bordered w-full"
+                  placeholder="0"
+                />
+              </div>
+
+              <div>
+                <label class="label">
+                  <span class="label-text">{gettext("Founder (Optional)")}</span>
+                </label>
+                <.input
+                  field={@school_form[:founder]}
+                  class="input input-bordered w-full"
+                  placeholder={gettext("Enter founder name")}
+                />
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button type="submit" class="btn btn-primary">
+                <.icon name="hero-plus" class="w-4 h-4 mr-2" />
+                {gettext("Create School")}
+              </button>
+            </div>
+          </.form>
         </div>
       </div>
     </Layouts.dashboard>

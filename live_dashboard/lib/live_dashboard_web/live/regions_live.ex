@@ -1,24 +1,9 @@
 defmodule LiveDashboardWeb.RegionsLive do
   use LiveDashboardWeb, :live_view
 
+  alias LiveDashboard.Repo
+  alias LiveDashboard.Schemas.Region
   alias LiveDashboardWeb.RegionsData
-
-  @regions [
-    %{id: "praha", name: "Praha", code: "A"},
-    %{id: "stredocesky", name: "Středočeský", code: "S"},
-    %{id: "jihocesky", name: "Jihočeský", code: "C"},
-    %{id: "plzensky", name: "Plzeňský", code: "P"},
-    %{id: "karlovarsky", name: "Karlovarský", code: "K"},
-    %{id: "ustecky", name: "Ústecký", code: "U"},
-    %{id: "liberecky", name: "Liberecký", code: "L"},
-    %{id: "kralovehradecky", name: "Královéhradecký", code: "H"},
-    %{id: "pardubicky", name: "Pardubický", code: "E"},
-    %{id: "vysocina", name: "Vysočina", code: "J"},
-    %{id: "jihomoravsky", name: "Jihomoravský", code: "B"},
-    %{id: "olomoucky", name: "Olomoucký", code: "M"},
-    %{id: "zlinsky", name: "Zlínský", code: "Z"},
-    %{id: "moravskoslezsky", name: "Moravskoslezský", code: "T"}
-  ]
 
   @impl true
   def mount(_params, session, socket) do
@@ -26,12 +11,13 @@ defmodule LiveDashboardWeb.RegionsLive do
     locale = Map.get(session, "locale", "en")
     Gettext.put_locale(LiveDashboardWeb.Gettext, locale)
 
+    regions = Repo.all(Region)
     regions_geojson = RegionsData.get_regions_geojson()
 
     socket =
       socket
       |> assign(:selected_region, nil)
-      |> assign(:regions, @regions)
+      |> assign(:regions, regions)
       |> assign(:regions_geojson, regions_geojson)
 
     {:ok, socket}
@@ -45,7 +31,7 @@ defmodule LiveDashboardWeb.RegionsLive do
 
   @impl true
   def handle_event("select_region", %{"region_id" => region_id}, socket) do
-    region = Enum.find(@regions, &(&1.id == region_id))
+    region = Enum.find(socket.assigns.regions, &(&1.slug == region_id))
     report_data = get_region_report(region_id)
 
     socket =

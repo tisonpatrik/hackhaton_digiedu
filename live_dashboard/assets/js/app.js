@@ -26,18 +26,40 @@ import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import { ChartHook } from "./chart_hook"
 import { MapHook } from "./map_hook"
+import { ScrollToForm } from "./hooks/scroll_to_form"
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks, Chart: ChartHook, Map: MapHook},
+  hooks: {...colocatedHooks, Chart: ChartHook, Map: MapHook, ScrollToForm: ScrollToForm},
 })
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
+
+// Global fragment handler for scroll-to-form
+document.addEventListener('phx:liveview:connected', () => {
+  if (window.location.hash === '#scroll-to-form') {
+    setTimeout(() => {
+      const formElement = document.querySelector('[data-form="add-school"]');
+      if (formElement) {
+        formElement.classList.add('ring-2', 'ring-primary', 'ring-opacity-50');
+        formElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        setTimeout(() => {
+          formElement.classList.remove('ring-2', 'ring-primary', 'ring-opacity-50');
+        }, 2000);
+        // Clean up hash from URL
+        history.replaceState(null, null, window.location.pathname);
+      }
+    }, 100);
+  }
+});
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
