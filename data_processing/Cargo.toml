@@ -24,6 +24,10 @@ sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "tls-rustls-r
 uuid = { version = "1.10", features = ["v4"] }
 schemars = "0.8"
 base64 = "0.22"
+# Document processing
+pdf-extract = "0.7"
+zip = "2.1"
+quick-xml = "0.36"
 
 [dev-dependencies]
 actix-rt = "2"
