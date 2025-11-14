@@ -10,7 +10,8 @@ use crate::processors::audio::transcribe_audio_file;
 use crate::processors::image::analyze_image_file;
 use crate::processors::text::parse_text_file;
 use crate::processors::tabular::parse_tabular_file;
-use crate::file_types::{is_audio_extension, is_image_extension, is_text_extension, is_tabular_extension};
+use crate::processors::document::parse_document_file;
+use crate::file_types::{is_audio_extension, is_image_extension, is_text_extension, is_tabular_extension, is_document_extension};
 use crate::injectors::inject_document;
 use crate::labels::get_labels_for_chunk;
 
@@ -84,6 +85,7 @@ pub async fn upload_multipart_file(
         let is_audio = is_audio_extension(&extension);
         let is_image = is_image_extension(&extension);
         let is_text = is_text_extension(&extension);
+        let is_document = is_document_extension(&extension);
         let is_tabular = is_tabular_extension(&extension);
         
         // Save to appropriate directory
@@ -130,6 +132,7 @@ pub async fn upload_multipart_file(
     let is_audio = is_audio_extension(&extension);
     let is_image = is_image_extension(&extension);
     let is_text = is_text_extension(&extension);
+    let is_document = is_document_extension(&extension);
     let is_tabular = is_tabular_extension(&extension);
     
     if is_audio {
@@ -221,6 +224,36 @@ pub async fn upload_multipart_file(
             Err(error_msg) => {
                 HttpResponse::InternalServerError().json(FileUploadError {
                     error: format!("File saved but text extraction failed: {}", error_msg),
+                })
+            }
+        }
+    } else if is_document {
+        log::info!("Processing document file: {:?}", saved_path);
+        // Parse the document file (PDF, DOCX, PPTX)
+        match parse_document_file(&saved_path).await {
+            Ok(document_text) => {
+                log::info!("Document extraction complete: {} characters", document_text.len());
+                
+                // Inject document and extract labels
+                let labels = process_and_extract_labels(
+                    pool.get_ref(),
+                    &filename,
+                    &document_text
+                ).await;
+                
+                HttpResponse::Ok().json(FileUploadResponse {
+                    status: "ok".to_string(),
+                    file_type: "document".to_string(),
+                    filename,
+                    file_path: saved_path.to_string_lossy().to_string(),
+                    transcript_text: Some(document_text),
+                    transcript_path: None,
+                    labels,
+                })
+            }
+            Err(error_msg) => {
+                HttpResponse::InternalServerError().json(FileUploadError {
+                    error: format!("File saved but document extraction failed: {}", error_msg),
                 })
             }
         }

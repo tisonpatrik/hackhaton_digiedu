@@ -3,7 +3,11 @@ pub const AUDIO_EXTENSIONS: &[&str] = &[
 ];
 
 pub const TEXT_EXTENSIONS: &[&str] = &[
-    "txt", "md", "log", "doc", "docx"
+    "txt", "md", "log"
+];
+
+pub const DOCUMENT_EXTENSIONS: &[&str] = &[
+    "pdf", "docx", "pptx"
 ];
 
 pub const TABULAR_EXTENSIONS: &[&str] = &[
@@ -20,6 +24,10 @@ pub fn is_audio_extension(extension: &str) -> bool {
 
 pub fn is_text_extension(extension: &str) -> bool {
     TEXT_EXTENSIONS.contains(&extension)
+}
+
+pub fn is_document_extension(extension: &str) -> bool {
+    DOCUMENT_EXTENSIONS.contains(&extension)
 }
 
 pub fn is_tabular_extension(extension: &str) -> bool {
