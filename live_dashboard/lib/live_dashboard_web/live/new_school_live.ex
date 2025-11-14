@@ -77,9 +77,18 @@ defmodule LiveDashboardWeb.NewSchoolLive do
 
   defp list_municipalities do
     try do
-      Repo.all(from m in Municipality, order_by: [asc: m.name])
+      result = Repo.all(from m in Municipality, order_by: [asc: m.name])
+      # If database returns empty list, fallback to mock data
+      if Enum.empty?(result) do
+        get_mock_municipalities()
+      else
+        result
+      end
     rescue
-      _ ->
+      error ->
+        # Log the error for debugging
+        require Logger
+        Logger.warning("Error fetching municipalities: #{inspect(error)}")
         # Fallback to mock data if database is not set up
         get_mock_municipalities()
     end
