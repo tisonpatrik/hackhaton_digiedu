@@ -66,7 +66,10 @@ defmodule LiveDashboardWeb.NewSchoolLive do
         socket =
           socket
           |> assign(:form, to_form(changeset))
-          |> put_flash(:error, gettext("Failed to create school. Please check the form for errors."))
+          |> put_flash(
+            :error,
+            gettext("Failed to create school. Please check the form for errors.")
+          )
 
         {:noreply, socket}
     end
@@ -134,8 +137,8 @@ defmodule LiveDashboardWeb.NewSchoolLive do
             </li>
           </ol>
         </nav>
-
-        <!-- Header -->
+        
+    <!-- Header -->
         <header class="mb-8">
           <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
             {gettext("Add New School")}
@@ -144,8 +147,8 @@ defmodule LiveDashboardWeb.NewSchoolLive do
             {gettext("Create a new school profile by filling in the information below")}
           </p>
         </header>
-
-        <!-- Form -->
+        
+    <!-- Form -->
         <div class="max-w-3xl">
           <form phx-submit="save" phx-change="validate" class="space-y-6">
             <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
@@ -178,6 +181,14 @@ defmodule LiveDashboardWeb.NewSchoolLive do
                   prompt={gettext("Select municipality")}
                   options={Enum.map(@municipalities, fn m -> {m.name, m.id} end)}
                   required
+                />
+
+                <.input
+                  field={@form[:students]}
+                  type="number"
+                  label={gettext("Number of Students")}
+                  placeholder="0"
+                  min="0"
                 />
 
                 <.input

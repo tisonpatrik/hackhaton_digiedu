@@ -32,7 +32,9 @@ defmodule LiveDashboardWeb.Router do
 
     live "/schools", SchoolsLive
 
-    live "/schools/all", SchoolsAllLive
+    live "/schools/new", NewSchoolLive
+
+    live "/schools/regions", SchoolsRegionsLive
 
     live "/schools/:id", SchoolProfileLive, :show
 
