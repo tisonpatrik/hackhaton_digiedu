@@ -1,7 +1,7 @@
 mod handlers;
 mod models;
 
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -10,23 +10,23 @@ use models::{
     TranscribeRequest, TranscribeResponse, TranscribeError,
 };
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+#[utoipa::path(
+    get,
+    path = "/health",
+    responses(
+        (status = 200, description = "Service is healthy")
+    ),
+    tag = "Health"
+)]
+#[get("/health")]
+async fn health() -> impl Responder {
+    HttpResponse::Ok().json(serde_json::json!({"status": "ok"}))
 }
 
 #[derive(OpenApi)]
 #[openapi(
     paths(
+        health,
         crate::handlers::upload_file,
         crate::handlers::transcribe_audio
     ),
@@ -39,6 +39,7 @@ async fn manual_hello() -> impl Responder {
         TranscribeError
     )),
     tags(
+        (name = "Health", description = "Health check"),
         (name = "Files", description = "File operations"),
         (name = "Audio", description = "Audio transcription operations")
     )
@@ -58,18 +59,18 @@ async fn main() -> std::io::Result<()> {
     
     log::info!("Starting server on {}:{}", host, port);
     
-    HttpServer::new(|| {
+    let openapi = ApiDoc::openapi();
+    
+    HttpServer::new(move || {
         App::new()
             .wrap(actix_web::middleware::Logger::default())
             .service(
                 SwaggerUi::new("/docs/{_:.*}")
-                    .url("/api-doc/openapi.json", ApiDoc::openapi())
+                    .url("/api-doc/openapi.json", openapi.clone())
             )
-            .service(hello)
-            .service(echo)
+            .service(health)
             .service(handlers::upload_file)
             .service(handlers::transcribe_audio)
-            .route("/hey", web::get().to(manual_hello))
     })
     .bind((host.as_str(), port))?
     .run()
