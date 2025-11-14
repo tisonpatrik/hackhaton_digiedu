@@ -18,12 +18,23 @@ defmodule LiveDashboard.FileJobs.Job do
     timestamps(type: :utc_datetime)
   end
 
-  # Progress stages: 0=uploaded, 1=preparing, 2=transcribing, 3=finalizing
-  def stage_name(0), do: "Uploaded"
-  def stage_name(1), do: "Preparing audio"
-  def stage_name(2), do: "Transcribing"
-  def stage_name(3), do: "Finalizing"
-  def stage_name(_), do: "Processing"
+  # Progress stages: 0=uploaded, 1=preparing, 2=processing, 3=finalizing
+  def stage_name(0, _file_type), do: "Uploaded"
+  def stage_name(1, "audio"), do: "Preparing audio"
+  def stage_name(1, "image"), do: "Preparing image"
+  def stage_name(1, "text"), do: "Preparing text"
+  def stage_name(1, "tabular"), do: "Preparing data"
+  def stage_name(1, _), do: "Preparing"
+  def stage_name(2, "audio"), do: "Transcribing"
+  def stage_name(2, "image"), do: "Analyzing with AI"
+  def stage_name(2, "text"), do: "Extracting text"
+  def stage_name(2, "tabular"), do: "Parsing data"
+  def stage_name(2, _), do: "Processing"
+  def stage_name(3, _file_type), do: "Finalizing"
+  def stage_name(_, _), do: "Processing"
+  
+  # Backward compatibility for old code
+  def stage_name(stage) when is_integer(stage), do: stage_name(stage, "audio")
 
   @doc false
   def changeset(job, attrs) do
