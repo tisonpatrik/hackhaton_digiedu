@@ -1,4 +1,5 @@
 use actix_web::{post, web, HttpResponse, Responder};
+use sqlx::PgPool;
 use std::path::Path;
 
 use crate::models::{
@@ -17,13 +18,15 @@ use crate::file_types::{is_audio_extension, is_text_extension, is_tabular_extens
     responses(
         (status = 200, description = "File processed", body = UploadFileResponse),
         (status = 404, description = "File not found", body = UploadFileError),
-        (status = 500, description = "Processing failed", body = UploadFileError),
-        (status = 501, description = "Document injection not implemented", body = UploadFileError)
+        (status = 500, description = "Processing failed", body = UploadFileError)
     ),
     tag = "Files"
 )]
 #[post("/upload-file")]
-pub async fn upload_file(req: web::Json<UploadFileRequest>) -> impl Responder {
+pub async fn upload_file(
+    req: web::Json<UploadFileRequest>,
+    pool: web::Data<PgPool>,
+) -> impl Responder {
     let file_path = Path::new(&req.path);
     
     if !file_path.exists() {
@@ -77,7 +80,12 @@ pub async fn upload_file(req: web::Json<UploadFileRequest>) -> impl Responder {
         });
     };
     
-    match inject_document(&plain_text) {
+    let document_name = file_path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("unknown");
+    
+    match inject_document(pool.get_ref(), document_name, &plain_text).await {
         Ok(_) => {
             HttpResponse::Ok().json(UploadFileResponse {
                 status: "ok".to_string(),
@@ -86,7 +94,7 @@ pub async fn upload_file(req: web::Json<UploadFileRequest>) -> impl Responder {
             })
         }
         Err(error_msg) => {
-            HttpResponse::NotImplemented().json(UploadFileError {
+            HttpResponse::InternalServerError().json(UploadFileError {
                 error: error_msg,
             })
         }

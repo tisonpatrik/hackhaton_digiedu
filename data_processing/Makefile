@@ -7,3 +7,7 @@ run:
 .PHONY: build
 build:
 	cargo build
+
+.PHONY: db-shell
+db-shell:
+	cd .. && docker-compose exec postgres psql -U postgres -d live_dashboard_dev
