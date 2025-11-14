@@ -1,8 +1,6 @@
 # Seeds for municipalities
 # Creates municipalities associated with regions
 
-import Ecto.Query
-
 alias LiveDashboard.Repo
 alias LiveDashboard.Schemas.Region
 alias LiveDashboard.Schemas.Municipality

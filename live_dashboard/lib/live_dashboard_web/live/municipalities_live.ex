@@ -52,22 +52,30 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
               <li class="inline-flex items-center">
                 <.link
-                  navigate={~p"/schools"}
+                  navigate={~p"/catalog/regions"}
                   class="inline-flex items-center text-sm font-medium text-base-content/60 hover:text-base-content"
                 >
                   <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
-                  {gettext("Schools")}
+                  {gettext("Catalog")}
                 </.link>
               </li>
               <li>
                 <div class="flex items-center">
                   <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
                   <.link
-                    navigate={if @region, do: "/regions/#{@region.slug}/schools", else: "#"}
+                    navigate={~p"/catalog/regions"}
                     class="text-sm font-medium text-base-content/60 hover:text-base-content"
                   >
-                    {@region.name}
+                    {gettext("Regions")}
                   </.link>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <span class="text-sm font-medium text-base-content">
+                    {if @region, do: @region.name, else: gettext("Unknown Region")}
+                  </span>
                 </div>
               </li>
               <li>
@@ -102,7 +110,7 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
             </div>
           </div>
         </header>
-        
+
     <!-- Municipalities Grid -->
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div
@@ -136,7 +144,7 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
             </div>
           </div>
         </div>
-        
+
     <!-- Empty State -->
         <div :if={@municipalities == []} class="text-center py-16">
           <div class="mx-auto max-w-md">
@@ -155,7 +163,7 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
             </button>
           </div>
         </div>
-        
+
     <!-- Back to Browse by Region -->
         <div class="mt-12 text-center">
           <.link navigate={~p"/schools"} class="btn btn-outline">
