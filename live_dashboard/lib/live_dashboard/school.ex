@@ -17,19 +17,10 @@ defmodule LiveDashboard.School do
 
   def changeset(school, attrs) do
     school
-    |> cast(attrs, [
-      :name,
-      :region_id,
-      :type,
-      :students,
-      :address,
-      :phone,
-      :email,
-      :website,
-      :description
-    ])
+    |> cast(attrs, [:name, :region_id, :type, :students, :address, :phone, :email, :website, :description])
     |> validate_required([:name, :region_id, :type])
     |> validate_number(:students, greater_than_or_equal_to: 0)
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must be a valid email")
   end
 end
+

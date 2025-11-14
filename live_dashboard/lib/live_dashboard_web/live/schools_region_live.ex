@@ -122,7 +122,7 @@ defmodule LiveDashboardWeb.SchoolsRegionLive do
                   {if @region, do: @region.name, else: gettext("Unknown Region")}
                 </div>
                 <.link
-                  navigate={~p"/schools/#{school.id}"}
+                  navigate={~p"/regions/#{@region.id}/schools/#{school.id}"}
                   class="btn btn-primary btn-sm"
                 >
                   <.icon name="hero-eye" class="w-4 h-4 mr-2" />

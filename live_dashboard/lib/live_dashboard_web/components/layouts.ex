@@ -136,23 +136,29 @@ defmodule LiveDashboardWeb.Layouts do
               <span>{gettext("Courses")}</span>
             </a>
           </:item>
+          <:item>
+            <.link navigate={~p"/schools#scroll-to-form"} class="menu-item">
+              <.icon name="hero-plus" class="w-5 h-5" />
+              <span>{gettext("Add School")}</span>
+            </.link>
+          </:item>
         </.menu_section>
 
         <.menu_section title={gettext("Schools")} icon="hero-building-library">
           <:item>
             <.link navigate={~p"/schools"} class="menu-item">
-              <.icon name="hero-building-library" class="w-5 h-5" />
-              <span>{gettext("All Schools")}</span>
-            </.link>
-          </:item>
-          <:item>
-            <.link navigate={~p"/schools/regions"} class="menu-item">
               <.icon name="hero-map" class="w-5 h-5" />
-              <span>{gettext("Browse by Region")}</span>
+              <span>{gettext("Browse Schools")}</span>
             </.link>
           </:item>
           <:item>
-            <.link navigate={~p"/schools/new"} class="menu-item">
+            <.link navigate={~p"/schools/all"} class="menu-item">
+              <.icon name="hero-building-library" class="w-5 h-5" />
+              <span>{gettext("See Schools")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <.link navigate={~p"/schools#scroll-to-form"} class="menu-item">
               <.icon name="hero-plus" class="w-5 h-5" />
               <span>{gettext("Add School")}</span>
             </.link>

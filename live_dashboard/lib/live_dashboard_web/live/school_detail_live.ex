@@ -27,10 +27,10 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
     Gettext.put_locale(LiveDashboardWeb.Gettext, locale)
 
     region = Enum.find(@regions, &(&1.id == region_id))
-
+    
     # Try to get school from database, fallback to mock data if not found
     school = get_school(school_id) || get_mock_school(school_id, region_id)
-
+    
     socket =
       socket
       |> assign(:region, region)
@@ -47,18 +47,17 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
   end
 
   def handle_event("edit", _params, socket) do
-    changeset =
-      School.changeset(socket.assigns.school, %{
-        name: socket.assigns.school.name,
-        region_id: socket.assigns.school.region_id,
-        type: socket.assigns.school.type,
-        students: socket.assigns.school.students,
-        address: socket.assigns.school.address || "",
-        phone: socket.assigns.school.phone || "",
-        email: socket.assigns.school.email || "",
-        website: socket.assigns.school.website || "",
-        description: socket.assigns.school.description || ""
-      })
+    changeset = School.changeset(socket.assigns.school, %{
+      name: socket.assigns.school.name,
+      region_id: socket.assigns.school.region_id,
+      type: socket.assigns.school.type,
+      students: socket.assigns.school.students,
+      address: socket.assigns.school.address || "",
+      phone: socket.assigns.school.phone || "",
+      email: socket.assigns.school.email || "",
+      website: socket.assigns.school.website || "",
+      description: socket.assigns.school.description || ""
+    })
 
     socket =
       socket
@@ -140,198 +139,32 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
   defp get_mock_school(school_id, region_id) do
     # Mock data matching the structure from SchoolsRegionLive - all schools from all regions
     mock_schools = [
-      %{
-        id: 1,
-        name: "Gymnázium Jana Nerudy",
-        region_id: "praha",
-        type: "Gymnázium",
-        students: 450,
-        address: "Hellichova 3, 118 00 Praha 1",
-        phone: "+420 257 533 534",
-        email: "info@gjn.cz",
-        website: "https://www.gjn.cz",
-        description: "Elite grammar school in Prague"
-      },
-      %{
-        id: 2,
-        name: "Základní škola U Školky",
-        region_id: "praha",
-        type: "Základní škola",
-        students: 320,
-        address: "U Školky 1, 150 00 Praha 5",
-        phone: "+420 251 555 123",
-        email: "info@uskolky.cz",
-        website: "https://www.uskolky.cz",
-        description: "Elementary school in Prague 5"
-      },
-      %{
-        id: 3,
-        name: "Střední průmyslová škola",
-        region_id: "stredocesky",
-        type: "Střední škola",
-        students: 280,
-        address: "Hlavní 123, 250 00 Mělník",
-        phone: "+420 315 123 456",
-        email: "info@sps-melnik.cz",
-        website: "https://www.sps-melnik.cz",
-        description: "Technical high school in Central Bohemia"
-      },
-      %{
-        id: 4,
-        name: "Gymnázium České Budějovice",
-        region_id: "jihocesky",
-        type: "Gymnázium",
-        students: 380,
-        address: "Jirsíkova 1, 370 01 České Budějovice",
-        phone: "+420 387 123 456",
-        email: "info@gymcb.cz",
-        website: "https://www.gymcb.cz",
-        description: "Grammar school in České Budějovice"
-      },
-      %{
-        id: 5,
-        name: "Základní škola Plzeň",
-        region_id: "plzensky",
-        type: "Základní škola",
-        students: 290,
-        address: "Náměstí Republiky 1, 301 00 Plzeň",
-        phone: "+420 377 123 456",
-        email: "info@zsplzen.cz",
-        website: "https://www.zsplzen.cz",
-        description: "Elementary school in Plzeň"
-      },
-      %{
-        id: 6,
-        name: "Technická univerzita Liberec",
-        region_id: "liberecky",
-        type: "Vysoká škola",
-        students: 5200,
-        address: "Studentská 2, 461 17 Liberec",
-        phone: "+420 485 123 456",
-        email: "info@tul.cz",
-        website: "https://www.tul.cz",
-        description: "Technical University of Liberec"
-      },
-      %{
-        id: 7,
-        name: "Gymnázium Hradec Králové",
-        region_id: "kralovehradecky",
-        type: "Gymnázium",
-        students: 410,
-        address: "Eliščino nábřeží 1, 500 03 Hradec Králové",
-        phone: "+420 495 123 456",
-        email: "info@gymhk.cz",
-        website: "https://www.gymhk.cz",
-        description: "Grammar school in Hradec Králové"
-      },
-      %{
-        id: 8,
-        name: "Univerzita Pardubice",
-        region_id: "pardubicky",
-        type: "Vysoká škola",
-        students: 8900,
-        address: "Studentská 95, 532 10 Pardubice",
-        phone: "+420 466 123 456",
-        email: "info@upce.cz",
-        website: "https://www.upce.cz",
-        description: "University of Pardubice"
-      },
-      %{
-        id: 9,
-        name: "Střední škola Jihlava",
-        region_id: "vysocina",
-        type: "Střední škola",
-        students: 350,
-        address: "Havlíčkova 1, 586 01 Jihlava",
-        phone: "+420 567 123 456",
-        email: "info@ssjihlava.cz",
-        website: "https://www.ssjihlava.cz",
-        description: "High school in Jihlava"
-      },
-      %{
-        id: 10,
-        name: "Masarykova univerzita",
-        region_id: "jihomoravsky",
-        type: "Vysoká škola",
-        students: 32000,
-        address: "Žerotínovo nám. 9, 601 77 Brno",
-        phone: "+420 549 123 456",
-        email: "info@muni.cz",
-        website: "https://www.muni.cz",
-        description: "Masaryk University in Brno"
-      },
-      %{
-        id: 11,
-        name: "Univerzita Palackého",
-        region_id: "olomoucky",
-        type: "Vysoká škola",
-        students: 21000,
-        address: "Křížkovského 8, 771 47 Olomouc",
-        phone: "+420 585 123 456",
-        email: "info@upol.cz",
-        website: "https://www.upol.cz",
-        description: "Palacký University in Olomouc"
-      },
-      %{
-        id: 12,
-        name: "Univerzita Tomáše Bati",
-        region_id: "zlinsky",
-        type: "Vysoká škola",
-        students: 9200,
-        address: "nám. T. G. Masaryka 5555, 760 01 Zlín",
-        phone: "+420 576 123 456",
-        email: "info@utb.cz",
-        website: "https://www.utb.cz",
-        description: "Tomas Bata University in Zlín"
-      },
-      %{
-        id: 13,
-        name: "Ostravská univerzita",
-        region_id: "moravskoslezsky",
-        type: "Vysoká škola",
-        students: 9800,
-        address: "Dvořákova 7, 701 03 Ostrava",
-        phone: "+420 597 123 456",
-        email: "info@osu.cz",
-        website: "https://www.osu.cz",
-        description: "University of Ostrava"
-      },
-      %{
-        id: 14,
-        name: "Vysoká škola báňská",
-        region_id: "moravskoslezsky",
-        type: "Vysoká škola",
-        students: 15600,
-        address: "17. listopadu 2172/15, 708 00 Ostrava",
-        phone: "+420 597 123 789",
-        email: "info@vsb.cz",
-        website: "https://www.vsb.cz",
-        description: "VSB - Technical University of Ostrava"
-      },
-      %{
-        id: 15,
-        name: "Základní škola Ostrava",
-        region_id: "moravskoslezsky",
-        type: "Základní škola",
-        students: 275,
-        address: "Hlavní 100, 700 30 Ostrava",
-        phone: "+420 597 456 789",
-        email: "info@zsostrava.cz",
-        website: "https://www.zsostrava.cz",
-        description: "Elementary school in Ostrava"
-      }
+      %{id: 1, name: "Gymnázium Jana Nerudy", region_id: "praha", type: "Gymnázium", students: 450, address: "Hellichova 3, 118 00 Praha 1", phone: "+420 257 533 534", email: "info@gjn.cz", website: "https://www.gjn.cz", description: "Elite grammar school in Prague"},
+      %{id: 2, name: "Základní škola U Školky", region_id: "praha", type: "Základní škola", students: 320, address: "U Školky 1, 150 00 Praha 5", phone: "+420 251 555 123", email: "info@uskolky.cz", website: "https://www.uskolky.cz", description: "Elementary school in Prague 5"},
+      %{id: 3, name: "Střední průmyslová škola", region_id: "stredocesky", type: "Střední škola", students: 280, address: "Hlavní 123, 250 00 Mělník", phone: "+420 315 123 456", email: "info@sps-melnik.cz", website: "https://www.sps-melnik.cz", description: "Technical high school in Central Bohemia"},
+      %{id: 4, name: "Gymnázium České Budějovice", region_id: "jihocesky", type: "Gymnázium", students: 380, address: "Jirsíkova 1, 370 01 České Budějovice", phone: "+420 387 123 456", email: "info@gymcb.cz", website: "https://www.gymcb.cz", description: "Grammar school in České Budějovice"},
+      %{id: 5, name: "Základní škola Plzeň", region_id: "plzensky", type: "Základní škola", students: 290, address: "Náměstí Republiky 1, 301 00 Plzeň", phone: "+420 377 123 456", email: "info@zsplzen.cz", website: "https://www.zsplzen.cz", description: "Elementary school in Plzeň"},
+      %{id: 6, name: "Technická univerzita Liberec", region_id: "liberecky", type: "Vysoká škola", students: 5200, address: "Studentská 2, 461 17 Liberec", phone: "+420 485 123 456", email: "info@tul.cz", website: "https://www.tul.cz", description: "Technical University of Liberec"},
+      %{id: 7, name: "Gymnázium Hradec Králové", region_id: "kralovehradecky", type: "Gymnázium", students: 410, address: "Eliščino nábřeží 1, 500 03 Hradec Králové", phone: "+420 495 123 456", email: "info@gymhk.cz", website: "https://www.gymhk.cz", description: "Grammar school in Hradec Králové"},
+      %{id: 8, name: "Univerzita Pardubice", region_id: "pardubicky", type: "Vysoká škola", students: 8900, address: "Studentská 95, 532 10 Pardubice", phone: "+420 466 123 456", email: "info@upce.cz", website: "https://www.upce.cz", description: "University of Pardubice"},
+      %{id: 9, name: "Střední škola Jihlava", region_id: "vysocina", type: "Střední škola", students: 350, address: "Havlíčkova 1, 586 01 Jihlava", phone: "+420 567 123 456", email: "info@ssjihlava.cz", website: "https://www.ssjihlava.cz", description: "High school in Jihlava"},
+      %{id: 10, name: "Masarykova univerzita", region_id: "jihomoravsky", type: "Vysoká škola", students: 32000, address: "Žerotínovo nám. 9, 601 77 Brno", phone: "+420 549 123 456", email: "info@muni.cz", website: "https://www.muni.cz", description: "Masaryk University in Brno"},
+      %{id: 11, name: "Univerzita Palackého", region_id: "olomoucky", type: "Vysoká škola", students: 21000, address: "Křížkovského 8, 771 47 Olomouc", phone: "+420 585 123 456", email: "info@upol.cz", website: "https://www.upol.cz", description: "Palacký University in Olomouc"},
+      %{id: 12, name: "Univerzita Tomáše Bati", region_id: "zlinsky", type: "Vysoká škola", students: 9200, address: "nám. T. G. Masaryka 5555, 760 01 Zlín", phone: "+420 576 123 456", email: "info@utb.cz", website: "https://www.utb.cz", description: "Tomas Bata University in Zlín"},
+      %{id: 13, name: "Ostravská univerzita", region_id: "moravskoslezsky", type: "Vysoká škola", students: 9800, address: "Dvořákova 7, 701 03 Ostrava", phone: "+420 597 123 456", email: "info@osu.cz", website: "https://www.osu.cz", description: "University of Ostrava"},
+      %{id: 14, name: "Vysoká škola báňská", region_id: "moravskoslezsky", type: "Vysoká škola", students: 15600, address: "17. listopadu 2172/15, 708 00 Ostrava", phone: "+420 597 123 789", email: "info@vsb.cz", website: "https://www.vsb.cz", description: "VSB - Technical University of Ostrava"},
+      %{id: 15, name: "Základní škola Ostrava", region_id: "moravskoslezsky", type: "Základní škola", students: 275, address: "Hlavní 100, 700 30 Ostrava", phone: "+420 597 456 789", email: "info@zsostrava.cz", website: "https://www.zsostrava.cz", description: "Elementary school in Ostrava"},
     ]
 
-    school_id_int =
-      try do
-        String.to_integer(school_id)
-      rescue
-        _ -> nil
-      end
+    school_id_int = try do
+      String.to_integer(school_id)
+    rescue
+      _ -> nil
+    end
 
     if school_id_int do
       school = Enum.find(mock_schools, &(&1.id == school_id_int && &1.region_id == region_id))
-
+      
       if school do
         # Convert to School struct-like map
         %{
@@ -373,7 +206,7 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
         website: attrs["website"] || school.website || "",
         description: attrs["description"] || school.description || ""
       }
-
+      
       updated_school = Map.merge(school, attrs_atom)
       {:ok, updated_school}
     end
@@ -381,14 +214,12 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
 
   defp parse_integer(nil), do: nil
   defp parse_integer(val) when is_integer(val), do: val
-
   defp parse_integer(val) when is_binary(val) do
     case Integer.parse(val) do
       {int, _} -> int
       :error -> nil
     end
   end
-
   defp parse_integer(_), do: nil
 
   defp delete_school(school) do
@@ -436,8 +267,8 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
             </li>
           </ol>
         </nav>
-        
-    <!-- Header -->
+
+        <!-- Header -->
         <header class="mb-8">
           <div class="flex items-center justify-between">
             <div class="flex-1">
@@ -470,8 +301,8 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
             </div>
           </div>
         </header>
-        
-    <!-- School Details -->
+
+        <!-- School Details -->
         <div :if={!@editing} class="grid gap-6 lg:grid-cols-3">
           <!-- Main Info -->
           <div class="lg:col-span-2 space-y-6">
@@ -549,8 +380,8 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
               </div>
             </div>
           </div>
-          
-    <!-- Sidebar -->
+
+          <!-- Sidebar -->
           <div class="lg:col-span-1 space-y-6">
             <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm">
               <h3 class="text-lg font-bold text-base-content mb-4">
@@ -596,8 +427,8 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
             </div>
           </div>
         </div>
-        
-    <!-- Edit Form -->
+
+        <!-- Edit Form -->
         <div :if={@editing} class="max-w-3xl">
           <form phx-submit="save" phx-change="validate" class="space-y-6">
             <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
@@ -678,3 +509,4 @@ defmodule LiveDashboardWeb.SchoolDetailLive do
     """
   end
 end
+
