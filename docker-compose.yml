@@ -58,7 +58,11 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 8080
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/live_dashboard_dev
       WHISPER_URL: http://faster-whisper:8000
+      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY}
+      FEATHERLESS_BASE_URL: ${FEATHERLESS_BASE_URL:-https://api.featherless.ai/v1}
+      FEATHERLESS_VISION_MODEL: ${FEATHERLESS_VISION_MODEL:-google/gemma-3-4b-it}
     volumes:
       - data_processing_audio:/app/audio_files
       - data_processing_transcripts:/app/transcripts

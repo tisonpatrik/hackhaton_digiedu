@@ -8,8 +8,9 @@ use crate::models::{
 use crate::processors::audio::transcribe_audio_file;
 use crate::processors::text::parse_text_file;
 use crate::processors::tabular::parse_tabular_file;
+use crate::processors::image::analyze_image_file;
 use crate::injectors::inject_document;
-use crate::file_types::{is_audio_extension, is_text_extension, is_tabular_extension};
+use crate::file_types::{is_audio_extension, is_text_extension, is_tabular_extension, is_image_extension};
 
 #[utoipa::path(
     post,
@@ -44,6 +45,7 @@ pub async fn upload_file(
     let is_audio = is_audio_extension(&extension);
     let is_text = is_text_extension(&extension);
     let is_tabular = is_tabular_extension(&extension);
+    let is_image = is_image_extension(&extension);
     
     let plain_text = if is_audio {
         match transcribe_audio_file(file_path).await {
@@ -72,6 +74,15 @@ pub async fn upload_file(
                 });
             }
         }
+    } else if is_image {
+        match analyze_image_file(file_path).await {
+            Ok(text) => text,
+            Err(error_msg) => {
+                return HttpResponse::InternalServerError().json(UploadFileError {
+                    error: error_msg,
+                });
+            }
+        }
     } else {
         return HttpResponse::Ok().json(UploadFileResponse {
             status: "ok".to_string(),
@@ -87,9 +98,21 @@ pub async fn upload_file(
     
     match inject_document(pool.get_ref(), document_name, &plain_text).await {
         Ok(_) => {
+            let file_type = if is_audio {
+                "audio"
+            } else if is_text {
+                "text"
+            } else if is_tabular {
+                "tabular"
+            } else if is_image {
+                "image"
+            } else {
+                "other"
+            };
+            
             HttpResponse::Ok().json(UploadFileResponse {
                 status: "ok".to_string(),
-                file_type: if is_audio { "audio" } else if is_text { "text" } else { "tabular" }.to_string(),
+                file_type: file_type.to_string(),
                 transcript_path: None,
             })
         }

@@ -6,6 +6,10 @@ use std::fs;
 
 use crate::models::{FileUploadResponse, FileUploadError};
 use crate::processors::audio::transcribe_audio_file;
+use crate::processors::image::analyze_image_file;
+use crate::processors::text::parse_text_file;
+use crate::processors::tabular::parse_tabular_file;
+use crate::file_types::{is_audio_extension, is_image_extension, is_text_extension, is_tabular_extension};
 
 #[utoipa::path(
     post,
@@ -64,17 +68,17 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
             .unwrap_or("uploaded_file")
             .to_string();
         
-        // Determine if it's audio
-        let is_audio = Path::new(&filename)
+        // Determine file type
+        let extension = Path::new(&filename)
             .extension()
             .and_then(|ext| ext.to_str())
-            .map(|ext| {
-                matches!(
-                    ext.to_lowercase().as_str(),
-                    "mp3" | "wav" | "ogg" | "flac" | "m4a" | "aac" | "wma" | "opus"
-                )
-            })
-            .unwrap_or(false);
+            .map(|ext| ext.to_lowercase())
+            .unwrap_or_default();
+        
+        let is_audio = is_audio_extension(&extension);
+        let is_image = is_image_extension(&extension);
+        let is_text = is_text_extension(&extension);
+        let is_tabular = is_tabular_extension(&extension);
         
         // Save to appropriate directory
         let target_dir = if is_audio { audio_dir } else { upload_dir };
@@ -110,19 +114,20 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
         });
     }
     
-    // Check if it's an audio file and transcribe
-    let is_audio = saved_path
+    // Determine file type and process
+    let extension = saved_path
         .extension()
         .and_then(|ext| ext.to_str())
-        .map(|ext| {
-            matches!(
-                ext.to_lowercase().as_str(),
-                "mp3" | "wav" | "ogg" | "flac" | "m4a" | "aac" | "wma" | "opus"
-            )
-        })
-        .unwrap_or(false);
+        .map(|ext| ext.to_lowercase())
+        .unwrap_or_default();
+    
+    let is_audio = is_audio_extension(&extension);
+    let is_image = is_image_extension(&extension);
+    let is_text = is_text_extension(&extension);
+    let is_tabular = is_tabular_extension(&extension);
     
     if is_audio {
+        log::info!("Processing audio file: {:?}", saved_path);
         // Transcribe the audio file
         match transcribe_audio_file(&saved_path).await {
             Ok(transcript_path) => {
@@ -145,7 +150,74 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
                 })
             }
         }
+    } else if is_image {
+        log::info!("Processing image file: {:?}", saved_path);
+        // Analyze the image file
+        match analyze_image_file(&saved_path).await {
+            Ok(analysis_text) => {
+                log::info!("Image analysis complete: {} characters", analysis_text.len());
+                
+                HttpResponse::Ok().json(FileUploadResponse {
+                    status: "ok".to_string(),
+                    file_type: "image".to_string(),
+                    filename,
+                    file_path: saved_path.to_string_lossy().to_string(),
+                    transcript_text: Some(analysis_text),
+                    transcript_path: None,
+                })
+            }
+            Err(error_msg) => {
+                HttpResponse::InternalServerError().json(FileUploadError {
+                    error: format!("File saved but image analysis failed: {}", error_msg),
+                })
+            }
+        }
+    } else if is_text {
+        log::info!("Processing text file: {:?}", saved_path);
+        // Parse the text file
+        match parse_text_file(&saved_path).await {
+            Ok(text_content) => {
+                log::info!("Text extraction complete: {} characters", text_content.len());
+                
+                HttpResponse::Ok().json(FileUploadResponse {
+                    status: "ok".to_string(),
+                    file_type: "text".to_string(),
+                    filename,
+                    file_path: saved_path.to_string_lossy().to_string(),
+                    transcript_text: Some(text_content),
+                    transcript_path: None,
+                })
+            }
+            Err(error_msg) => {
+                HttpResponse::InternalServerError().json(FileUploadError {
+                    error: format!("File saved but text extraction failed: {}", error_msg),
+                })
+            }
+        }
+    } else if is_tabular {
+        log::info!("Processing tabular file: {:?}", saved_path);
+        // Parse the tabular file
+        match parse_tabular_file(&saved_path).await {
+            Ok(table_content) => {
+                log::info!("Tabular extraction complete: {} characters", table_content.len());
+                
+                HttpResponse::Ok().json(FileUploadResponse {
+                    status: "ok".to_string(),
+                    file_type: "tabular".to_string(),
+                    filename,
+                    file_path: saved_path.to_string_lossy().to_string(),
+                    transcript_text: Some(table_content),
+                    transcript_path: None,
+                })
+            }
+            Err(error_msg) => {
+                HttpResponse::InternalServerError().json(FileUploadError {
+                    error: format!("File saved but tabular extraction failed: {}", error_msg),
+                })
+            }
+        }
     } else {
+        log::info!("File saved without processing (unsupported type): {:?}", saved_path);
         HttpResponse::Ok().json(FileUploadResponse {
             status: "ok".to_string(),
             file_type: "other".to_string(),

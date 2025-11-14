@@ -40,7 +40,13 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
         file_size = byte_size(file_binary)
 
         # Determine file type
-        file_type = if is_audio_file?(filename), do: "audio", else: "other"
+        file_type = cond do
+          is_audio_file?(filename) -> "audio"
+          is_image_file?(filename) -> "image"
+          is_text_file?(filename) -> "text"
+          is_tabular_file?(filename) -> "tabular"
+          true -> "other"
+        end
 
         # Create job in database
         case FileJobs.create_job(%{
@@ -52,7 +58,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
           {:ok, job} ->
             # Process file in background
             Task.start(fn ->
-              process_file_job(job.id, file_binary, filename)
+              process_file_job(job.id, file_binary, filename, file_type)
             end)
 
             {:ok, job}
@@ -95,7 +101,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
     {:noreply, socket}
   end
 
-  defp process_file_job(job_id, file_binary, filename) do
+  defp process_file_job(job_id, file_binary, filename, file_type) do
     # Stage 0: Uploaded
     FileJobs.update_job_status(job_id, "processing", %{progress: 0})
     FileJobs.broadcast_job_update(%{id: job_id})
@@ -114,12 +120,14 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
         file_binary <>
         "\r\n--#{boundary}--\r\n"
 
-    # Stage 1: Preparing (API will handle audio preprocessing)
+    # Stage 1: Preparing (API will handle preprocessing)
     FileJobs.update_job_status(job_id, "processing", %{progress: 1})
     FileJobs.broadcast_job_update(%{id: job_id})
-    Process.sleep(2000)  # Show stage for visibility
+    # Images process faster, so shorter delay
+    sleep_time = if file_type == "image", do: 1000, else: 2000
+    Process.sleep(sleep_time)
 
-    # Stage 2: Transcribing (send to API)
+    # Stage 2: Processing (transcribing/analyzing - send to API)
     FileJobs.update_job_status(job_id, "processing", %{progress: 2})
     FileJobs.broadcast_job_update(%{id: job_id})
 
@@ -171,6 +179,24 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
     ext in [".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aac", ".wma", ".opus"]
   end
 
+  defp is_image_file?(filename) do
+    ext = Path.extname(filename) |> String.downcase()
+
+    ext in [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".tif"]
+  end
+
+  defp is_text_file?(filename) do
+    ext = Path.extname(filename) |> String.downcase()
+
+    ext in [".txt", ".md", ".log", ".doc", ".docx"]
+  end
+
+  defp is_tabular_file?(filename) do
+    ext = Path.extname(filename) |> String.downcase()
+
+    ext in [".csv", ".xlsx", ".xls", ".tsv", ".ods", ".json", ".yml", ".yaml"]
+  end
+
   defp get_content_type(filename) do
     case Path.extname(filename) |> String.downcase() do
       ".mp3" -> "audio/mpeg"
@@ -178,6 +204,14 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
       ".ogg" -> "audio/ogg"
       ".m4a" -> "audio/mp4"
       ".flac" -> "audio/flac"
+      ".png" -> "image/png"
+      ".jpg" -> "image/jpeg"
+      ".jpeg" -> "image/jpeg"
+      ".gif" -> "image/gif"
+      ".webp" -> "image/webp"
+      ".bmp" -> "image/bmp"
+      ".tiff" -> "image/tiff"
+      ".tif" -> "image/tiff"
       ".txt" -> "text/plain"
       ".pdf" -> "application/pdf"
       ".json" -> "application/json"
@@ -200,7 +234,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
             </h1>
             <p class="mt-4 max-w-xl text-base leading-7 text-base-content/70">
               {gettext(
-                "Upload files for processing. Audio files will be automatically transcribed. Track processing status in real-time."
+                "Upload educational files for processing. Audio files will be transcribed, images analyzed with AI vision, text and tables extracted automatically."
               )}
             </p>
           </div>
@@ -232,38 +266,72 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
                   </span>
                 </div>
                 <p class="mt-2 text-xs text-base-content/50">
-                  {gettext("Audio files will be automatically transcribed")}
+                  {gettext("All file types supported: audio, images, text, tables")}
                 </p>
               </div>
 
               <!-- File preview -->
               <%= for entry <- @uploads.file.entries do %>
-                <div class="flex items-center gap-4 rounded-xl bg-base-200/50 p-4">
-                  <.icon name="hero-document" class="h-8 w-8 text-primary" />
-                  <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-base-content truncate">
-                      <%= entry.client_name %>
-                    </p>
-                    <p class="text-xs text-base-content/60">
-                      <%= Float.round(entry.client_size / 1_000_000, 2) %> MB
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    phx-click="cancel-upload"
-                    phx-value-ref={entry.ref}
-                    class="btn btn-ghost btn-sm btn-circle"
-                  >
-                    <.icon name="hero-x-mark" class="h-5 w-5" />
-                  </button>
-                </div>
+                <div class="space-y-3">
+                  <%= if is_image_file?(entry.client_name) do %>
+                    <!-- Image preview -->
+                    <div class="relative rounded-xl overflow-hidden bg-base-200/50 p-2">
+                      <.live_img_preview entry={entry} class="w-full h-48 object-contain rounded-lg" />
+                      <button
+                        type="button"
+                        phx-click="cancel-upload"
+                        phx-value-ref={entry.ref}
+                        class="absolute top-3 right-3 btn btn-ghost btn-sm btn-circle bg-base-100/80 hover:bg-base-100"
+                      >
+                        <.icon name="hero-x-mark" class="h-5 w-5" />
+                      </button>
+                    </div>
+                  <% else %>
+                    <!-- Regular file preview -->
+                    <div class="flex items-center gap-4 rounded-xl bg-base-200/50 p-4">
+                      <%= if is_audio_file?(entry.client_name) do %>
+                        <.icon name="hero-speaker-wave" class="h-8 w-8 text-primary" />
+                      <% else %>
+                        <.icon name="hero-document" class="h-8 w-8 text-secondary" />
+                      <% end %>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-base-content truncate">
+                          <%= entry.client_name %>
+                        </p>
+                        <p class="text-xs text-base-content/60">
+                          <%= Float.round(entry.client_size / 1_000_000, 2) %> MB
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        phx-click="cancel-upload"
+                        phx-value-ref={entry.ref}
+                        class="btn btn-ghost btn-sm btn-circle"
+                      >
+                        <.icon name="hero-x-mark" class="h-5 w-5" />
+                      </button>
+                    </div>
+                  <% end %>
 
-                <!-- Progress bar -->
-                <div class="w-full bg-base-300 rounded-full h-2">
-                  <div
-                    class="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={"width: #{entry.progress}%"}
-                  >
+                  <!-- File name and size for images -->
+                  <%= if is_image_file?(entry.client_name) do %>
+                    <div class="flex items-center justify-between px-2">
+                      <p class="text-sm font-semibold text-base-content truncate flex-1">
+                        <%= entry.client_name %>
+                      </p>
+                      <p class="text-xs text-base-content/60">
+                        <%= Float.round(entry.client_size / 1_000_000, 2) %> MB
+                      </p>
+                    </div>
+                  <% end %>
+
+                  <!-- Progress bar -->
+                  <div class="w-full bg-base-300 rounded-full h-2">
+                    <div
+                      class="bg-primary h-2 rounded-full transition-all duration-300"
+                      style={"width: #{entry.progress}%"}
+                    >
+                    </div>
                   </div>
                 </div>
               <% end %>
@@ -320,10 +388,17 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
                 <%= for job <- @jobs do %>
                   <div class="rounded-xl border border-base-300 bg-base-200/30 p-6">
                     <div class="flex items-start gap-3 mb-4">
-                      <%= if job.file_type == "audio" do %>
-                        <.icon name="hero-speaker-wave" class="h-6 w-6 text-primary flex-shrink-0" />
-                      <% else %>
-                        <.icon name="hero-document" class="h-6 w-6 text-secondary flex-shrink-0" />
+                      <%= cond do %>
+                        <% job.file_type == "audio" -> %>
+                          <.icon name="hero-speaker-wave" class="h-6 w-6 text-primary flex-shrink-0" />
+                        <% job.file_type == "image" -> %>
+                          <.icon name="hero-photo" class="h-6 w-6 text-accent flex-shrink-0" />
+                        <% job.file_type == "text" -> %>
+                          <.icon name="hero-document-text" class="h-6 w-6 text-info flex-shrink-0" />
+                        <% job.file_type == "tabular" -> %>
+                          <.icon name="hero-table-cells" class="h-6 w-6 text-success flex-shrink-0" />
+                        <% true -> %>
+                          <.icon name="hero-document" class="h-6 w-6 text-secondary flex-shrink-0" />
                       <% end %>
                       <div class="flex-1 min-w-0">
                         <p class="font-semibold text-base-content truncate">
@@ -348,7 +423,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
                     <%= if job.status in ["pending", "processing"] do %>
                       <div class="mb-4">
                         <div class="flex justify-between text-xs text-base-content/60 mb-2">
-                          <span><%= LiveDashboard.FileJobs.Job.stage_name(job.progress) %></span>
+                          <span><%= LiveDashboard.FileJobs.Job.stage_name(job.progress, job.file_type) %></span>
                           <span class="loading loading-spinner loading-xs"></span>
                         </div>
                         <div class="flex gap-1">
@@ -366,7 +441,13 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
                     <%= if job.transcript_text do %>
                       <div class="mt-4 p-4 rounded-lg bg-base-100 border border-base-300">
                         <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-2">
-                          {gettext("Transcription")}
+                          <%= cond do %>
+                            <% job.file_type == "audio" -> %> {gettext("Transcription")}
+                            <% job.file_type == "image" -> %> {gettext("Image Analysis")}
+                            <% job.file_type == "text" -> %> {gettext("Extracted Text")}
+                            <% job.file_type == "tabular" -> %> {gettext("Extracted Data")}
+                            <% true -> %> {gettext("Content")}
+                          <% end %>
                         </p>
                         <p class="text-sm text-base-content whitespace-pre-wrap max-h-40 overflow-y-auto">
                           <%= job.transcript_text %>
