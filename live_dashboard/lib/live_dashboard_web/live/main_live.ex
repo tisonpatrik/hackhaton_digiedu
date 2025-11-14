@@ -323,24 +323,7 @@ defmodule LiveDashboardWeb.MainLive do
               )}
             </p>
           </div>
-          <div class="flex flex-wrap gap-3">
-            <button
-              type="button"
-              class="inline-flex items-center gap-2 rounded-2xl bg-base-100 px-5 py-3 text-sm font-semibold text-base-content shadow-sm transition hover:bg-base-300 hover:text-base-content/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <.icon name="hero-arrow-path" class="h-4 w-4 animate-spin text-primary" />
-              {gettext("Auto-sync pending")}
-            </button>
-            <button
-              type="button"
-              class="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-content shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <.icon name="hero-bolt" class="h-4 w-4" />
-              {gettext("Connect Data Source")}
-            </button>
-          </div>
         </header>
-
         <section class="mt-12 space-y-12">
           <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             <article class="group rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
