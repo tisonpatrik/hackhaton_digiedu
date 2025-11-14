@@ -7,6 +7,9 @@ use crate::file_types::is_tabular_extension;
 
 const MAX_FILE_SIZE: u64 = 50 * 1024 * 1024;
 
+// Separator marker for tabular data records
+pub const TABULAR_RECORD_SEPARATOR: &str = "\n---RECORD---\n";
+
 fn format_row_with_headers(id: &str, headers: &[String], values: &[String]) -> String {
     let mut pairs = Vec::new();
     for (i, header) in headers.iter().enumerate() {
@@ -15,11 +18,14 @@ fn format_row_with_headers(id: &str, headers: &[String], values: &[String]) -> S
         }
     }
     
-    if pairs.is_empty() {
-        format!("{}:\n", id)
+    let row_content = if pairs.is_empty() {
+        format!("{}:", id)
     } else {
-        format!("{}: {}\n", id, pairs.join(", "))
-    }
+        format!("{}: {}", id, pairs.join(", "))
+    };
+    
+    // Add separator marker at the end of each record
+    format!("{}{}", row_content, TABULAR_RECORD_SEPARATOR)
 }
 
 fn cell_to_string(cell: &Data) -> String {
@@ -141,7 +147,7 @@ fn parse_json(content: &str) -> Result<String, String> {
                     }
                     
                     if !pairs.is_empty() {
-                        result.push_str(&format!("{}: {}\n", id, pairs.join(", ")));
+                        result.push_str(&format!("{}: {}{}", id, pairs.join(", "), TABULAR_RECORD_SEPARATOR));
                     }
                 }
             }

@@ -1,81 +1,95 @@
-use async_openai::{
-    config::OpenAIConfig,
-    types::{
-        chat::{ChatCompletionRequestMessage, CreateChatCompletionRequestArgs},
-        embeddings::{CreateEmbeddingRequestArgs, EmbeddingInput},
-    },
-    Client,
-};
+// Use direct HTTP request to Mistral API for custom model support
+use serde::{Deserialize, Serialize};
 
-fn create_client() -> Result<Client<OpenAIConfig>, String> {
-    let api_base = "https://api.featherless.ai/v1";
-    // Try API_KEY first, then fall back to API_KEYS for compatibility
-    let api_key = std::env::var("API_KEY")
-        .or_else(|_| std::env::var("API_KEYS"))
-        .map_err(|_| {
-            "API_KEY or API_KEYS environment variable not set. Please set it in your .env file or environment variables.".to_string()
-        })?;
-    
-    let client = Client::with_config(
-        OpenAIConfig::new()
-            .with_api_key(&api_key)
-            .with_api_base(api_base),
-    );
-    
-    Ok(client)
+#[derive(Serialize)]
+struct ChatRequest {
+    model: String,
+    messages: Vec<ChatMessageRequest>,
+    temperature: f32,
+    top_p: f32,
+    max_tokens: Option<u32>,
 }
 
-pub async fn create_embedding(text: &str) -> Result<Vec<f32>, String> {
-    let client = create_client()?;
-    
-    let request = CreateEmbeddingRequestArgs::default()
-        .model("text-embedding-ada-002")
-        .input(EmbeddingInput::String(text.to_string()))
-        .build()
-        .map_err(|e| format!("Failed to create embedding request: {}", e))?;
-    
-    let response = client
-        .embeddings()
-        .create(request)
-        .await
-        .map_err(|e| format!("Failed to create embedding: {}", e))?;
-    
-    let embedding = response
-        .data
-        .first()
-        .ok_or("No embedding data in response")?
-        .embedding
-        .clone();
-    
-    Ok(embedding)
+#[derive(Serialize)]
+struct ChatMessageRequest {
+    role: String,
+    content: String,
+}
+
+#[derive(Deserialize)]
+struct ChatResponse {
+    choices: Vec<Choice>,
+}
+
+#[derive(Deserialize)]
+struct Choice {
+    message: Message,
+}
+
+#[derive(Deserialize)]
+struct Message {
+    content: String,
 }
 
 pub async fn chat_completion(
-    messages: Vec<ChatCompletionRequestMessage>,
+    system_message: &str,
+    user_message: &str,
 ) -> Result<String, String> {
-    let client = create_client()?;
+    // Get API key
+    let api_key = std::env::var("API_KEY")
+        .or_else(|_| std::env::var("API_KEYS"))
+        .or_else(|_| std::env::var("MISTRAL_API_KEY"))
+        .map_err(|_| {
+            "API_KEY, API_KEYS, or MISTRAL_API_KEY environment variable not set. Please set it in your .env file or environment variables.".to_string()
+        })?;
     
-    let request = CreateChatCompletionRequestArgs::default()
-        .model("zai-org/GLM-4.6")
-        .messages(messages)
-        .temperature(0.1)
-        .top_p(1.0)
-        .frequency_penalty(0.0)
-        .presence_penalty(0.0)
-        .build()
-        .map_err(|e| format!("Failed to create chat completion request: {}", e))?;
-
+    // Use direct HTTP request to support custom model name
+    let client = reqwest::Client::new();
+    let model_name = "ministral-8b-2410";
+    
+    let request = ChatRequest {
+        model: model_name.to_string(),
+        messages: vec![
+            ChatMessageRequest {
+                role: "system".to_string(),
+                content: system_message.to_string(),
+            },
+            ChatMessageRequest {
+                role: "user".to_string(),
+                content: user_message.to_string(),
+            },
+        ],
+        temperature: 0.1,
+        top_p: 1.0,
+        max_tokens: Some(2000),
+    };
+    
     let response = client
-        .chat()
-        .create(request)
+        .post("https://api.mistral.ai/v1/chat/completions")
+        .header("Authorization", format!("Bearer {}", api_key))
+        .header("Content-Type", "application/json")
+        .json(&request)
+        .send()
         .await
-        .map_err(|e| format!("Failed to create chat completion: {}", e))?;
+        .map_err(|e| format!("Failed to send request to Mistral API: {}", e))?;
     
-    let content = response
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(format!("Mistral API error ({}): {}", status, error_body));
+    }
+    
+    let chat_response: ChatResponse = response
+        .json()
+        .await
+        .map_err(|e| format!("Failed to parse response: {}", e))?;
+    
+    let content = chat_response
         .choices
         .first()
-        .and_then(|choice| choice.message.content.as_ref())
-        .ok_or("No content in response")?
+        .ok_or("No choices in response")?
+        .message
+        .content
         .clone();
     
     Ok(content)
