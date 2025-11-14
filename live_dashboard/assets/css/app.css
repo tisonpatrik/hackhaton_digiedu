@@ -21,72 +21,74 @@
   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
   We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
   on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
+/* Catppuccin Mocha (dark theme) - Base: #1e1e2e, Text: #cdd6f4, Blue: #89b4fa, Mauve: #cba6f7 */
 @plugin "../vendor/daisyui-theme" {
-  name: "dark";
+  name: "mocha";
   default: false;
   prefersdark: true;
   color-scheme: "dark";
-  --color-base-100: oklch(30.33% 0.016 252.42);
-  --color-base-200: oklch(25.26% 0.014 253.1);
-  --color-base-300: oklch(20.15% 0.012 254.09);
-  --color-base-content: oklch(97.807% 0.029 256.847);
-  --color-primary: oklch(58% 0.233 277.117);
-  --color-primary-content: oklch(96% 0.018 272.314);
-  --color-secondary: oklch(58% 0.233 277.117);
-  --color-secondary-content: oklch(96% 0.018 272.314);
-  --color-accent: oklch(60% 0.25 292.717);
-  --color-accent-content: oklch(96% 0.016 293.756);
-  --color-neutral: oklch(37% 0.044 257.287);
-  --color-neutral-content: oklch(98% 0.003 247.858);
-  --color-info: oklch(58% 0.158 241.966);
-  --color-info-content: oklch(97% 0.013 236.62);
-  --color-success: oklch(60% 0.118 184.704);
-  --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: oklch(58% 0.253 17.585);
-  --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
+  --color-base-100: oklch(30.2% 0.015 280);
+  --color-base-200: oklch(26.5% 0.012 280);
+  --color-base-300: oklch(22.5% 0.010 280);
+  --color-base-content: oklch(85.5% 0.015 280);
+  --color-primary: oklch(75.2% 0.135 250);
+  --color-primary-content: oklch(30.2% 0.015 280);
+  --color-secondary: oklch(78.5% 0.120 280);
+  --color-secondary-content: oklch(30.2% 0.015 280);
+  --color-accent: oklch(75.8% 0.145 320);
+  --color-accent-content: oklch(30.2% 0.015 280);
+  --color-neutral: oklch(40% 0.020 280);
+  --color-neutral-content: oklch(85.5% 0.015 280);
+  --color-info: oklch(72.5% 0.130 210);
+  --color-info-content: oklch(30.2% 0.015 280);
+  --color-success: oklch(75.8% 0.110 150);
+  --color-success-content: oklch(30.2% 0.015 280);
+  --color-warning: oklch(88.5% 0.080 80);
+  --color-warning-content: oklch(30.2% 0.015 280);
+  --color-error: oklch(70.5% 0.150 15);
+  --color-error-content: oklch(30.2% 0.015 280);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
   --depth: 1;
   --noise: 0;
 }
 
+/* Catppuccin Latte (light theme) - Base: #eff1f5, Text: #4c4f69, Blue: #1e66f5, Mauve: #8839ef */
 @plugin "../vendor/daisyui-theme" {
-  name: "light";
+  name: "latte";
   default: true;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(98% 0 0);
-  --color-base-200: oklch(96% 0.001 286.375);
-  --color-base-300: oklch(92% 0.004 286.32);
-  --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: oklch(70% 0.213 47.604);
-  --color-primary-content: oklch(98% 0.016 73.684);
-  --color-secondary: oklch(55% 0.027 264.364);
-  --color-secondary-content: oklch(98% 0.002 247.839);
-  --color-accent: oklch(0% 0 0);
-  --color-accent-content: oklch(100% 0 0);
-  --color-neutral: oklch(44% 0.017 285.786);
-  --color-neutral-content: oklch(98% 0 0);
-  --color-info: oklch(62% 0.214 259.815);
-  --color-info-content: oklch(97% 0.014 254.604);
-  --color-success: oklch(70% 0.14 182.503);
-  --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: oklch(58% 0.253 17.585);
-  --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
+  --color-base-100: oklch(96.5% 0.005 250);
+  --color-base-200: oklch(93.5% 0.008 250);
+  --color-base-300: oklch(90% 0.010 250);
+  --color-base-content: oklch(35% 0.015 250);
+  --color-primary: oklch(55% 0.180 250);
+  --color-primary-content: oklch(96.5% 0.005 250);
+  --color-secondary: oklch(65% 0.140 280);
+  --color-secondary-content: oklch(96.5% 0.005 250);
+  --color-accent: oklch(75% 0.150 320);
+  --color-accent-content: oklch(96.5% 0.005 250);
+  --color-neutral: oklch(45% 0.020 250);
+  --color-neutral-content: oklch(96.5% 0.005 250);
+  --color-info: oklch(60% 0.160 210);
+  --color-info-content: oklch(96.5% 0.005 250);
+  --color-success: oklch(65% 0.140 150);
+  --color-success-content: oklch(96.5% 0.005 250);
+  --color-warning: oklch(70% 0.120 50);
+  --color-warning-content: oklch(35% 0.015 250);
+  --color-error: oklch(60% 0.180 10);
+  --color-error-content: oklch(96.5% 0.005 250);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
   --depth: 1;
   --noise: 0;
 }
@@ -97,7 +99,7 @@
 @custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
 /* Use the data attribute for dark mode  */
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:where([data-theme=mocha], [data-theme=mocha] *));
 
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session], [data-phx-teleported-src] { display: contents }
