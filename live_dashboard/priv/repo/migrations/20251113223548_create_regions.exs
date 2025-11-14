@@ -2,10 +2,10 @@ defmodule LiveDashboard.Repo.Migrations.CreateRegions do
   use Ecto.Migration
 
   def change do
-    create table(:regions) do
+    create_if_not_exists table(:regions) do
       add :name, :string, null: false
     end
 
-    create index(:regions, [:name])
+    create_if_not_exists index(:regions, [:name])
   end
 end

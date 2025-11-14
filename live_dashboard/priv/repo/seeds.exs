@@ -13,6 +13,8 @@
 alias LiveDashboard.Repo
 alias LiveDashboard.Schemas.Region
 
+import Ecto.Query
+
 regions_data = [
   %{name: "Hlavní město Praha"},
   %{name: "Středočeský kraj"},
@@ -30,4 +32,6 @@ regions_data = [
   %{name: "Moravskoslezský kraj"}
 ]
 
-Repo.insert_all(Region, regions_data)
+if Repo.aggregate(from(r in Region), :count) == 0 do
+  Repo.insert_all(Region, regions_data)
+end

@@ -2,7 +2,7 @@ defmodule LiveDashboard.Repo.Migrations.CreateProjects do
   use Ecto.Migration
 
   def change do
-    create table(:projects) do
+    create_if_not_exists table(:projects) do
       add :name, :string, null: false
       add :municipality_id, references(:municipalities, on_delete: :restrict), null: false
       add :type, :string, null: false
@@ -14,8 +14,8 @@ defmodule LiveDashboard.Repo.Migrations.CreateProjects do
       timestamps(type: :utc_datetime)
     end
 
-    create index(:projects, [:municipality_id])
-    create index(:projects, [:type])
-    create index(:projects, [:start_date])
+    create_if_not_exists index(:projects, [:municipality_id])
+    create_if_not_exists index(:projects, [:type])
+    create_if_not_exists index(:projects, [:start_date])
   end
 end
