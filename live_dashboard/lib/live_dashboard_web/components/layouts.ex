@@ -157,6 +157,12 @@ defmodule LiveDashboardWeb.Layouts do
               <span>{gettext("See Schools")}</span>
             </.link>
           </:item>
+          <:item>
+            <.link navigate={~p"/schools/new"} class="menu-item">
+              <.icon name="hero-plus-circle" class="w-5 h-5" />
+              <span>{gettext("Add New School")}</span>
+            </.link>
+          </:item>
         </.menu_section>
 
         <.menu_section title={gettext("Settings")} icon="hero-cog-6-tooth">
