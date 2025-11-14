@@ -30,6 +30,10 @@ defmodule LiveDashboardWeb.Router do
 
     live "/upload", FileUploadLiveV2
 
+    live "/labels", LabelsLive
+
+    live "/query", QueryLive
+
     live "/regions", RegionsLive
 
     live "/schools", SchoolsLive

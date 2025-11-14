@@ -94,6 +94,25 @@ defmodule LiveDashboardWeb.Layouts do
         </header>
 
         <main class="flex-1 overflow-y-auto">
+          <!-- Global AI Search Bar -->
+          <div class="sticky top-0 z-10 bg-base-100 border-b border-base-300/70 px-6 py-3 shadow-sm">
+            <div class="max-w-4xl mx-auto">
+              <form action="/query" method="get" class="relative">
+                <input
+                  type="text"
+                  name="q"
+                  placeholder={gettext("Search your data with AI...")}
+                  class="input input-bordered w-full pl-12 pr-28"
+                />
+                <.icon name="hero-magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-base-content/40" />
+                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-sm btn-primary gap-2">
+                  <.icon name="hero-sparkles" class="h-4 w-4" />
+                  {gettext("Ask AI")}
+                </button>
+              </form>
+            </div>
+          </div>
+          
           {render_slot(@inner_block)}
         </main>
       </div>
@@ -128,6 +147,18 @@ defmodule LiveDashboardWeb.Layouts do
             <.link navigate={~p"/upload"} class="menu-item">
               <.icon name="hero-cloud-arrow-up" class="w-5 h-5" />
               <span>{gettext("File Upload")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <.link navigate={~p"/labels"} class="menu-item">
+              <.icon name="hero-tag" class="w-5 h-5" />
+              <span>{gettext("Labels Dashboard")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <.link navigate={~p"/query"} class="menu-item">
+              <.icon name="hero-sparkles" class="w-5 h-5" />
+              <span>{gettext("Ask Questions")}</span>
             </.link>
           </:item>
           <:item>

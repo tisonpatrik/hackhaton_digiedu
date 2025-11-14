@@ -1,15 +1,18 @@
-use actix_web::{post, HttpResponse, Responder};
+use actix_web::{post, web, HttpResponse, Responder};
 use actix_multipart::Multipart;
 use futures_util::StreamExt;
 use std::path::Path;
 use std::fs;
+use sqlx::PgPool;
 
-use crate::models::{FileUploadResponse, FileUploadError};
+use crate::models::{FileUploadResponse, FileUploadError, LabelResponse};
 use crate::processors::audio::transcribe_audio_file;
 use crate::processors::image::analyze_image_file;
 use crate::processors::text::parse_text_file;
 use crate::processors::tabular::parse_tabular_file;
 use crate::file_types::{is_audio_extension, is_image_extension, is_text_extension, is_tabular_extension};
+use crate::injectors::inject_document;
+use crate::labels::get_labels_for_chunk;
 
 #[utoipa::path(
     post,
@@ -22,7 +25,10 @@ use crate::file_types::{is_audio_extension, is_image_extension, is_text_extensio
     tag = "Files"
 )]
 #[post("/upload")]
-pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
+pub async fn upload_multipart_file(
+    mut payload: Multipart,
+    pool: web::Data<PgPool>,
+) -> impl Responder {
     // Create directories
     let audio_dir = Path::new("./audio_files");
     let upload_dir = Path::new("./uploads");
@@ -135,6 +141,13 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
                 let transcript_text = fs::read_to_string(&transcript_path)
                     .unwrap_or_else(|_| String::new());
                 
+                // Inject document and extract labels
+                let labels = process_and_extract_labels(
+                    pool.get_ref(),
+                    &filename,
+                    &transcript_text
+                ).await;
+                
                 HttpResponse::Ok().json(FileUploadResponse {
                     status: "ok".to_string(),
                     file_type: "audio".to_string(),
@@ -142,6 +155,7 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
                     file_path: saved_path.to_string_lossy().to_string(),
                     transcript_text: Some(transcript_text),
                     transcript_path: Some(transcript_path),
+                    labels,
                 })
             }
             Err(error_msg) => {
@@ -157,6 +171,13 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
             Ok(analysis_text) => {
                 log::info!("Image analysis complete: {} characters", analysis_text.len());
                 
+                // Inject document and extract labels
+                let labels = process_and_extract_labels(
+                    pool.get_ref(),
+                    &filename,
+                    &analysis_text
+                ).await;
+                
                 HttpResponse::Ok().json(FileUploadResponse {
                     status: "ok".to_string(),
                     file_type: "image".to_string(),
@@ -164,6 +185,7 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
                     file_path: saved_path.to_string_lossy().to_string(),
                     transcript_text: Some(analysis_text),
                     transcript_path: None,
+                    labels,
                 })
             }
             Err(error_msg) => {
@@ -179,6 +201,13 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
             Ok(text_content) => {
                 log::info!("Text extraction complete: {} characters", text_content.len());
                 
+                // Inject document and extract labels
+                let labels = process_and_extract_labels(
+                    pool.get_ref(),
+                    &filename,
+                    &text_content
+                ).await;
+                
                 HttpResponse::Ok().json(FileUploadResponse {
                     status: "ok".to_string(),
                     file_type: "text".to_string(),
@@ -186,6 +215,7 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
                     file_path: saved_path.to_string_lossy().to_string(),
                     transcript_text: Some(text_content),
                     transcript_path: None,
+                    labels,
                 })
             }
             Err(error_msg) => {
@@ -201,6 +231,13 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
             Ok(table_content) => {
                 log::info!("Tabular extraction complete: {} characters", table_content.len());
                 
+                // Inject document and extract labels
+                let labels = process_and_extract_labels(
+                    pool.get_ref(),
+                    &filename,
+                    &table_content
+                ).await;
+                
                 HttpResponse::Ok().json(FileUploadResponse {
                     status: "ok".to_string(),
                     file_type: "tabular".to_string(),
@@ -208,6 +245,7 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
                     file_path: saved_path.to_string_lossy().to_string(),
                     transcript_text: Some(table_content),
                     transcript_path: None,
+                    labels,
                 })
             }
             Err(error_msg) => {
@@ -225,6 +263,60 @@ pub async fn upload_multipart_file(mut payload: Multipart) -> impl Responder {
             file_path: saved_path.to_string_lossy().to_string(),
             transcript_text: None,
             transcript_path: None,
+            labels: None,
         })
+    }
+}
+
+/// Helper function to process document and extract labels
+async fn process_and_extract_labels(
+    pool: &PgPool,
+    document_name: &str,
+    text: &str,
+) -> Option<Vec<LabelResponse>> {
+    // Skip if text is too short
+    if text.len() < 50 {
+        log::info!("Text too short to process for labels");
+        return None;
+    }
+    
+    // Inject document (this will chunk, extract Q&A, create embeddings, and save to DB)
+    match inject_document(pool, document_name, text).await {
+        Ok(_) => {
+            log::info!("Document injected successfully, fetching labels");
+            
+            // Get labels for the first chunk (they should all have the same labels for now)
+            let chunk_key = format!("{}:0", document_name);
+            match get_labels_for_chunk(pool, &chunk_key).await {
+                Ok(labels) => {
+                    if labels.is_empty() {
+                        log::info!("No labels extracted for document");
+                        None
+                    } else {
+                        log::info!("Extracted {} labels for document", labels.len());
+                        Some(
+                            labels
+                                .into_iter()
+                                .map(|label| LabelResponse {
+                                    id: label.id,
+                                    name: label.name,
+                                    normalized_name: label.normalized_name,
+                                    category: label.category,
+                                    usage_count: label.usage_count,
+                                })
+                                .collect()
+                        )
+                    }
+                }
+                Err(e) => {
+                    log::warn!("Failed to fetch labels: {}", e);
+                    None
+                }
+            }
+        }
+        Err(e) => {
+            log::warn!("Failed to inject document: {}", e);
+            None
+        }
     }
 }

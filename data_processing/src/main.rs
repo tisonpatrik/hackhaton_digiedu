@@ -5,6 +5,7 @@ mod injectors;
 mod file_types;
 mod gen_ai;
 mod prompts;
+mod labels;
 
 use actix_web::{App, HttpServer, web};
 use sqlx::postgres::PgPoolOptions;
@@ -15,6 +16,8 @@ use models::{
     UploadFileError, UploadFileRequest, UploadFileResponse,
     TranscribeRequest, TranscribeResponse, TranscribeError,
     FileUploadResponse, FileUploadError,
+    LabelResponse, LabelsListResponse,
+    SearchByLabelsRequest, SearchByLabelsResponse, ChunkWithLabelsResponse,
 };
 
 #[derive(OpenApi)]
@@ -23,7 +26,9 @@ use models::{
         crate::handlers::health::health,
         crate::handlers::upload_file::upload_file,
         crate::handlers::transcribe::transcribe_audio,
-        crate::handlers::upload_multipart::upload_multipart_file
+        crate::handlers::upload_multipart::upload_multipart_file,
+        crate::handlers::labels::get_labels,
+        crate::handlers::labels::search_by_labels
     ),
     components(schemas(
         UploadFileRequest,
@@ -33,12 +38,18 @@ use models::{
         TranscribeResponse,
         TranscribeError,
         FileUploadResponse,
-        FileUploadError
+        FileUploadError,
+        LabelResponse,
+        LabelsListResponse,
+        SearchByLabelsRequest,
+        SearchByLabelsResponse,
+        ChunkWithLabelsResponse
     )),
     tags(
         (name = "Health", description = "Health check"),
         (name = "Files", description = "File operations"),
-        (name = "Audio", description = "Audio transcription operations")
+        (name = "Audio", description = "Audio transcription operations"),
+        (name = "Labels", description = "Label management and search operations")
     )
 )]
 struct ApiDoc;
@@ -89,6 +100,9 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::upload_file::upload_file)
             .service(handlers::transcribe::transcribe_audio)
             .service(handlers::upload_multipart::upload_multipart_file)
+            .service(handlers::labels::get_labels)
+            .service(handlers::labels::search_by_labels)
+            .service(handlers::query::query_with_labels)
     })
     .keep_alive(std::time::Duration::from_secs(600)) // 10 min keep-alive
     .client_request_timeout(std::time::Duration::from_secs(600)) // 10 min timeout
