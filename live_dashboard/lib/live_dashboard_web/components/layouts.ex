@@ -125,7 +125,13 @@ defmodule LiveDashboardWeb.Layouts do
   @doc """
   Renders a collapsible sidebar menu with expandable sections.
   """
+  attr :catalog_menu_items, :list, default: nil
+
   def sidebar(assigns) do
+    catalog_items = assigns[:catalog_menu_items] || LiveDashboardWeb.MenuHelpers.catalog_menu_items()
+
+    assigns = assign(assigns, :catalog_items, catalog_items)
+
     ~H"""
     <aside class="w-64 bg-base-100 border-r border-base-300 flex flex-col">
       <div class="p-4 border-b border-base-300">
@@ -139,22 +145,15 @@ defmodule LiveDashboardWeb.Layouts do
         </.link>
 
         <.menu_section title={gettext("Catalog")} icon="hero-building-library">
-          <:item>
-            <.link navigate={~p"/schools/regions"} class="menu-item">
-              <.icon name="hero-map" class="w-5 h-5" />
-              <span>{gettext("Regions")}</span>
-            </.link>
-          </:item>
-          <:item>
-            <.link navigate={~p"/schools"} class="menu-item">
-              <.icon name="hero-building-library" class="w-5 h-5" />
-              <span>{gettext("All Schools")}</span>
-            </.link>
-          </:item>
-          <:item>
-            <.link navigate={~p"/schools/new"} class="menu-item">
-              <.icon name="hero-plus" class="w-5 h-5" />
-              <span>{gettext("Add School")}</span>
+          <:item :for={item <- @catalog_items}>
+            <.link navigate={item.route} class="menu-item">
+              <.icon name={item.icon} class="w-5 h-5" />
+              <span>
+                {Gettext.gettext(LiveDashboardWeb.Gettext, item.label)}
+                <%= if Map.has_key?(item, :count) do %>
+                  <span class="ml-2 text-xs text-base-content/50">({item.count})</span>
+                <% end %>
+              </span>
             </.link>
           </:item>
         </.menu_section>
