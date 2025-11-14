@@ -233,10 +233,13 @@ defmodule LiveDashboardWeb.SchoolsRegionLive do
                   <.icon name="hero-map-pin" class="w-4 h-4 inline mr-1" />
                   {@region.name}
                 </div>
-                <button class="btn btn-primary btn-sm">
+                <.link
+                  navigate={~p"/regions/#{@region.id}/schools/#{school.id}"}
+                  class="btn btn-primary btn-sm"
+                >
                   <.icon name="hero-eye" class="w-4 h-4 mr-2" />
                   {gettext("View Details")}
-                </button>
+                </.link>
               </div>
             </div>
           </div>
