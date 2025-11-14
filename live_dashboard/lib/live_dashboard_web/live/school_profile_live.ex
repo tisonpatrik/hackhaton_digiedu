@@ -58,38 +58,51 @@ defmodule LiveDashboardWeb.SchoolProfileLive do
         <!-- Breadcrumbs -->
         <div class="mb-6">
           <nav class="flex" aria-label="Breadcrumb">
-            <ol class="flex items-center space-x-2">
-              <li>
-                <.link navigate={~p"/schools"} class="text-base-content/60 hover:text-base-content">
-                  {gettext("Schools")}
-                </.link>
-              </li>
-              <li class="flex items-center">
-                <svg class="w-4 h-4 text-base-content/40 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
-                  >
-                  </path>
-                </svg>
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
                 <.link
-                  navigate={~p"/schools/#{@school.id}"}
-                  class="text-base-content/60 hover:text-base-content"
+                  navigate={~p"/catalog/regions"}
+                  class="inline-flex items-center text-sm font-medium text-base-content/60 hover:text-base-content"
                 >
-                  {@school.name}
+                  <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
+                  {gettext("Catalog")}
                 </.link>
               </li>
-              <li class="flex items-center">
-                <svg class="w-4 h-4 text-base-content/40 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <.link
+                    navigate={~p"/catalog/regions"}
+                    class="text-sm font-medium text-base-content/60 hover:text-base-content"
                   >
-                  </path>
-                </svg>
-                <span class="text-base-content">{gettext("Edit")}</span>
+                    {gettext("Regions")}
+                  </.link>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <span class="text-sm font-medium text-base-content">
+                    {@school.municipality.region.name}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <.link
+                    navigate={~p"/schools/#{@school.id}"}
+                    class="text-sm font-medium text-base-content/60 hover:text-base-content"
+                  >
+                    {@school.name}
+                  </.link>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <span class="text-sm font-medium text-base-content">{gettext("Edit")}</span>
+                </div>
               </li>
             </ol>
           </nav>
@@ -211,27 +224,45 @@ defmodule LiveDashboardWeb.SchoolProfileLive do
         <!-- Breadcrumbs -->
         <div class="mb-6">
           <nav class="flex" aria-label="Breadcrumb">
-            <ol class="flex items-center space-x-2">
-              <li>
-                <.link navigate={~p"/schools"} class="text-base-content/60 hover:text-base-content">
-                  {gettext("Schools")}
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <.link
+                  navigate={~p"/catalog/regions"}
+                  class="inline-flex items-center text-sm font-medium text-base-content/60 hover:text-base-content"
+                >
+                  <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
+                  {gettext("Catalog")}
                 </.link>
               </li>
-              <li class="flex items-center">
-                <svg class="w-4 h-4 text-base-content/40 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <.link
+                    navigate={~p"/catalog/regions"}
+                    class="text-sm font-medium text-base-content/60 hover:text-base-content"
                   >
-                  </path>
-                </svg>
-                <span class="text-base-content">{@school.name}</span>
+                    {gettext("Regions")}
+                  </.link>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <span class="text-sm font-medium text-base-content">
+                    {@school.municipality.region.name}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                  <span class="text-sm font-medium text-base-content">{@school.name}</span>
+                </div>
               </li>
             </ol>
           </nav>
         </div>
-        
+
     <!-- School Header -->
         <div class="bg-base-100 rounded-3xl p-8 mb-8 border border-base-300/70">
           <div class="flex items-start justify-between">
@@ -259,7 +290,7 @@ defmodule LiveDashboardWeb.SchoolProfileLive do
             </div>
           </div>
         </div>
-        
+
     <!-- School Details -->
         <div class="grid gap-6 md:grid-cols-2">
           <div class="bg-base-100 rounded-3xl p-6 border border-base-300/70">
@@ -300,10 +331,10 @@ defmodule LiveDashboardWeb.SchoolProfileLive do
             </dl>
           </div>
         </div>
-        
+
     <!-- Back Button -->
         <div class="mt-8 text-center">
-          <.link navigate={~p"/schools"} class="btn btn-ghost">
+          <.link navigate={~p"/catalog/regions/#{@school.municipality.region.slug}/schools?municipality_id=#{@school.municipality.id}"} class="btn btn-ghost">
             <.icon name="hero-arrow-left" class="w-4 h-4 mr-2" />
             {gettext("Back to Schools")}
           </.link>

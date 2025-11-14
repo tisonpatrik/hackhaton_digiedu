@@ -40,15 +40,15 @@ defmodule LiveDashboardWeb.Router do
 
     live "/schools/new", NewSchoolLive
 
-    live "/catalog/regions", SchoolsRegionsLive
+    live "/catalog/regions", RegionsLive
+
+    live "/catalog/regions/:region_id/municipalities", MunicipalitiesLive
+
+    live "/catalog/regions/:region_id/schools", SchoolsRegionLive
 
     live "/schools/:id", SchoolProfileLive, :show
 
     live "/schools/:id/edit", SchoolProfileLive, :edit
-
-    live "/regions/:region_id/municipalities", MunicipalitiesLive
-
-    live "/regions/:region_id/schools", SchoolsRegionLive
 
     live "/regions/:region_id/schools/:school_id", SchoolDetailLive
   end

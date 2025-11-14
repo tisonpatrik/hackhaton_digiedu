@@ -74,65 +74,27 @@ defmodule LiveDashboardWeb.SchoolsRegionLive do
             </ol>
           </nav>
 
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
-                {gettext("Schools in")} {if @region, do: @region.name, else: gettext("Unknown Region")}
-              </h1>
-              <p class="mt-4 text-base leading-7 text-base-content/70">
-                {gettext("Manage educational institutions in the")} {if @region,
-                  do: @region.name,
-                  else: gettext("selected")} {gettext("region")}
-              </p>
-            </div>
-            <div :if={@region} class="flex items-center gap-3">
-              <span class="badge badge-primary badge-lg">
-                {@region.code}
-              </span>
-              <span class="text-sm text-base-content/60">
-                {length(@schools)} {gettext("schools")}
-              </span>
-            </div>
+          <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
+              {gettext("Schools in")} {if @region, do: @region.name, else: gettext("Unknown Region")}
+            </h1>
           </div>
         </header>
-        
-    <!-- Schools Grid -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div
-            :for={school <- @schools}
-            class="card bg-base-100 shadow-sm border border-base-300/70 hover:shadow-lg transition-shadow"
-          >
-            <div class="card-body p-6">
-              <div class="flex items-start justify-between mb-4">
-                <div class="flex-1">
-                  <h3 class="card-title text-lg text-base-content mb-1">{school.name}</h3>
-                  <p class="text-sm text-base-content/70">
-                    {school.type} • {(school.municipality && school.municipality.name) ||
-                      "Unknown Municipality"}
-                  </p>
-                </div>
-                <div class="badge badge-primary badge-outline">
-                  {school.students || 0} {gettext("students")}
-                </div>
-              </div>
 
-              <div class="flex items-center justify-between">
-                <div class="text-sm text-base-content/60">
-                  <.icon name="hero-map-pin" class="w-4 h-4 inline mr-1" />
-                  {if @region, do: @region.name, else: gettext("Unknown Region")}
-                </div>
-                <.link
-                  navigate={~p"/schools/#{school.id}"}
-                  class="btn btn-primary btn-sm"
-                >
-                  <.icon name="hero-eye" class="w-4 h-4 mr-2" />
-                  {gettext("View Details")}
-                </.link>
+    <!-- Schools Grid -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div :for={school <- @schools} class="group">
+            <.link
+              navigate={~p"/schools/#{school.id}"}
+              class="block"
+            >
+              <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
+                <h3 class="text-xl font-bold text-base-content">{school.name}</h3>
               </div>
-            </div>
+            </.link>
           </div>
         </div>
-        
+
     <!-- Empty State -->
         <div :if={@schools == []} class="text-center py-16">
           <div class="mx-auto max-w-md">
@@ -150,14 +112,6 @@ defmodule LiveDashboardWeb.SchoolsRegionLive do
               {gettext("Add First School")}
             </button>
           </div>
-        </div>
-        
-    <!-- Back to Schools Overview -->
-        <div class="mt-12 text-center">
-          <.link navigate={~p"/schools"} class="btn btn-outline">
-            <.icon name="hero-arrow-left" class="w-4 h-4 mr-2" />
-            {gettext("Back to All Schools")}
-          </.link>
         </div>
       </div>
     </Layouts.dashboard>
