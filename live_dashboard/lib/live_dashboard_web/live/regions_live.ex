@@ -3,7 +3,6 @@ defmodule LiveDashboardWeb.RegionsLive do
 
   alias LiveDashboard.Repo
   alias LiveDashboard.Schemas.Region
-  alias LiveDashboardWeb.RegionsData
 
   @impl true
   def mount(_params, session, socket) do
@@ -11,65 +10,36 @@ defmodule LiveDashboardWeb.RegionsLive do
     locale = Map.get(session, "locale", "en")
     Gettext.put_locale(LiveDashboardWeb.Gettext, locale)
 
-    regions = Repo.all(Region)
-    regions_geojson = RegionsData.get_regions_geojson()
+    regions =
+      Repo.all(Region)
+      |> Repo.preload(municipalities: [schools: []])
+      |> Enum.map(&Map.put(&1, :schools_count, count_region_schools(&1)))
+
+    # Calculate real statistics
+    stats = %{
+      total_regions: length(regions),
+      regions_with_schools: length(Enum.filter(regions, &(&1.schools_count > 0))),
+      total_municipalities: Enum.sum(Enum.map(regions, &length(&1.municipalities))),
+      total_schools: Enum.sum(Enum.map(regions, & &1.schools_count))
+    }
 
     socket =
       socket
-      |> assign(:selected_region, nil)
       |> assign(:regions, regions)
-      |> assign(:regions_geojson, regions_geojson)
+      |> assign(:stats, stats)
 
     {:ok, socket}
   end
 
+  defp count_region_schools(region) do
+    region.municipalities
+    |> Enum.flat_map(& &1.schools)
+    |> length()
+  end
+
   @impl true
   def handle_event("set-locale", %{"locale" => locale}, socket) when locale in ["en", "cs"] do
-    # Navigate to controller endpoint which updates session
     {:noreply, push_navigate(socket, to: ~p"/set-locale/#{locale}")}
-  end
-
-  @impl true
-  def handle_event("select_region", %{"region_id" => region_id}, socket) do
-    region = Enum.find(socket.assigns.regions, &(&1.slug == region_id))
-    report_data = get_region_report(region_id)
-
-    socket =
-      socket
-      |> assign(:selected_region, region)
-      |> assign(:report_data, report_data)
-
-    {:noreply, socket}
-  end
-
-  def handle_event("deselect_region", _params, socket) do
-    socket =
-      socket
-      |> assign(:selected_region, nil)
-      |> assign(:report_data, nil)
-
-    {:noreply, socket}
-  end
-
-  def handle_event("reset_map", _params, socket) do
-    {:noreply, push_event(socket, "reset-map", %{})}
-  end
-
-  defp get_region_report(_region_id) do
-    %{
-      active_learners: :rand.uniform(5000) + 1000,
-      completion_rate: :rand.uniform(20) + 70,
-      avg_session_length: :rand.uniform(30) + 30,
-      engagement_score: Float.round(:rand.uniform() * 2 + 7.5, 1),
-      courses_count: :rand.uniform(50) + 20,
-      institutions_count: :rand.uniform(30) + 10
-    }
-  end
-
-  defp format_number(number) do
-    number
-    |> Integer.to_string()
-    |> String.replace(~r/(\d)(?=(\d{3})+(?!\d))/, "\\1 ")
   end
 
   @impl true
@@ -77,121 +47,68 @@ defmodule LiveDashboardWeb.RegionsLive do
     ~H"""
     <Layouts.dashboard flash={@flash}>
       <div class="px-6 py-10 sm:px-10 lg:px-16 xl:px-20">
+        <!-- Breadcrumb -->
+        <nav class="mb-6" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <.link
+                navigate={~p"/catalog/regions"}
+                class="inline-flex items-center text-sm font-medium text-base-content/60 hover:text-base-content"
+              >
+                <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
+                {gettext("Catalog")}
+              </.link>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <.icon name="hero-chevron-right" class="w-4 h-4 text-base-content/40 mx-1" />
+                <span class="text-sm font-medium text-base-content">
+                  {gettext("Regions")}
+                </span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
+    <!-- Header -->
         <header class="mb-8">
           <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
-            {gettext("Regional Overview")}
+            {gettext("Schools by Region")}
           </h1>
-          <p class="mt-4 text-base leading-7 text-base-content/70">
-            {gettext("Click on a region in the map to view detailed report")}
-          </p>
         </header>
 
-        <div class="grid gap-6 lg:grid-cols-3">
-          <div class="lg:col-span-2">
-            <div class="rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
-              <div class="mb-6 flex items-center justify-between">
-                <h2 class="text-xl font-bold text-base-content">
-                  {gettext("Map of Czech Republic")}
-                </h2>
-                <div class="flex items-center gap-2">
-                  <button
-                    phx-click="reset_map"
-                    class="btn btn-ghost btn-sm"
-                    title={gettext("Reset map view")}
-                  >
-                    <.icon name="hero-arrows-pointing-out" class="h-4 w-4" />
-                    {gettext("Reset view")}
-                  </button>
-                  <button
-                    :if={@selected_region}
-                    phx-click="deselect_region"
-                    class="btn btn-ghost btn-sm"
-                  >
-                    <.icon name="hero-x-mark" class="h-4 w-4" />
-                    {gettext("Clear selection")}
-                  </button>
-                </div>
+    <!-- Regions Grid -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div :for={region <- @regions} class="group">
+            <.link navigate={~p"/catalog/regions/#{region.slug}/municipalities"} class="block">
+              <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
+                <h3 class="text-xl font-bold text-base-content">{region.name}</h3>
               </div>
-              <div
-                id="map"
-                phx-hook="Map"
-                phx-update="ignore"
-                class="w-full h-[600px] rounded-xl"
-              >
-              </div>
-            </div>
+            </.link>
           </div>
+        </div>
 
-          <div class="lg:col-span-1">
-            <div :if={@selected_region && @report_data} class="space-y-6">
-              <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm">
-                <div class="mb-4 flex items-center justify-between">
-                  <h3 class="text-xl font-bold text-base-content">
-                    {gettext("Region")}: {@selected_region.name}
-                  </h3>
-                  <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-                    {@selected_region.code}
-                  </span>
-                </div>
-              </div>
-
-              <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm">
-                <h3 class="mb-4 text-lg font-bold text-base-content">{gettext("Statistics")}</h3>
-                <div class="space-y-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">{gettext("Active learners")}</span>
-                    <span class="text-lg font-bold text-base-content">
-                      {format_number(@report_data.active_learners)}
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">{gettext("Completion rate")}</span>
-                    <span class="text-lg font-bold text-base-content">
-                      {@report_data.completion_rate}%
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">
-                      {gettext("Average session length")}
-                    </span>
-                    <span class="text-lg font-bold text-base-content">
-                      {@report_data.avg_session_length} {gettext("min")}
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">{gettext("Engagement score")}</span>
-                    <span class="text-lg font-bold text-base-content">
-                      {@report_data.engagement_score}
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">{gettext("Number of courses")}</span>
-                    <span class="text-lg font-bold text-base-content">
-                      {@report_data.courses_count}
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-base-content/70">
-                      {gettext("Number of institutions")}
-                    </span>
-                    <span class="text-lg font-bold text-base-content">
-                      {@report_data.institutions_count}
-                    </span>
-                  </div>
-                </div>
-              </div>
+    <!-- Stats Summary -->
+        <div class="mt-12 rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
+          <h2 class="text-xl font-bold text-base-content mb-6">
+            {gettext("Regional Overview")}
+          </h2>
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-primary">{@stats.total_regions}</div>
+              <div class="text-sm text-base-content/60">{gettext("Regions")}</div>
             </div>
-
-            <div
-              :if={!@selected_region}
-              class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm"
-            >
-              <div class="text-center py-12">
-                <.icon name="hero-map" class="mx-auto h-12 w-12 text-base-content/30" />
-                <p class="mt-4 text-base text-base-content/70">
-                  {gettext("Select a region in the map to view report")}
-                </p>
-              </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-secondary">{@stats.regions_with_schools}</div>
+              <div class="text-sm text-base-content/60">{gettext("Regions with Schools")}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-accent">{@stats.total_municipalities}</div>
+              <div class="text-sm text-base-content/60">{gettext("Municipalities")}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-info">{@stats.total_schools}</div>
+              <div class="text-sm text-base-content/60">{gettext("Total Schools")}</div>
             </div>
           </div>
         </div>

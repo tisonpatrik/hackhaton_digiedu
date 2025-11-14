@@ -27,10 +27,27 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
         []
       end
 
+    stats =
+      if region do
+        %{
+          total_municipalities: length(municipalities),
+          municipalities_with_schools:
+            length(Enum.filter(municipalities, &(&1.schools_count > 0))),
+          total_schools: Enum.sum(Enum.map(municipalities, & &1.schools_count))
+        }
+      else
+        %{
+          total_municipalities: 0,
+          municipalities_with_schools: 0,
+          total_schools: 0
+        }
+      end
+
     socket =
       socket
       |> assign(:region, region)
       |> assign(:municipalities, municipalities)
+      |> assign(:stats, stats)
 
     {:ok, socket}
   end
@@ -89,58 +106,46 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
             </ol>
           </nav>
 
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
-                {gettext("Municipalities in")} {if @region,
-                  do: @region.name,
-                  else: gettext("Unknown Region")}
-              </h1>
-              <p class="mt-4 text-base leading-7 text-base-content/70">
-                {gettext("Select a municipality to view schools")}
-              </p>
-            </div>
-            <div :if={@region} class="flex items-center gap-3">
-              <span class="badge badge-primary badge-lg">
-                {@region.code}
-              </span>
-              <span class="text-sm text-base-content/60">
-                {length(@municipalities)} {gettext("municipalities")}
-              </span>
-            </div>
+          <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
+              {gettext("Municipalities in")} {if @region,
+                do: @region.name,
+                else: gettext("Unknown Region")}
+            </h1>
           </div>
         </header>
 
     <!-- Municipalities Grid -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div
-            :for={municipality <- @municipalities}
-            class="card bg-base-100 shadow-sm border border-base-300/70 hover:shadow-lg transition-shadow"
-          >
-            <div class="card-body p-6">
-              <div class="flex items-start justify-between mb-4">
-                <div class="flex-1">
-                  <h3 class="card-title text-lg text-base-content mb-1">{municipality.name}</h3>
-                  <p class="text-sm text-base-content/70">{@region.name}</p>
-                </div>
-                <div class="badge badge-primary badge-outline">
-                  {municipality.schools_count} {gettext("schools")}
-                </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div :for={municipality <- @municipalities} class="group">
+            <.link
+              navigate={if @region, do: ~p"/catalog/regions/#{@region.slug}/schools?municipality_id=#{municipality.id}", else: ~p"/"}
+              class="block"
+            >
+              <div class="rounded-3xl border border-base-300/70 bg-base-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20">
+                <h3 class="text-xl font-bold text-base-content">{municipality.name}</h3>
               </div>
+            </.link>
+          </div>
+        </div>
 
-              <div class="flex items-center justify-between">
-                <div class="text-sm text-base-content/60">
-                  <.icon name="hero-map-pin" class="w-4 h-4 inline mr-1" />
-                  {@region.name}
-                </div>
-                <.link
-                  navigate={if @region, do: "/regions/#{@region.slug}/schools", else: "#"}
-                  class="btn btn-primary btn-sm"
-                >
-                  <.icon name="hero-building-library" class="w-4 h-4 mr-2" />
-                  {gettext("View Schools")}
-                </.link>
-              </div>
+    <!-- Stats Summary -->
+        <div class="mt-12 rounded-3xl border border-base-300/70 bg-base-100 p-8 shadow-sm">
+          <h2 class="text-xl font-bold text-base-content mb-6">
+            {gettext("Regional Overview")}
+          </h2>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-primary">{@stats.total_municipalities}</div>
+              <div class="text-sm text-base-content/60">{gettext("Municipalities")}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-secondary">{@stats.municipalities_with_schools}</div>
+              <div class="text-sm text-base-content/60">{gettext("Municipalities with Schools")}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-accent">{@stats.total_schools}</div>
+              <div class="text-sm text-base-content/60">{gettext("Total Schools")}</div>
             </div>
           </div>
         </div>
@@ -162,14 +167,6 @@ defmodule LiveDashboardWeb.MunicipalitiesLive do
               {gettext("Add Municipality")}
             </button>
           </div>
-        </div>
-
-    <!-- Back to Browse by Region -->
-        <div class="mt-12 text-center">
-          <.link navigate={~p"/schools"} class="btn btn-outline">
-            <.icon name="hero-arrow-left" class="w-4 h-4 mr-2" />
-            {gettext("Back to Browse by Region")}
-          </.link>
         </div>
       </div>
     </Layouts.dashboard>
