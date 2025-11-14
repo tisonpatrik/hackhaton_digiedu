@@ -133,11 +133,28 @@ defmodule LiveDashboardWeb.Layouts do
       </div>
 
       <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-        <.menu_section title={gettext("Dashboard")} icon="hero-home" default_open={true}>
+        <.link navigate={~p"/"} class="menu-section-header">
+          <.icon name="hero-chart-bar" class="w-5 h-5" />
+          <span class="flex-1 text-left font-semibold">{gettext("Overview")}</span>
+        </.link>
+
+        <.menu_section title={gettext("Catalog")} icon="hero-building-library">
           <:item>
-            <.link navigate={~p"/"} class="menu-item">
-              <.icon name="hero-chart-bar" class="w-5 h-5" />
-              <span>{gettext("Overview")}</span>
+            <.link navigate={~p"/schools/regions"} class="menu-item">
+              <.icon name="hero-map" class="w-5 h-5" />
+              <span>{gettext("Regions")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <.link navigate={~p"/schools"} class="menu-item">
+              <.icon name="hero-building-library" class="w-5 h-5" />
+              <span>{gettext("All Schools")}</span>
+            </.link>
+          </:item>
+          <:item>
+            <.link navigate={~p"/schools/new"} class="menu-item">
+              <.icon name="hero-plus" class="w-5 h-5" />
+              <span>{gettext("Add School")}</span>
             </.link>
           </:item>
         </.menu_section>
@@ -181,27 +198,6 @@ defmodule LiveDashboardWeb.Layouts do
               <.icon name="hero-academic-cap" class="w-5 h-5" />
               <span>{gettext("Courses")}</span>
             </a>
-          </:item>
-        </.menu_section>
-
-        <.menu_section title={gettext("Schools")} icon="hero-building-library">
-          <:item>
-            <.link navigate={~p"/schools"} class="menu-item">
-              <.icon name="hero-building-library" class="w-5 h-5" />
-              <span>{gettext("All Schools")}</span>
-            </.link>
-          </:item>
-          <:item>
-            <.link navigate={~p"/schools/regions"} class="menu-item">
-              <.icon name="hero-map" class="w-5 h-5" />
-              <span>{gettext("Browse by Region")}</span>
-            </.link>
-          </:item>
-          <:item>
-            <.link navigate={~p"/schools/new"} class="menu-item">
-              <.icon name="hero-plus" class="w-5 h-5" />
-              <span>{gettext("Add School")}</span>
-            </.link>
           </:item>
         </.menu_section>
 

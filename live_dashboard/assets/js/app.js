@@ -25,8 +25,8 @@ import { hooks as colocatedHooks } from "phoenix-colocated/live_dashboard"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import { ChartHook } from "./chart_hook"
-import { MapHook } from "./map_hook"
 import { ScrollToForm } from "./hooks/scroll_to_form"
+import { MapHook } from "./map_hook"
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
