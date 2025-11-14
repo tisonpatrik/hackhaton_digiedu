@@ -72,7 +72,16 @@ services:
     image: fedirz/faster-whisper-server:latest-cpu
     container_name: faster_whisper
     environment:
-      - WHISPER_MODEL=base
+      # Use MEDIUM model - much better for Czech with poor audio, prevents repetitions
+      # Models: tiny -> small -> medium(~1.5GB) -> large-v3(~3GB, slowest but best)
+      - WHISPER_MODEL=medium
+      # Use int8 for best CPU speed (float16 warning is expected, model auto-converts)
+      - WHISPER_COMPUTE_TYPE=int8
+      # Increase beam size for better accuracy (helps prevent hallucinations)
+      - WHISPER_BEAM_SIZE=5
+      # Multi-threading: CTranslate2 automatically uses all available CPU cores
+      # You can limit threads if needed, but 0 = use all cores (default behavior)
+      - WHISPER__CPU_THREADS=0  # Note: double underscore for config format
     volumes:
       - whisper_data:/root/.cache/huggingface
     ports:

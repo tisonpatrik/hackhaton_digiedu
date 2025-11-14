@@ -99,7 +99,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
     # Stage 0: Uploaded
     FileJobs.update_job_status(job_id, "processing", %{progress: 0})
     FileJobs.broadcast_job_update(%{id: job_id})
-    Process.sleep(500)  # Show stage for visibility
+    Process.sleep(1500)  # Show stage for visibility
 
     api_url = System.get_env("DATA_PROCESSING_URL", "http://data_processing:8080")
 
@@ -117,7 +117,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
     # Stage 1: Preparing (API will handle audio preprocessing)
     FileJobs.update_job_status(job_id, "processing", %{progress: 1})
     FileJobs.broadcast_job_update(%{id: job_id})
-    Process.sleep(300)  # Show stage for visibility
+    Process.sleep(2000)  # Show stage for visibility
 
     # Stage 2: Transcribing (send to API)
     FileJobs.update_job_status(job_id, "processing", %{progress: 2})
@@ -134,7 +134,7 @@ defmodule LiveDashboardWeb.FileUploadLiveV2 do
         # Stage 3: Finalizing
         FileJobs.update_job_status(job_id, "processing", %{progress: 3})
         FileJobs.broadcast_job_update(%{id: job_id})
-        Process.sleep(300)  # Show stage for visibility
+        Process.sleep(1500)  # Show stage for visibility
         
         # Success
         FileJobs.update_job_status(job_id, "completed", %{
