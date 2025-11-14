@@ -14,4 +14,3 @@ pub fn reformat_to_conversation_user(text: &str) -> String {
         text
     )
 }
-

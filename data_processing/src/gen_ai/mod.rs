@@ -1,4 +1,4 @@
 mod client;
 
-pub use client::{create_embedding, chat_completion};
+pub use client::chat_completion;
 
