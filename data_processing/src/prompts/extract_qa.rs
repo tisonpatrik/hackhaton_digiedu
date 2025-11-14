@@ -29,7 +29,8 @@ Your job is to:
          "question_text": string,
          "answer": string
        }
-     ]
+     ],
+     "topic_labels": [string]
    }
 
    - `timestamp`:
@@ -42,6 +43,11 @@ Your job is to:
          (before your cleaning and structuring).
    - `qa`:
        * A list of question–answer pairs that capture the meaningful content.
+   - `topic_labels`:
+       * A list of topic labels that categorize the content (e.g., "formative_assessment", "teaching_methods", "student_engagement", "professional_development", "obstacles", "aha_moments", etc.).
+       * Extract relevant topics based on the content discussed in the text.
+       * Use short, descriptive labels in English or Czech (prefer English for consistency).
+       * If no clear topics can be identified, return an empty array.
 
 4. RULES for building `qa`:
 
@@ -102,6 +108,7 @@ pub fn extract_qa_user(text: &str) -> String {
    - timestamp (if present, otherwise null)
    - raw_input (copy the original text as-is)
    - qa (question–answer pairs as described in the system instructions)
+   - topic_labels (list of relevant topic labels that categorize the content)
 
 Input text:
 

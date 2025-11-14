@@ -104,5 +104,7 @@ pub struct NormalizedResponse {
     pub raw_input: String,
     /// List of question-answer pairs
     pub qa: Vec<QuestionAnswer>,
+    /// Topic labels for categorization
+    pub topic_labels: Vec<String>,
 }
 

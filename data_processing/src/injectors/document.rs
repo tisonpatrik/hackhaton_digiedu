@@ -1,8 +1,11 @@
 use sqlx::PgPool;
+use futures_util::future::join_all;
+use std::sync::Arc;
+use tokio::sync::Semaphore;
 
 use crate::injectors::db;
 use crate::injectors::create_chunks_from_document;
-use crate::gen_ai::extract_qa_structured;
+use crate::gen_ai::{extract_qa_structured, create_embedding};
 use crate::prompts::{extract_qa_system, extract_qa_user};
 use crate::processors::tabular::TABULAR_RECORD_SEPARATOR;
 
@@ -11,18 +14,10 @@ pub async fn inject_document(
     document_name: &str,
     text: &str,
 ) -> Result<(), String> {
-    let bpe = tiktoken_rs::cl100k_base()
-        .map_err(|e| format!("Failed to initialize tokenizer: {}", e))?;
-    
-    let tokens = bpe.encode_with_special_tokens(text);
-    let token_count = tokens.len();
-    
-    log::info!("Document token count: {}", token_count);
-    
     db::insert_or_update_document(pool, document_name, text).await?;
     
     // Create chunks first
-    const TOKEN_SIZE: usize = 1000;
+    const TOKEN_SIZE: usize = 1500;
     const OVERLAP_TOKEN_SIZE: usize = 200;
     
     // Detect if text contains tabular record separator, use appropriate separator
@@ -35,35 +30,55 @@ pub async fn inject_document(
     };
     
     let chunks = create_chunks_from_document(text, separator, TOKEN_SIZE, OVERLAP_TOKEN_SIZE)?;
-    log::info!("Created {} chunks from document '{}'", chunks.len(), document_name);
+    let chunks_count = chunks.len();
+    log::info!("Created {} chunks from document '{}'", chunks_count, document_name);
     
     let system_msg = extract_qa_system();
+    let semaphore = Arc::new(Semaphore::new(5));
     
-    for (index, chunk) in chunks.iter().enumerate() {
-        log::info!("Processing chunk {}/{} ({} tokens)", index + 1, chunks.len(), chunk.total_tokens);
+    let tasks: Vec<_> = chunks.iter().enumerate().map(|(index, chunk)| {
+        let pool = pool.clone();
+        let document_name = document_name.to_string();
+        let chunk_text = chunk.text.clone();
+        let user_msg = extract_qa_user(&chunk_text);
+        let total_tokens = chunk.total_tokens;
+        let permit = semaphore.clone();
         
-        let user_msg = extract_qa_user(&chunk.text);
-        
-        match extract_qa_structured(system_msg, &user_msg).await {
-            Ok(normalized) => {
-                println!("\n=== Chunk {} - Normalized Response ===", index + 1);
-                println!("Timestamp: {:?}", normalized.timestamp);
-                println!("QA pairs: {}", normalized.qa.len());
-                for (qa_index, qa) in normalized.qa.iter().enumerate() {
-                    println!("\n  QA {}:", qa_index + 1);
-                    if let Some(ref qid) = qa.question_id {
-                        println!("    Question ID: {}", qid);
-                    }
-                    println!("    Question: {}", qa.question_text);
-                    println!("    Answer: {}", qa.answer);
+        async move {
+            let _permit = permit.acquire().await.unwrap();
+            log::info!("Processing chunk {}/{} ({} tokens)", index + 1, chunks_count, total_tokens);
+            
+            let normalized = match extract_qa_structured(system_msg, &user_msg).await {
+                Ok(normalized) => normalized,
+                Err(e) => {
+                    log::warn!("Failed to extract QA from chunk {}: {}", index + 1, e);
+                    return;
                 }
-                println!("\n");
-            }
-            Err(e) => {
-                log::warn!("Failed to extract QA from chunk {}: {}", index + 1, e);
+            };
+            
+            let content = match serde_json::to_string(&normalized) {
+                Ok(c) => c,
+                Err(e) => {
+                    log::warn!("Failed to serialize normalized response for chunk {}: {}", index + 1, e);
+                    return;
+                }
+            };
+            
+            let embedding = match create_embedding(&content).await {
+                Ok(emb) => emb,
+                Err(e) => {
+                    log::warn!("Failed to create embedding for chunk {}: {}", index + 1, e);
+                    return;
+                }
+            };
+            
+            if let Err(e) = db::insert_chunk(&pool, &document_name, index, &content, &embedding).await {
+                log::warn!("Failed to insert chunk {} into database: {}", index + 1, e);
             }
         }
-    }
+    }).collect();
+    
+    join_all(tasks).await;
     
     log::info!("Successfully processed {} chunks", chunks.len());
     
