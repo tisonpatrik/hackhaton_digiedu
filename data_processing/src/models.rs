@@ -10,6 +10,21 @@ pub struct UploadFileRequest {
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
+pub struct LabelResponse {
+    /// Label ID
+    pub id: i32,
+    /// Label name
+    pub name: String,
+    /// Normalized name for comparison
+    pub normalized_name: String,
+    /// Optional category
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
+    /// Usage count
+    pub usage_count: i32,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct FileUploadResponse {
     /// Status of the upload
     #[schema(example = "ok")]
@@ -30,6 +45,9 @@ pub struct FileUploadResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(example = "/app/transcripts/recording.txt")]
     pub transcript_path: Option<String>,
+    /// Extracted labels from content
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub labels: Option<Vec<LabelResponse>>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -108,3 +126,30 @@ pub struct NormalizedResponse {
     pub topic_labels: Vec<String>,
 }
 
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct ChunkWithLabelsResponse {
+    /// Chunk document name
+    pub document_name: String,
+    /// Chunk content
+    pub content: String,
+    /// Associated labels
+    pub labels: Vec<LabelResponse>,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct LabelsListResponse {
+    /// List of all labels
+    pub labels: Vec<LabelResponse>,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct SearchByLabelsRequest {
+    /// Label IDs to search for
+    pub label_ids: Vec<i32>,
+}
+
+#[derive(Serialize, Deserialize, ToSchema)]
+pub struct SearchByLabelsResponse {
+    /// Chunks matching the labels
+    pub chunks: Vec<ChunkWithLabelsResponse>,
+}

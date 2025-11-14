@@ -8,6 +8,7 @@ use crate::injectors::create_chunks_from_document;
 use crate::gen_ai::{extract_qa_structured, create_embedding};
 use crate::prompts::{extract_qa_system, extract_qa_user};
 use crate::processors::tabular::TABULAR_RECORD_SEPARATOR;
+use crate::labels::associate_labels_with_chunk;
 
 pub async fn inject_document(
     pool: &PgPool,
@@ -72,8 +73,24 @@ pub async fn inject_document(
                 }
             };
             
+            let chunk_key = format!("{}:{}", document_name, index);
+            
             if let Err(e) = db::insert_chunk(&pool, &document_name, index, &content, &embedding).await {
                 log::warn!("Failed to insert chunk {} into database: {}", index + 1, e);
+                return;
+            }
+            
+            // Associate labels with chunk
+            if !normalized.topic_labels.is_empty() {
+                log::info!("Associating {} labels with chunk {}", normalized.topic_labels.len(), index + 1);
+                match associate_labels_with_chunk(&pool, &chunk_key, &normalized.topic_labels, None).await {
+                    Ok(labels) => {
+                        log::info!("Successfully associated {} labels with chunk {}", labels.len(), index + 1);
+                    }
+                    Err(e) => {
+                        log::warn!("Failed to associate labels with chunk {}: {}", index + 1, e);
+                    }
+                }
             }
         }
     }).collect();

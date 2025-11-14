@@ -282,12 +282,27 @@ defmodule LiveDashboardWeb.FileUploadLive do
                       <span class="badge badge-success">{gettext("Success")}</span>
                     </div>
 
+                    <%= if file["labels"] && file["labels"] != [] do %>
+                      <div class="mt-4 flex flex-wrap gap-2">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 w-full mb-1">
+                          {gettext("Labels")}:
+                        </p>
+                        <%= for label <- file["labels"] do %>
+                          <span class="badge badge-primary badge-outline gap-1">
+                            <.icon name="hero-tag" class="h-3 w-3" />
+                            <%= label["name"] %>
+                            <span class="badge badge-xs"><%= label["usage_count"] %></span>
+                          </span>
+                        <% end %>
+                      </div>
+                    <% end %>
+
                     <%= if file["transcript_text"] do %>
                       <div class="mt-4 p-4 rounded-lg bg-base-100 border border-base-300">
                         <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-2">
                           {gettext("Transcription")}
                         </p>
-                        <p class="text-sm text-base-content whitespace-pre-wrap">
+                        <p class="text-sm text-base-content whitespace-pre-wrap max-h-60 overflow-y-auto">
                           <%= file["transcript_text"] %>
                         </p>
                       </div>
