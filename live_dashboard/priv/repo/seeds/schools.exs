@@ -1,8 +1,6 @@
 # Seeds for schools
 # Creates schools associated with municipalities
 
-import Ecto.Query
-
 alias LiveDashboard.Repo
 alias LiveDashboard.Schemas.Municipality
 alias LiveDashboard.Schemas.School
