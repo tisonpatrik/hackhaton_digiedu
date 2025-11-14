@@ -79,9 +79,25 @@ defmodule LiveDashboardWeb.Layouts do
       <.sidebar />
 
       <div class="flex flex-1 flex-col overflow-hidden">
-        <header class="navbar px-4 sm:px-6 lg:px-8 border-b border-base-300">
-          <div class="flex-1"></div>
-          <div class="flex-none">
+        <header class="navbar px-4 sm:px-6 lg:px-8 bg-base-100 gap-4">
+          <div class="flex-1 max-w-2xl w-full">
+            <form action="/query" method="get" class="flex gap-2 items-center">
+              <div class="relative flex-1">
+                <input
+                  type="text"
+                  name="q"
+                  placeholder={gettext("Search your data with AI...")}
+                  class="input input-bordered w-full pl-10 text-sm"
+                />
+                <.icon name="hero-magnifying-glass" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/40 pointer-events-none" />
+              </div>
+              <button type="submit" class="btn btn-sm btn-primary gap-1.5 flex-shrink-0 whitespace-nowrap">
+                <.icon name="hero-sparkles" class="h-4 w-4" />
+                {gettext("Ask AI")}
+              </button>
+            </form>
+          </div>
+          <div class="flex items-center gap-4 ml-auto">
             <ul class="flex flex-column px-1 space-x-4 items-center">
               <li>
                 <.locale_toggle />
@@ -94,25 +110,6 @@ defmodule LiveDashboardWeb.Layouts do
         </header>
 
         <main class="flex-1 overflow-y-auto">
-          <!-- Global AI Search Bar -->
-          <div class="sticky top-0 z-10 bg-base-100 border-b border-base-300/70 px-6 py-3 shadow-sm">
-            <div class="max-w-4xl mx-auto">
-              <form action="/query" method="get" class="relative">
-                <input
-                  type="text"
-                  name="q"
-                  placeholder={gettext("Search your data with AI...")}
-                  class="input input-bordered w-full pl-12 pr-28"
-                />
-                <.icon name="hero-magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-base-content/40" />
-                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-sm btn-primary gap-2">
-                  <.icon name="hero-sparkles" class="h-4 w-4" />
-                  {gettext("Ask AI")}
-                </button>
-              </form>
-            </div>
-          </div>
-          
           {render_slot(@inner_block)}
         </main>
       </div>
